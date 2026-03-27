@@ -1,26 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// App.tsx
+// Component gốc — chỉ việc gọi AppRouter là xong
+// Mọi logic điều hướng nằm trong AppRouter
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import React from 'react';
+import AppRouter from './router/AppRouter';
+
+const App = () => {
+  return <AppRouter />;
+};
 
 export default App;
