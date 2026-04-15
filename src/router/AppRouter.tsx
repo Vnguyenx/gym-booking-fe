@@ -3,23 +3,44 @@
 // Mỗi path tương ứng với 1 trang cụ thể
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import useAuth from '../hooks/useAuth';
 
 // --- Import các trang (sẽ tạo dần) ---
 // Public pages (không cần đăng nhập)
 import HomePage from '../pages/public/HomePage';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+
+
+// Import Dashboard Pages (Bạn tạo các file này trong thư mục tương ứng)
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import PtDashboard from '../pages/pt/PtDashboard';
+import ProfilePage from '../pages/customer/ProfilePage';
+
 
 const AppRouter = () => {
+    const { isLoggedIn } = useAuth();
     return (
         <BrowserRouter>
             <Routes>
                 {/* Public routes — ai cũng vào được */}
                 <Route path={ROUTES.HOME} element={<HomePage />} />
-                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-                <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+                <Route path={ROUTES.LOGIN} element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
+                <Route path={ROUTES.REGISTER} element={!isLoggedIn ? <RegisterPage /> : <Navigate to="/" />} />
+                <Route path={ROUTES.RESET} element={<ForgotPasswordPage />} />
+
+                {/* Dashboard routes */}
+                <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+                <Route path={ROUTES.PT_DASHBOARD} element={<PtDashboard />} />
+                <Route path={ROUTES.MY_PROFILE} element={<ProfilePage />} />
+
+
+                {/* Fallback - Link lung tung sẽ về Home */}
+                <Route path="*" element={<Navigate to="/" />} />
+
             </Routes>
         </BrowserRouter>
     );

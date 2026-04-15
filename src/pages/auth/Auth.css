@@ -1,0 +1,124 @@
+/* Nền tối đậm theo yêu cầu #0F0F0F */
+.auth-container {
+    padding: 24px;
+    max-width: 400px;
+    margin: 60px auto;
+    background-color: #1C1C1E; /* Surface */
+    border-radius: 16px;
+    border: 1px solid #2C2C2E;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+}
+
+.auth-title {
+    text-align: center;
+    color: #FF3B30; /* Đỏ Gym */
+    font-size: 26px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #A1A1A1;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.auth-input {
+    background-color: #0F0F0F;
+    border: 1px solid #2C2C2E;
+    color: #FFFFFF;
+    padding: 14px;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #FF9500; /* Cam khi nhấn vào */
+}
+
+.auth-btn {
+    background-color: #FF3B30;
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    background-color: #FF9500;
+}
+
+.auth-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.auth-link-item {
+    color: #A1A1A1;
+    text-decoration: none;
+}
+
+.auth-link-highlight {
+    color: #FF9500;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-error {
+    color: #FF3B30;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 14px; /* Căn chỉnh tùy theo độ cao input */
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+    z-index: 10;
+}
+
+/* Đảm bảo input không bị chữ đè lên icon */
+.auth-input {
+    padding-right: 40px !important;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #A1A1A1;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 0;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    color: #FF3B30;
+}
+
+
+.auth-input-container {
+    position: relative;
+    width: 100%;
+}

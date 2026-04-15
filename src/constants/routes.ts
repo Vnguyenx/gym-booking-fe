@@ -12,16 +12,16 @@ export const ROUTES = {
     PT_LIST: '/pts',              // Danh sách huấn luyện viên
     PT_DETAIL: '/pts/:id',        // Chi tiết 1 huấn luyện viên
 
-    // ── Auth routes (đăng nhập / đăng ký) ──
+    // ── Auth routes (đăng nhập / đăng ký/ reset) ──
     LOGIN: '/login',
     REGISTER: '/register',
+    RESET: '/forgotpass',
 
     // ── Customer routes (cần đăng nhập, role: customer) ──
     BOOKING: '/booking',          // Đặt lịch tập
     MY_PROFILE: '/profile',       // Trang cá nhân
     MY_BOOKINGS: '/my-bookings',  // Lịch sử đặt lịch
     ATTENDANCE: '/attendance',    // Điểm danh
-    CHAT: '/chat',                // Chat với AI
 
     // ── PT routes (cần đăng nhập, role: pt) ──
     PT_DASHBOARD: '/pt/dashboard',  // Trang quản lý của PT
