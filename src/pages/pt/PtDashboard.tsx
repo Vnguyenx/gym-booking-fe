@@ -6,7 +6,6 @@ import { auth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
 import useAuth from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
-import '../auth/Auth.css';
 
 const ProfilePage = () => {
     const { user, isLoggedIn, loading } = useAuth(); // Lấy data từ Redux

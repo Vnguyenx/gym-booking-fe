@@ -1,129 +1,114 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth'; //
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'; //
-import { auth, db } from '../../config/firebase'; // [cite: 16]
-import { ROUTES } from '../../constants/routes'; // [cite: 16]
-import { ROLES } from '../../constants/roles'; // [cite: 16]
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../../config/firebase';
+import { ROUTES } from '../../constants/routes';
+import { ROLES } from '../../constants/roles';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setLoading, setError } from '../../store/slices/authSlice';
 import useValidator from '../../hooks/useValidator';
-import './Auth.css';
-import {setLoading} from "../../store/slices/authSlice";
-
+import '../../styles/auth.css';
 
 const RegisterPage = () => {
-
     const navigate = useNavigate();
-    // Lấy toàn bộ logic từ Hook ra
-    const {
-        showPassword,
-        togglePassword,
-        validatePassword,
-        validatePhone,
-        isMatch
-    } = useValidator();
+    const dispatch = useAppDispatch();
+    const { loading, error } = useAppSelector(state => state.auth);
+    const { showPassword, togglePassword, validatePassword, validatePhone, isMatch } = useValidator();
 
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        confirmPassword: '',
         displayName: '',
-        phone: ''
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: ''
     });
-    const [error, setError] = useState('');
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
+        dispatch(setError(null));
 
-        // Kiểm tra logic bằng Hook
-        if (!validatePhone(formData.phone)) return setError('Số điện thoại không hợp lệ (VN)!');
-        if (!validatePassword(formData.password)) return setError('Mật khẩu yếu! (8 ký tự, 1 hoa, 1 số, 1 đặc biệt)');
-        if (!isMatch(formData.password, formData.confirmPassword)) return setError('Mật khẩu nhập lại không khớp!');
+        if (!validatePhone(formData.phone)) return dispatch(setError('Số điện thoại không hợp lệ.'));
+        if (!validatePassword(formData.password)) return dispatch(setError('Mật khẩu cần ít nhất 8 ký tự, có chữ hoa và số.'));
+        if (!isMatch(formData.password, formData.confirmPassword)) return dispatch(setError('Mật khẩu nhập lại không khớp.'));
 
-        console.log("Dữ liệu hợp lệ, tiến hành đăng ký...", formData);
-        setLoading(true);
+        dispatch(setLoading(true));
         try {
-            // 2. Tạo tài khoản trên Firebase Auth
             const userCred = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-
-            // 3. Lưu thông tin bổ sung vào Firestore [cite: 23, 37]
-            // Document ID sẽ khớp với UID của Firebase Auth
-            await setDoc(doc(db, 'users', userCred.user.uid), {
+            await setDoc(doc(db, "users", userCred.user.uid), {
                 uid: userCred.user.uid,
-                displayName: formData.displayName,
                 email: formData.email,
+                displayName: formData.displayName,
                 phone: formData.phone,
-                role: ROLES.CUSTOMER, // Mặc định là khách hàng [cite: 5, 23]
-                avatarUrl: '',
-                createdAt: serverTimestamp() // [cite: 23]
+                role: ROLES.CUSTOMER,
+                createdAt: serverTimestamp()
             });
-
-            // 4. Thành công thì đá về trang Login hoặc Home
             navigate(ROUTES.LOGIN);
         } catch (err: any) {
-            // Việt hoá một số lỗi cơ bản từ Firebase
-            if (err.code === 'auth/email-already-in-use') setError('Email này đã được sử dụng!');
-            else setError('Lỗi đăng ký: ' + err.message);
+            dispatch(setError(err.message));
         } finally {
-            setLoading(false);
+            dispatch(setLoading(false));
         }
     };
 
     return (
-        <div className="auth-container">
-            <h1 className="auth-title">Đăng ký</h1>
-            <button className="back-btn" onClick={() => navigate(-1)}>
-                ← Quay lại
-            </button>
-            <form onSubmit={handleRegister}>
-                <input className="auth-input" placeholder="Họ tên"
-                       onChange={e => setFormData({...formData, displayName: e.target.value})} required/>
-                <input className="auth-input" type="email" placeholder="Email"
-                       onChange={e => setFormData({...formData, email: e.target.value})} required/>
+        <div className="auth-page">
+            <div className="auth-card">
+                <Link to={ROUTES.HOME} className="auth-logo">GYM<span>XYZ</span></Link>
 
-                <input
-                    className="auth-input"
-                    placeholder="Số điện thoại"
-                    onChange={e => setFormData({...formData, phone: e.target.value})}
-                    required
-                />
+                <button className="auth-back" onClick={() => navigate(ROUTES.HOME)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Về trang chủ
+                </button>
 
-                {/* Ô Mật khẩu 1 */}
-                <div style={{position: 'relative'}}>
-                    <input
-                        className="auth-input"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Mật khẩu"
-                        onChange={e => setFormData({...formData, password: e.target.value})}
-                        required
-                    />
-                    <span className="toggle-pass" onClick={togglePassword}>
-                        {showPassword ? '👁️' : '🙈'}
-                    </span>
-                </div>
+                <h1 className="auth-title">Tạo tài khoản</h1>
+                <p className="auth-sub">Miễn phí · Kích hoạt trong 24 giờ.</p>
 
-                {/* Ô Nhập lại mật khẩu - CŨNG DÙNG CHUNG showPassword */}
-                <div style={{position: 'relative'}}>
-                    <input
-                        className="auth-input"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Nhập lại mật khẩu"
-                        onChange={e => setFormData({...formData, confirmPassword: e.target.value})}
-                        required
-                    />
-                    <span className="toggle-pass" onClick={togglePassword}>
-                        {showPassword ? '👁️' : '🙈'}
-                    </span>
-                </div>
+                <form className="auth-form" onSubmit={handleRegister}>
+                    <div className="form-group">
+                        <label className="form-label">Họ và tên</label>
+                        <input className="auth-input" type="text" placeholder="Nguyễn Văn A"
+                               onChange={e => setFormData({...formData, displayName: e.target.value})} required />
+                    </div>
 
-                {error && <p className="auth-error">{error}</p>}
-                <button type="submit" className="auth-btn">ĐĂNG KÝ</button>
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input className="auth-input" type="email" placeholder="name@example.com"
+                               onChange={e => setFormData({...formData, email: e.target.value})} required />
+                    </div>
 
-                <div className="auth-links" style={{justifyContent: 'center', gap: '8px'}}>
-                    <span className="auth-link-item">Bạn đã có tài khoản?</span>
-                    <Link to={ROUTES.LOGIN} className="auth-link-highlight">Đăng nhập</Link>
-                </div>
-            </form>
+                    <div className="form-group">
+                        <label className="form-label">Số điện thoại</label>
+                        <input className="auth-input" type="tel" placeholder="0901234567"
+                               onChange={e => setFormData({...formData, phone: e.target.value})} required />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Mật khẩu</label>
+                            <input className="auth-input" type={showPassword ? "text" : "password"} placeholder="••••••••"
+                                   onChange={e => setFormData({...formData, password: e.target.value})} required />
+
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Xác nhận mật khẩu</label>
+                        <input className="auth-input" type={showPassword ? "text" : "password"} placeholder="••••••••"
+                               onChange={e => setFormData({...formData, confirmPassword: e.target.value})} required />
+                    </div>
+
+                    {error && <p className="auth-error-msg">{error}</p>}
+
+                    <button type="submit" className="btn-auth" disabled={loading}>
+                        {loading ? 'Đang tạo tài khoản...' : 'Đăng ký ngay'}
+                    </button>
+                </form>
+
+                <p className="auth-footer">
+                    Đã có tài khoản? <Link to={ROUTES.LOGIN}>Đăng nhập</Link>
+                </p>
+            </div>
         </div>
     );
 };

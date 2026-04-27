@@ -6,11 +6,11 @@
 export const ROUTES = {
     // ── Public routes (không cần đăng nhập) ──
     HOME: '/',                    // Trang chủ
-    GYM_INFO: '/gym-info',        // Thông tin phòng gym
     EQUIPMENT: '/equipment',      // Danh sách máy móc
     EXERCISES: '/exercises',      // Danh sách bài tập
     PT_LIST: '/pts',              // Danh sách huấn luyện viên
     PT_DETAIL: '/pts/:id',        // Chi tiết 1 huấn luyện viên
+    ABOUT_DETAIL: '/about-detail', // Chi tiết Thông tin phòng gym
 
     // ── Auth routes (đăng nhập / đăng ký/ reset) ──
     LOGIN: '/login',

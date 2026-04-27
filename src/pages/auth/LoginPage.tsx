@@ -1,116 +1,112 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../config/firebase';
-import { useAppDispatch, useAppSelector } from '../../store/hooks'; // Thêm selector để lấy error
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUser, setLoading, setError } from '../../store/slices/authSlice';
-import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
-import { ROLES } from '../../constants/roles';
 import useValidator from '../../hooks/useValidator';
-import './Auth.css';
+import '../../styles/auth.css';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { showPassword, togglePassword } = useValidator();
+    const { loading, error } = useAppSelector((state) => state.auth);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    // Lấy trạng thái từ Redux để hiển thị thông báo
-    const { loading, error } = useAppSelector((state) => state.auth);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         dispatch(setLoading(true));
+        dispatch(setError(null));
+
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, password);
-            const uid = userCred.user.uid; // Lấy UID từ Firebase Auth
-
-            // Lấy thông tin từ Firestore
-            const userDoc = await getDoc(doc(db, 'users', uid));
+            const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
 
             if (userDoc.exists()) {
                 const data = userDoc.data();
-
-                // 1. Cập nhật Redux TRƯỚC
                 dispatch(setUser({
-                    uid: data.uid,
+                    uid: userCred.user.uid,
                     email: data.email,
                     displayName: data.displayName,
                     role: data.role,
-                    phone: data.phone,
+                    phone: data.phone || '',
                     avatarUrl: data.avatarUrl || ''
                 }));
-
-                // 2. Ép nó dừng loading để AppRouter nhận diện isLoggedIn = true
-                dispatch(setLoading(false));
-
-                // 3. Điều hướng (Sử dụng setTimeout 100ms nếu vẫn bị đứng trang)
-                setTimeout(() => {
-                    if (data.role === ROLES.ADMIN) navigate(ROUTES.ADMIN_DASHBOARD);
-                    else if (data.role === ROLES.PT) navigate(ROUTES.PT_DASHBOARD);
-                    else navigate(ROUTES.MY_PROFILE);
-                }, 100);
-
-            } else {
-                dispatch(setError("Tài khoản chưa được phân quyền trong hệ thống!"));
+                navigate(ROUTES.HOME);
             }
         } catch (err: any) {
-            dispatch(setError("Email hoặc mật khẩu không chính xác!"));
+            dispatch(setError("Email hoặc mật khẩu không chính xác."));
         } finally {
             dispatch(setLoading(false));
         }
     };
 
     return (
-        <div className="auth-container">
-            <button className="back-btn" onClick={() => navigate(ROUTES.HOME)}>
-                ← Trang chủ
-            </button>
+        <div className="auth-page">
+            <div className="auth-card">
+                <Link to={ROUTES.HOME} className="auth-logo">GYM<span>XYZ</span></Link>
 
-            <h1 className="auth-title">Đăng nhập</h1>
-
-            <form onSubmit={handleLogin}>
-                {/* THIẾU 1: Bổ sung value và onChange cho Email */}
-                <input
-                    className="auth-input"
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-
-                <div style={{position: 'relative'}}>
-                    {/* THIẾU 2: Bổ sung value và onChange cho Password */}
-                    <input
-                        className="auth-input"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Mật khẩu"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <span className="toggle-pass" onClick={togglePassword}>
-                        {showPassword ? '👁️' : '🙈'}
-                    </span>
-                </div>
-
-                {/* THIẾU 3: Hiển thị thông báo lỗi từ Redux */}
-                {error && <p className="auth-error">{error}</p>}
-
-                <button type="submit" className="auth-btn" disabled={loading}>
-                    {loading ? 'ĐANG XỬ LÝ...' : 'ĐĂNG NHẬP'}
+                <button className="auth-back" onClick={() => navigate(ROUTES.HOME)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Về trang chủ
                 </button>
 
-                <div className="auth-links">
-                    <Link to={ROUTES.RESET} className="auth-link-item">Quên mật khẩu?</Link>
-                    <Link to={ROUTES.REGISTER} className="auth-link-highlight">Đăng ký ngay</Link>
-                </div>
-            </form>
+                <h1 className="auth-title">Đăng nhập</h1>
+                <p className="auth-sub">Chào mừng trở lại! Tiếp tục hành trình của bạn.</p>
+
+                <form className="auth-form" onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            className={`auth-input ${error ? 'error' : ''}`}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="name@example.com"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Mật khẩu</label>
+
+                            <input
+                                className={`auth-input ${error ? 'error' : ''}`}
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required
+                            />
+
+                    </div>
+
+                    {error && <p className="auth-error-msg">{error}</p>}
+
+                    <button type="submit" className="btn-auth" disabled={loading}>
+                        {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+                    </button>
+
+                    <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                        <Link to={ROUTES.RESET} className="auth-link-item" style={{ fontSize: '0.85rem' }}>
+                            Quên mật khẩu?
+                        </Link>
+                    </div>
+                </form>
+
+                <p className="auth-footer">
+                    Chưa có tài khoản? <Link to={ROUTES.REGISTER}>Đăng ký ngay</Link>
+                </p>
+            </div>
         </div>
     );
 };
+
 export default LoginPage;

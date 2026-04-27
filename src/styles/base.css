@@ -1,0 +1,199 @@
+/* ============================================================
+   BASE.CSS — Variables · Reset · Utilities   (mobile-first)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+/* ── DESIGN TOKENS ── */
+:root {
+    /* Colours */
+    --bg:           #0F0F0F;
+    --surface:      #1A1A1A;
+    --surface-2:    #242424;
+    --border:       #2C2C2E;
+    --border-lt:    #3A3A3C;
+
+    --red:          #FF3B30;
+    --red-dk:       #C92B22;
+    --orange:       #FF9500;
+    --green:        #30D158;
+    --white:        #FFFFFF;
+    --text:         #F2F2F7;
+    --muted: #ffffff;
+    --muted-lt:     #AEAEB2;
+
+    /* Typography */
+    --ff-display: 'Bebas Neue', sans-serif;
+    --ff-body:    'DM Sans', sans-serif;
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius:    12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+
+    /* Layout */
+    --nav-h: 70px;
+    --max-w:      1120px;
+
+    /* Motion */
+    --ease:       cubic-bezier(0.4,0,0.2,1);
+    --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--ff-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; }
+button { font-family: var(--ff-body); cursor: pointer; border-radius: 8px; padding: 5px}
+input, textarea, select { font-family: var(--ff-body); border-radius: 10px; padding: 5px; }
+
+/* ── CONTAINER ── */
+.container {
+    width: 100%;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ── SECTION SPACING (mobile-first → scale up) ── */
+.section { padding: 3rem 0; }
+@media (min-width: 640px)  { .section { padding: 4.5rem 0; } }
+@media (min-width: 1024px) { .section { padding: 6rem 0; } }
+
+/* ── BUTTONS ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.62rem 1.3rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition),
+    opacity var(--transition), border-color var(--transition);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-red   { background: var(--red);    color: #fff; }
+.btn-red:hover { background: var(--red-dk); }
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border-lt);
+}
+.btn-ghost:hover { border-color: var(--muted-lt); }
+
+.btn-surface {
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+}
+.btn-surface:hover { border-color: var(--border-lt); }
+
+/* Sizes */
+.btn-sm  { font-size: 0.8rem;  padding: 0.45rem 0.9rem; }
+.btn-lg  { font-size: 0.95rem; padding: 0.8rem 1.65rem; }
+.btn-full{ width: 100%; }
+
+/* ── MORE / SEE ALL LINK ── */
+.more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    padding: 0.48rem 1rem;
+    transition: color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+}
+.more-link:hover { color: var(--text); border-color: var(--border-lt); }
+.more-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ── SECTION LABELS ── */
+.sec-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.45rem;
+}
+.sec-title {
+    font-family: var(--ff-display);
+    font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 0.65rem;
+}
+.sec-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+/* ── DIVIDER ── */
+.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.1rem 0;
+}
+
+/* ── SCROLL REVEAL ── */
+
+.reveal, .stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+}
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+.reveal.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Stagger children */
+.stagger > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+.stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.08s; }
+.stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.16s; }
+.stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.24s; }
+.stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:.32s; }
+.stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:.40s; }
+
+/* ── RESPONSIVE ── */
+@media (min-width: 768px) {
+    :root { --nav-h: 60px;  }
+}

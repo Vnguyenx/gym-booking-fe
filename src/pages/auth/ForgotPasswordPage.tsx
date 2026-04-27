@@ -1,68 +1,70 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { auth, db } from '../../config/firebase';
+import { auth } from '../../config/firebase';
 import { ROUTES } from '../../constants/routes';
-import './Auth.css';
+import '../../styles/auth.css';
+
 
 const ForgotPasswordPage = () => {
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState({ status: '', text: '' });
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [sent, setSent] = useState(false);
+    const [error, setError] = useState('');
 
     const handleReset = async (e: React.FormEvent) => {
         e.preventDefault();
-        setMessage({ status: '', text: '' });
-
+        setError('');
         try {
-            // 1. Kiểm tra email có trong Firestore users chưa
-            const q = query(collection(db, "users"), where("email", "==", email));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                return setMessage({ status: 'error', text: 'Email này chưa được đăng ký!' });
-            }
-
-            // 2. Gửi email reset pass của Firebase [cite: 75]
             await sendPasswordResetEmail(auth, email);
-            setMessage({ status: 'success', text: 'Thành công! Kiểm tra hộp thư của bạn.' });
+            setSent(true);
         } catch (err: any) {
-            setMessage({ status: 'error', text: 'Lỗi: ' + err.message });
+            setError("Không thể gửi email. Vui lòng kiểm tra lại địa chỉ email.");
         }
     };
 
     return (
-        <div className="auth-container">
-            {/* Nút Back về trang Login */}
-            <button className="back-btn" onClick={() => navigate(ROUTES.LOGIN)}>
-                ← Quay lại Đăng nhập
-            </button>
+        <div className="auth-page">
+            <div className="auth-card">
+                <Link to={ROUTES.HOME} className="auth-logo">GYM<span>XYZ</span></Link>
 
-            <h1 className="auth-title">KHÔI PHỤC</h1>
-            <p className="auth-subtitle">Nhập email để lấy lại mật khẩu</p>
+                <button className="auth-back" onClick={() => navigate(ROUTES.LOGIN)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Quay lại Đăng nhập
+                </button>
 
-            <form onSubmit={handleReset}>
-                <input
-                    className="auth-input"
-                    type="email"
-                    placeholder="Email của bạn"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+                {!sent ? (
+                    <>
+                        <h1 className="auth-title">Quên mật khẩu</h1>
+                        <p className="auth-sub">Nhập email đã đăng ký để nhận liên kết đặt lại mật khẩu.</p>
 
-                {message.text && (
-                    <p className={message.status === 'success' ? "auth-success" : "auth-error"}>
-                        {message.text}
-                    </p>
+                        <div className="auth-info" style={{marginBottom: '1.5rem'}}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Kiểm tra cả hòm thư Spam nếu bạn không thấy email gửi đến.
+                        </div>
+
+                        <form className="auth-form" onSubmit={handleReset}>
+                            <div className="form-group">
+                                <label className="form-label">Email đăng ký</label>
+                                <input className="auth-input" type="email" value={email}
+                                       onChange={e => setEmail(e.target.value)} placeholder="name@example.com" required />
+                            </div>
+                            {error && <p className="auth-error-msg">{error}</p>}
+                            <button type="submit" className="btn-auth">Gửi yêu cầu</button>
+                        </form>
+                    </>
+                ) : (
+                    <div className="auth-success">
+                        <div style={{fontSize: '3rem', marginBottom: '1rem'}}>📩</div>
+                        <h2 className="auth-title" style={{fontSize: '1.5rem'}}>Đã gửi thành công!</h2>
+                        <p className="auth-sub">Liên kết đặt lại mật khẩu đã được gửi tới <b>{email}</b>.</p>
+                        <button className="btn-auth" onClick={() => navigate(ROUTES.LOGIN)}>Quay lại Đăng nhập</button>
+                    </div>
                 )}
-
-                <button type="submit" className="auth-btn">GỬI YÊU CẦU</button>
-            </form>
-
-            <div className="auth-links" style={{ justifyContent: 'center' }}>
-                <span className="auth-link-item">Chưa có tài khoản? </span>
-                <Link to={ROUTES.REGISTER} className="auth-link-highlight">&nbsp;Đăng ký ngay</Link>
             </div>
         </div>
     );
