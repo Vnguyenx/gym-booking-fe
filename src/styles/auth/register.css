@@ -1,0 +1,29 @@
+/* ============================================================
+   REGISTER.CSS
+   ============================================================ */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+}
+
+.pw-strength {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.4rem;
+}
+
+.pw-bar {
+    flex: 1; height: 3px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+}
+.pw-bar.weak   { background: var(--red); }
+.pw-bar.medium { background: var(--orange); }
+.pw-bar.strong { background: var(--green); }
+
+@media (max-width: 380px) {
+    .form-row { grid-template-columns: 1fr; }
+}

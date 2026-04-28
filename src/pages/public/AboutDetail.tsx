@@ -1,13 +1,13 @@
 import React from 'react';
 import { useGymData } from '../../hooks/useGymData';
-import '../../styles/about-detail.css';
+import '../../styles/pages/about-detail.css';
 import {ROUTES} from "../../constants/routes";
 import {Link} from "react-router-dom";
 
 const AboutDetailPage: React.FC = () => {
     const { gymInfo, floors, zones, loading } = useGymData();
 
-    if (loading) return <div className="page-loading">Đang tải không gian Gym...</div>;
+    //if (loading) return <div className="page-loading">Đang tải không gian Gym...</div>;
 
     const am = gymInfo?.amenities;
 
@@ -93,35 +93,49 @@ const AboutDetailPage: React.FC = () => {
 
                 {/* 3. Sơ đồ mặt bằng */}
                 <section className="detail-section">
-                    <h2 className="sub-title">Cấu trúc phòng tập</h2>
-                    <p className="section-intro">Tổng số tầng: {gymInfo?.totalFloors}. Được thiết kế hiện đại, tối ưu cho từng bộ môn tập luyện.</p>
-                    <div className="floor-container">
-                        {floors.map(floor => (
-                            <div key={floor.id} className="floor-block reveal visible">
-                                <div className="floor-header">
-                                    <div className="floor-title">
-                                        <span className="tag">Tầng {floor.floor_number}</span>
-                                        <h3>{floor.name}</h3>
-                                    </div>
-                                    <span className="floor-area">{floor.area} m²</span>
-                                </div>
-                                <p className="floor-desc">{floor.description}</p>
-                                <div className="zone-list">
-                                    {zones.filter(z => z.floorId === floor.id).map(zone => (
-                                        <div key={zone.id} className="zone-card">
-                                            <h4>{zone.name}</h4>
-                                            <p>{zone.description}</p>
+                    <div className="container">
+                        <h2 className="sub-title">Cấu trúc phòng tập</h2>
+                        <p className="section-intro">Tổng số tầng: {gymInfo?.totalFloors}. Được thiết kế hiện đại, tối ưu cho từng bộ môn tập luyện.</p>
+
+                        <div className="floor-container">
+                            {floors.map(floor => (
+                                <div key={floor.id} className="floor-block reveal visible">
+                                    {/* LỚP NỀN: Tách riêng để làm mờ mà không ảnh hưởng tới chữ */}
+                                    <div
+                                        className="floor-bg-image"
+                                        style={{ backgroundImage: `url(${floor.img || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1000'})` }}
+                                    ></div>
+
+                                    {/* LỚP NỘI DUNG: Nằm trên lớp nền */}
+                                    <div className="floor-content">
+                                        <div className="floor-header">
+                                            <div className="floor-title-group">
+                                                <span className="tag">Tầng {floor.floorNumber}</span>
+                                                <h3 className="floor-name-text">{floor.name}</h3>
+                                            </div>
+                                            <span className="floor-area-badge">{floor.area} m²</span>
                                         </div>
-                                    ))}
+
+                                        <p className="floor-desc-text">{floor.description}</p>
+
+                                        <div className="zone-grid-layout">
+                                            {zones.filter(z => z.floorId === floor.id).map(zone => (
+                                                <div key={zone.id} className="zone-glass-card">
+                                                    <h4>📍 {zone.name}</h4>
+                                                    <p>{zone.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </section>
 
                 {/* 4. Vị trí & Chỉ đường (Thêm Lat/Lng) */}
                 <section className="detail-section">
-                    <h2 className="sub-title">Vị trí & Chỉ đường</h2>
+                <h2 className="sub-title">Vị trí & Chỉ đường</h2>
                     <div className="location-wrapper">
                         <div className="map-frame">
                             {gymInfo?.location.mapUrl && (

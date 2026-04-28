@@ -1,0 +1,81 @@
+/* ════════════════════════════════════════
+   PRICING SECTION (Bảng giá)
+   ════════════════════════════════════════ */
+.pricing__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.pricing__item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.pricing__item.featured {
+    border-color: var(--red);
+    background: rgba(255, 59, 48, 0.03);
+    transform: scale(1.02);
+}
+
+.pricing__item .badge {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--red);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+}
+
+.pricing__item h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+.pricing__item .price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-family: var(--ff-display);
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.pricing__item .price span {
+    font-size: 1rem;
+    color: var(--muted);
+    font-family: var(--ff-body);
+}
+
+.pricing__features {
+    list-style: none;
+    margin: 2rem 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.pricing__features li {
+    font-size: 0.9rem;
+    color: var(--muted-lt);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing__features li::before {
+    content: '✓';
+    color: var(--red);
+    font-weight: 800;
+}
+
+@media (min-width: 768px) {
+    .pricing__grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

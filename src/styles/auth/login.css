@@ -1,0 +1,32 @@
+/* ============================================================
+   LOGIN.CSS
+   ============================================================ */
+
+.field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.field-link {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--red);
+    transition: opacity var(--transition);
+}
+.field-link:hover { opacity: 0.8; }
+
+.auth-or {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 0.5rem 0;
+}
+.auth-or::before, .auth-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}

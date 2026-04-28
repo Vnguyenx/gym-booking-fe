@@ -1,0 +1,23 @@
+/* ════════════════════════════════════════
+   PT SECTION (Đội ngũ PT)
+   ════════════════════════════════════════ */
+/* Các class bổ trợ cho PT Section trong HomePage
+ file này vẫn sử dụng class
+ .auth-card (vì UI của bạn đang dùng chung thẻ này),
+ nên nhớ import file auth-shared.css hoặc file base nếu cần.*/
+.pt-section {
+    background-color: var(--bg);
+}
+
+.sec-tag {
+    color: var(--red);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+}
+
+.sec-title {
+    font-family: var(--ff-display);
+    font-size: 2.5rem;
+    margin-top: 0.5rem;
+}

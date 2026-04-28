@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 import useNavbar from '../../hooks/useNavbar';
-import '../../styles/navbar.css';
+import '../../styles/layout/navbar.css';
 import { useGymData } from '../../hooks/useGymData';
 
 // ─────────────────────────────────────────────

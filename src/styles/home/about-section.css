@@ -1,0 +1,78 @@
+/* ════════════════════════════════════════
+   ABOUT SECTION (Giới thiệu)
+   ════════════════════════════════════════ */
+.section {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding: 60px 0;
+}
+
+.about { padding: 4rem 0; }
+
+.about__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.about__content .section-subtitle {
+    color: var(--red);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.about__desc {
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 1.5rem 0;
+}
+
+.about__quick-info {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.about__amenities h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: var(--white);
+}
+
+.amenity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+}
+
+.amenity-item {
+    background: var(--surface-2);
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    border: 1px solid var(--border);
+    transition: transform 0.3s;
+}
+
+.amenity-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--red);
+}
+
+@media (min-width: 768px) {
+    .about__layout {
+        flex-direction: row;
+        align-items: center;
+    }
+    .about__content, .about__amenities {
+        flex: 1;
+    }
+}

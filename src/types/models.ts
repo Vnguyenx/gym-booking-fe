@@ -34,10 +34,11 @@ export interface UserProfile {
 export interface Floor {
     id?: string;
     name: string;
-    floor_number: number;
+    floorNumber: number;
     description: string;
     gymId: string;
     area: number;
+    img: string;
 }
 
 

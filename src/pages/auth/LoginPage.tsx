@@ -7,12 +7,13 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUser, setLoading, setError } from '../../store/slices/authSlice';
 import { ROUTES } from '../../constants/routes';
 import useValidator from '../../hooks/useValidator';
-import '../../styles/auth.css';
+import '../../styles/auth/auth-shared.css';
+import '../../styles/auth/login.css';
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { showPassword, togglePassword } = useValidator();
+    const { showPassword } = useValidator();
     const { loading, error } = useAppSelector((state) => state.auth);
 
     const [email, setEmail] = useState('');
@@ -49,7 +50,7 @@ const LoginPage = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <Link to={ROUTES.HOME} className="auth-logo">GYM<span>XYZ</span></Link>
+                <Link to={ROUTES.HOME} className="auth-logo">Welcome to my <span>GYM</span></Link>
 
                 <button className="auth-back" onClick={() => navigate(ROUTES.HOME)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

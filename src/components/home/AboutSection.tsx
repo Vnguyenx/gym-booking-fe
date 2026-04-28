@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useGymData } from '../../hooks/useGymData';
 import {ROUTES} from "../../constants/routes";
+import '../../styles/home/about-section.css';
 
 const AboutSection: React.FC = () => {
     const { gymInfo, loading } = useGymData();

@@ -2,7 +2,7 @@ import React from 'react';
 import { useFirestore } from '../../hooks/useFirestore';
 import { useSlideshow } from '../../hooks/useSlideshow';
 import { Banner } from '../../types/models';
-import '../../styles/hero.css';
+import '../../styles/home/hero.css';
 
 
 const BannerSection: React.FC = () => {

@@ -1,0 +1,61 @@
+/* ════════════════════════════════════════
+   FOOTER (Chân trang)
+   ════════════════════════════════════════ */
+.footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0 1.25rem;
+}
+
+.footer__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.footer__logo {
+    font-family: var(--ff-display);
+    font-size: 1.45rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+}
+.footer__logo span { color: var(--red); }
+
+.footer__tagline {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.footer__brand { grid-column: 1 / -1; }
+
+.footer__col-title {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+}
+
+.footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer__links a {
+    font-size: 0.85rem;
+    color: var(--muted-lt);
+    transition: color var(--transition);
+}
+
+.footer__links a:hover { color: var(--red); }
+
+@media (min-width: 768px) {
+    .footer__grid {
+        grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    }
+    .footer__brand { grid-column: auto; }
+}
