@@ -1,12 +1,12 @@
 import React from 'react';
-import { useFirestore } from '../../hooks/useFirestore';
+import { useBannerData } from '../../hooks/useBannerData';
 import { useSlideshow } from '../../hooks/useSlideshow';
 import { Banner } from '../../types/models';
 import '../../styles/home/hero.css';
 
 
 const BannerSection: React.FC = () => {
-    const { data: allBanners, loading } = useFirestore<Banner>('banners', true);
+    const { data: allBanners, loading } = useBannerData<Banner>('banners', true);
 
     // Lọc isActive + sắp xếp theo order
     const banners = allBanners

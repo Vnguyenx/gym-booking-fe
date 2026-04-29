@@ -1,9 +1,35 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 
+// Dùng chung cấu hình link với Navbar
+const NAV_LINKS = [
+    { href: '#about',     spy: 'about',     label: 'Giới thiệu' },
+    { href: '#equipment', spy: 'equipment',  label: 'Dụng cụ'    },
+    { href: '#pt',        spy: 'pt',         label: 'PT'          },
+    { href: '#pricing',   spy: 'pricing',    label: 'Bảng giá'   },
+];
 
 const Footer = () => {
+    const location = useLocation();
+    const isHome = location.pathname === ROUTES.HOME || location.pathname === '/';
+
+    // ── Xử lý click link hash (giống Navbar) ────────────────────────
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, spyId: string) => {
+        e.preventDefault();
+
+        if (isHome) {
+            // Đang ở Home → smooth scroll tới section
+            const target = document.getElementById(spyId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } else {
+            // Đang ở trang chi tiết → reload lại trang hiện tại
+            window.location.reload();
+        }
+    };
+
     return (
         <footer className="footer" style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', padding: '4rem 0 2rem' }}>
             <div className="container">
@@ -23,10 +49,15 @@ const Footer = () => {
                     <div className="footer__col">
                         <h4 className="footer__col-title">Khám phá</h4>
                         <div className="footer__links">
-                            <a href="/#about">Giới thiệu</a>
-                            <Link to={ROUTES.EQUIPMENT}>Dụng cụ</Link>
-                            <a href="/#pricing">Bảng giá</a>
-                            <Link to={ROUTES.PT_LIST}>Đội ngũ PT</Link>
+                            {NAV_LINKS.map(link => (
+                                <a
+                                    key={link.spy}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.spy)}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
                         </div>
                     </div>
 
@@ -41,12 +72,11 @@ const Footer = () => {
                         </div>
                     </div>
 
-
                     <div className="footer__col">
                         <h4 className="footer__col-title">Liên hệ</h4>
                         <div className="footer__links">
-                            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }} >Hotline: 090 123 4567</span>
-                            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }} >Email: contact@gymxyz.vn</span>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Hotline: 090 123 4567</span>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Email: contact@gymxyz.vn</span>
                             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
                                 Địa chỉ: Quận 1, TP. Hồ Chí Minh
                             </span>

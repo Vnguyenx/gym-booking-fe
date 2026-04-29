@@ -63,7 +63,7 @@ input, textarea, select { font-family: var(--ff-body); border-radius: 10px; padd
     width: 100%;
     max-width: var(--max-w);
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 20px 1rem;
 }
 
 /* ── SECTION SPACING (mobile-first → scale up) ── */

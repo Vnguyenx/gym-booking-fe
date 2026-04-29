@@ -6,9 +6,13 @@ import BannerSection from '../../components/home/Banner';
 import PTSection from '../../components/home/PTSection';
 import Footer from '../../components/layout/Footer';
 import AboutSection from "../../components/home/AboutSection";
+import EquipmentSection from "../../components/home/EquipmentSection";
+import useEquipmentData from "../../hooks/useEquipmentData";
 
 
 const HomePage: React.FC = () => {
+    const { equipment, loading, error } = useEquipmentData();
+
     // Logic để kích hoạt hiệu ứng Reveal on Scroll giống như file gốc
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -23,6 +27,20 @@ const HomePage: React.FC = () => {
         return () => observer.disconnect();
     }, []);
 
+    const RedDivider = () => (
+        <div style={{
+            height: '1px',
+            width: '100%',
+            background: 'linear-gradient(90deg, transparent 0%, #ef4444 50%, transparent 100%)',
+            margin: '0 auto',
+            opacity: 0.6
+        }} />
+    );
+
+
+    if (loading) return <div>Đang tải...</div>;
+    if (error)   return <div>{error}</div>;
+
     return (
         <div className="home-page">
             <Navbar />
@@ -31,42 +49,21 @@ const HomePage: React.FC = () => {
                 {/* 1. HERO / BANNER SECTION */}
                 <BannerSection />
 
+                <RedDivider />
                 {/* 2. ABOUT SECTION */}
                 <AboutSection />
 
+                <RedDivider />
                 {/* 3. EQUIPMENT SECTION */}
-                <section className="section equipment" id="equipment" style={{ background: 'var(--surface)' }}>
-                    <div className="container">
-                        <div className="section-header reveal" style={{ textAlign: 'center' }}>
-                            <span className="section-subtitle">Trang thiết bị</span>
-                            <h2 className="section-title">Máy móc <span>Hiện đại</span></h2>
-                        </div>
-                        <div className="equipment__grid stagger">
-                            <div className="equipment__card">
-                                <img src="/images/cardio.jpg" alt="Cardio Zone" />
-                                <h3>Cardio Zone</h3>
-                                <p>Hệ thống máy chạy bộ Matrix chuẩn quốc tế.</p>
-                            </div>
-                            <div className="equipment__card">
-                                <img src="/images/strength.jpg" alt="Strength Zone" />
-                                <h3>Strength Training</h3>
-                                <p>Khu vực tạ tự do và máy khối chuyên sâu.</p>
-                            </div>
-                            <div className="equipment__card">
-                                <img src="/images/crossfit.jpg" alt="Crossfit" />
-                                <h3>Crossfit Arena</h3>
-                                <p>Không gian rộng cho các bài tập cường độ cao.</p>
-                            </div>
-                        </div>
-                        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-                            <Link to={ROUTES.EQUIPMENT} className="btn btn--outline">Xem tất cả dụng cụ</Link>
-                        </div>
-                    </div>
-                </section>
+                <EquipmentSection data={equipment} />
 
+
+                <RedDivider />
                 {/* 4. PT SECTION (Component riêng bạn đã có) */}
                 <PTSection />
 
+
+                <RedDivider />
                 {/* 5. PRICING SECTION */}
                 <section className="section pricing" id="pricing">
                     <div className="container">
@@ -101,6 +98,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </section>
             </main>
+            <RedDivider />
 
             <Footer />
         </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase'; // Bạn nhớ tạo file config này
 
-export const useFirestore = <T>(collectionName: string, activeOnly: boolean = false) => {
+export const useBannerData = <T>(collectionName: string, activeOnly: boolean = false) => {
     const [data, setData] = useState<T[]>([]);
     const [loading, setLoading] = useState(true);
 

@@ -1,0 +1,101 @@
+/* ════════════════════════════════════════
+   EQUIPMENT CARD
+   Import trong EquipmentCard.tsx
+════════════════════════════════════════ */
+
+.eq-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.eq-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--red);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Ảnh */
+.eq-card__img-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--surface-2);
+}
+
+.eq-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.eq-card:hover .eq-card__img {
+    transform: scale(1.04);
+}
+
+/* Badge trạng thái */
+.eq-card__badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+}
+
+.eq-card__badge--active      { background: #22c55e; }
+.eq-card__badge--maintenance { background: var(--red); }
+
+/* Body */
+.eq-card__body {
+    padding: 1.1rem 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.eq-card__meta {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.4rem;
+}
+
+.eq-card__name {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.9rem;
+    line-height: 1.3;
+}
+
+/* Tags nhóm cơ */
+.eq-card__muscles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: auto;
+}
+
+.eq-card__muscle-tag {
+    padding: 3px 10px;
+    border: 1px solid #c92b22;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;;
+    letter-spacing: 0.04em;
+    color: var(--red);
+    background: rgba(255, 59, 48, 0.1);
+}

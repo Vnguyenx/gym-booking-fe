@@ -82,3 +82,30 @@ export interface Zone {
     floorId: string;
     gymId: string;
 }
+
+export interface Equipment {
+    id?: string;
+
+    name: string;
+    nameVi: string;
+
+    description: string;
+    category: string;
+    subCategory: string;
+
+    floorId: string;
+    gymId: string;
+    zoneId: string;
+
+    imageUrls: string[];
+
+    isActive: boolean;
+    quantity: number;
+
+    muscleGroups: string[];
+
+    tips: string;
+
+    updatedAt: Date;
+
+}

@@ -140,3 +140,6 @@
 /* Active link — set from JS (.nav-active class) */
 .navbar__links a.nav-active { color: var(--text); }
 .navbar__links a.nav-active::after { right: 0; }
+
+/* Active link trong drawer (mobile) */
+.navbar__drawer a.nav-active { color: var(--text); }

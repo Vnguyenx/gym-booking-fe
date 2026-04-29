@@ -28,6 +28,20 @@
     border-color: var(--red);
 }
 
+:root {
+    --navbar-height: 60px;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --navbar-height: 60px;
+    }
+}
+
+.about-detail-page {
+    padding-top: var(--navbar-height);
+}
+
 .detail-banner {
     position: relative;
     overflow: hidden;
@@ -60,14 +74,13 @@
     margin-top: 3rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* Giảm nhẹ gap trên mobile */
+    gap: 2rem;
 }
 
 .floor-block {
     position: relative;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    /* Dùng min-height linh hoạt để không bị cắt chữ trên mobile */
     min-height: 350px;
     display: flex;
     align-items: center;
@@ -75,10 +88,10 @@
     background: #000;
 }
 
-/* Hiệu ứng ảnh nền mờ - GIỮ NGUYÊN 100% */
+/* Hiệu ứng ảnh nền mờ */
 .floor-bg-image {
     position: absolute;
-    inset: 0; /* Cách viết tắt của top/left/right/bottom: 0 */
+    inset: 0;
     background-size: cover;
     background-position: center;
     filter: blur(10px) brightness(0.35);
@@ -96,14 +109,14 @@
 .floor-content {
     position: relative;
     z-index: 2;
-    /* Dùng clamp để padding tự nhỏ lại trên mobile */
     padding: clamp(1.2rem, 5vw, 3rem);
     width: 100%;
+    /* Đảm bảo không vượt khỏi block trên mobile */
+    box-sizing: border-box;
 }
 
 .floor-header {
     display: flex;
-    /* Tự động xuống dòng khi thiếu chỗ trên mobile */
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
@@ -127,10 +140,12 @@
 
 .floor-name-text {
     font-family: var(--ff-display);
-    /* Chữ to trên PC, tự co lại trên Mobile để không vỡ layout */
-    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-size: clamp(1.6rem, 6vw, 3.5rem);
     color: var(--white);
     text-transform: uppercase;
+    /* Tránh chữ dài tràn ra ngoài trên mobile */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .floor-area-badge {
@@ -142,7 +157,9 @@
     font-weight: 700;
     color: var(--white);
     border: 1px solid rgba(255,255,255,0.2);
-    white-space: nowrap; /* Không cho nhảy dòng đơn vị m2 */
+    white-space: nowrap;
+    /* Tự co lại trên màn hình nhỏ */
+    flex-shrink: 0;
 }
 
 .floor-desc-text {
@@ -153,11 +170,11 @@
     margin-bottom: 2.5rem;
 }
 
-/* Zone list dùng hiệu ứng Glassmorphism - GIỮ NGUYÊN ĐỘ MỜ */
+/* Zone list dùng hiệu ứng Glassmorphism */
 .zone-grid-layout {
     display: grid;
-    /* Tối ưu Grid: tự nhảy cột dựa trên chiều rộng màn hình */
-    grid-template-columns: repeat(auto-fill, minmax(clamp(240px, 100%, 280px), 1fr));
+    /* FIX: bỏ clamp lồng nhau gây lỗi, dùng minmax đơn giản và an toàn */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
     gap: 1rem;
 }
 
@@ -169,35 +186,39 @@
     padding: 1.5rem;
     border-radius: 16px;
     transition: all 0.3s ease;
+    /* Tránh overflow text trên mobile */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
-/* Hiệu ứng Hover - GIỮ NGUYÊN */
 .zone-glass-card:hover {
     background: rgba(255, 59, 48, 0.15);
     border-color: var(--red);
     transform: translateY(-5px);
 }
 
-.zone-glass-card h4 { color: var(--white); margin-bottom: 0.5rem; font-size: 1.15rem; }
-.zone-glass-card p { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
+.zone-glass-card h4 { color: var(--white); margin-bottom: 0.5rem; font-size: 1.05rem; }
+.zone-glass-card p  { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
 
-/* Desktop Adjustment (Để gap rộng hơn cho thoáng) */
+/* Desktop Adjustment */
 @media (min-width: 992px) {
-    .floor-container { gap: 3rem; }
-    .zone-grid-layout { gap: 1.5rem; }
+    .floor-container   { gap: 3rem; }
+    .zone-grid-layout  { gap: 1.5rem; }
 }
 
 /* ════════════════════════════════════════
    CÁC PHẦN KHÁC (Amenities, Location)
 ════════════════════════════════════════ */
 .detail-section {
-    padding: 80px 0;
+    /* FIX: padding co lại trên mobile thay vì cứng 80px */
+    padding: clamp(40px, 8vw, 80px) 0;
     border-bottom: 1px solid var(--border);
 }
 
 .sub-title {
     font-family: var(--ff-display);
-    font-size: 2.0rem;
+    /* FIX: clamp để chữ không quá to trên màn nhỏ */
+    font-size: clamp(1.4rem, 5vw, 2rem);
     color: var(--white);
     margin-bottom: 1.5rem;
     text-transform: uppercase;
@@ -205,7 +226,8 @@
 
 .amenities-detail-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* FIX: dùng min() để card không bao giờ vượt quá viewport */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: 1.5rem;
 }
 
@@ -225,6 +247,13 @@
     transform: translateY(-5px);
 }
 
+/* FIX: emoji icon không bị co vặn trên mobile */
+.am-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
 /* Location */
 .location-wrapper {
     display: grid;
@@ -237,11 +266,60 @@
     border: 1px solid var(--border);
 }
 
+/* FIX: map responsive chiều cao trên mobile */
+.map-frame iframe {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 50vw, 400px);
+}
+
 @media (min-width: 992px) {
     .location-wrapper { grid-template-columns: 2fr 1fr; align-items: center; }
 }
 
+/* ════════════════════════════════════════
+   MOBILE OVERRIDES (max-width: 768px)
+════════════════════════════════════════ */
 @media (max-width: 768px) {
-    .floor-name-text { font-size: 2.2rem; }
-    .floor-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    /* Banner */
+    .detail-banner {
+        min-height: 40vh;
+        padding: 5rem 1rem 3rem;
+    }
+
+    /* Nút back — tránh notch/safe-area */
+    .back-home-btn {
+        top: 16px;
+        left: 16px;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+    /* Floor */
+    .floor-block       { min-height: 280px; }
+    .floor-name-text   { font-size: 1.6rem; }
+    .floor-header      { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .floor-area-badge  { align-self: flex-start; }
+    .floor-desc-text   { margin-bottom: 1.5rem; }
+
+    /* Zone cards — 1 cột trên màn rất nhỏ */
+    .zone-grid-layout  { grid-template-columns: 1fr; gap: 0.75rem; }
+    .zone-glass-card   { padding: 1rem 1.2rem; }
+
+    /* Amenities — 1 cột trên màn nhỏ */
+    .amenities-detail-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .am-card { padding: 1.2rem; }
+
+    /* Location */
+    .location-info { text-align: center; }
+    .location-info .btn { width: 100%; justify-content: center; }
+}
+
+/* ════════════════════════════════════════
+   SMALL PHONE (max-width: 400px)
+════════════════════════════════════════ */
+@media (max-width: 400px) {
+    .floor-name-text { font-size: 1.3rem; }
+    .floor-content   { padding: 1rem; }
+    .am-card         { flex-direction: column; gap: 0.5rem; }
 }
