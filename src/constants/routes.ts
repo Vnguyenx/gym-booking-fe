@@ -7,6 +7,7 @@ export const ROUTES = {
     // ── Public routes (không cần đăng nhập) ──
     HOME: '/',                    // Trang chủ
     EQUIPMENT: '/equipment',      // Danh sách máy móc
+    EQUIPMENT_DETAIL: '/equipment-detail/:id',
     EXERCISES: '/exercises',      // Danh sách bài tập
     PT_LIST: '/pts',              // Danh sách huấn luyện viên
     PT_DETAIL: '/pts/:id',        // Chi tiết 1 huấn luyện viên

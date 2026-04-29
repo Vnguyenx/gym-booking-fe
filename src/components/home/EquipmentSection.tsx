@@ -6,15 +6,15 @@ import {ROUTES} from "../../constants/routes";
 import {Link} from "react-router-dom";
 
 interface EquipmentSectionProps {
-    data: Equipment[];
+    equipment: Equipment[];
 }
 
-const EquipmentSection: React.FC<EquipmentSectionProps> = ({ data }) => {
+const EquipmentSection: React.FC<EquipmentSectionProps> = ({ equipment }) => {
 
     // Lấy ngẫu nhiên 3 thiết bị, useMemo tránh re-shuffle mỗi lần render
     const randomEquipments = useMemo(() => {
-        return [...data].sort(() => 0.5 - Math.random()).slice(0, 3);
-    }, [data]);
+        return [...equipment].sort(() => 0.5 - Math.random()).slice(0, 3);
+    }, [equipment]);
 
     return (
         <section className="equipment-section" id="equipment">
@@ -51,7 +51,7 @@ const EquipmentSection: React.FC<EquipmentSectionProps> = ({ data }) => {
                 {/* CTA cuối — hiện trên mọi màn hình */}
                 <div className="equipment-footer">
                     <a href="/equipment" className="equipment-cta">
-                        Xem toàn bộ {data.length}+ thiết bị
+                        Xem toàn bộ {equipment.length}+ thiết bị
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>

@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useGymData } from '../../hooks/useGymData';
-import {ROUTES} from "../../constants/routes";
+import { GymInfo } from '../../types/models';
+import { ROUTES } from "../../constants/routes";
 import '../../styles/home/about-section.css';
 
-const AboutSection: React.FC = () => {
-    const { gymInfo, loading } = useGymData();
+interface AboutSectionProps {
+    gymInfo: GymInfo | null;
+    loading: boolean;
+}
 
+const AboutSection: React.FC<AboutSectionProps> = ({ gymInfo, loading }) => {
     if (loading) return <div className="about-skeleton">Đang tải giới thiệu...</div>;
 
     return (

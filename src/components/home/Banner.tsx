@@ -1,18 +1,14 @@
 import React from 'react';
-import { useBannerData } from '../../hooks/useBannerData';
 import { useSlideshow } from '../../hooks/useSlideshow';
 import { Banner } from '../../types/models';
 import '../../styles/home/hero.css';
 
+interface BannerSectionProps {
+    banners: Banner[];
+    loading: boolean;
+}
 
-const BannerSection: React.FC = () => {
-    const { data: allBanners, loading } = useBannerData<Banner>('banners', true);
-
-    // Lọc isActive + sắp xếp theo order
-    const banners = allBanners
-        .filter(b => b.isActive)
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-
+const BannerSection: React.FC<BannerSectionProps> = ({ banners, loading }) => {
     // Toàn bộ logic slideshow nằm trong hook
     const { currentIndex, goToSlide, handlers } = useSlideshow({
         total:   banners.length,

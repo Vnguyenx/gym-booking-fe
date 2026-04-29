@@ -20,6 +20,7 @@ import EquipmentPage from "../pages/public/EquipmentPage";
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard from '../pages/pt/PtDashboard';
 import ProfilePage from '../pages/customer/ProfilePage';
+import EquipmentDetailPage from "../pages/public/EquipmentDetailPage";
 
 
 
@@ -35,6 +36,7 @@ const AppRouter = () => {
                 <Route path={ROUTES.RESET} element={<ForgotPasswordPage />} />
                 <Route path={ROUTES.ABOUT_DETAIL} element={<AboutDetailPage />} />
                 <Route path={ROUTES.EQUIPMENT} element={<EquipmentPage />} />
+                <Route path={ROUTES.EQUIPMENT_DETAIL} element={<EquipmentDetailPage />} />
 
                 {/* Dashboard routes */}
                 <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />

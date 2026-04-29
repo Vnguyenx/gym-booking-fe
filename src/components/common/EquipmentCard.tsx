@@ -1,6 +1,8 @@
 import React from 'react';
 import '../../styles/home/equipment-card.css';
 import { Equipment } from '../../types/models';
+import { useNavigate } from 'react-router-dom';
+
 
 interface EquipmentCardProps {
     item: Equipment;
@@ -8,15 +10,21 @@ interface EquipmentCardProps {
 
 const EquipmentCard: React.FC<EquipmentCardProps> = ({ item }) => {
     const isActive = item.isActive;
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/equipment-detail/${item.id}`, { state: { equipment: item } });
+    };
 
     return (
-        <div className="eq-card">
+        <div className="eq-card"  onClick={handleClick} style={{ cursor: 'pointer' }}>
 
             {/* Ảnh */}
             <div className="eq-card__img-wrap">
                 <img
                     src={item.imageUrls[0]}
                     alt={item.nameVi}
+                    title={item.id}
                     className="eq-card__img"
                     loading="lazy"
                 />
