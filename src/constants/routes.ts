@@ -12,6 +12,7 @@ export const ROUTES = {
     PT_LIST: '/pts',              // Danh sách huấn luyện viên
     PT_DETAIL: '/pt-detail/:id',        // Chi tiết 1 huấn luyện viên
     ABOUT_DETAIL: '/about-detail', // Chi tiết Thông tin phòng gym
+    PRICING: '/pricing',
 
     // ── Auth routes (đăng nhập / đăng ký/ reset) ──
     LOGIN: '/login',

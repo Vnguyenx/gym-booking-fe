@@ -5,11 +5,13 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
+import membershipReducer from './membershipSlice';
 
 export const store = configureStore({
     reducer: {
         // auth: quản lý trạng thái đăng nhập (user hiện tại, loading, lỗi)
         auth: authReducer,
+        memberships: membershipReducer,
     },
 });
 

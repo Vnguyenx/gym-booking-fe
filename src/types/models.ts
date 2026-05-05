@@ -143,3 +143,21 @@ export interface Equipment {
     updatedAt: Date;
 
 }
+
+export interface Membership {
+    id?: string;
+    /** Tên gói tập, ví dụ: "Gói tập 3 tháng" */
+    name: string;
+    /** Số tháng của gói */
+    durationMonths: number;
+    /** Giá gốc (đồng) */
+    price: number;
+    /** Giá khi đăng ký online (đồng) */
+    priceOnline: number;
+    /** Ghi chú ngắn, ví dụ: "330K/tháng" */
+    note: string;
+    /** Có phải gói phổ biến nhất không */
+    isPopular?: boolean;
+    /** Danh sách quyền lợi / tính năng nổi bật */
+    promotions: string[];
+}

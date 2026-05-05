@@ -1,0 +1,192 @@
+/* ============================================================
+   PricingCard.css
+   src/styles/common/PricingCard.css
+
+   Style cho một thẻ gói tập đơn lẻ.
+   Mobile-first: base styles cho mobile, scale lên tablet/desktop.
+   ============================================================ */
+
+/* ---- CSS Variables (kế thừa từ theme chung nếu có) ---- */
+:root {
+    --card-bg: #1a1a1a;
+    --card-bg-popular: #1e1e1e;
+    --card-border: #2a2a2a;
+    --card-border-popular: #ef4444;
+    --color-red: #ef4444;
+    --color-red-hover: #dc2626;
+    --color-white: #ffffff;
+    --color-gray-light: #a1a1aa;
+    --color-gray-muted: #71717a;
+    --color-green: #22c55e;
+    --radius-card: 12px;
+    --font-heading: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* ---- Card wrapper ---- */
+.pricing-card {
+    position: relative;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    padding: 24px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* dùng margin từng thành phần để kiểm soát tốt hơn */
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hover nhẹ để cảm giác interactive */
+.pricing-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Gói nổi bật: viền đỏ */
+.pricing-card--popular {
+    border-color: var(--card-border-popular);
+    background-color: var(--card-bg-popular);
+}
+
+/* ---- Badge "PHỔ BIẾN NHẤT" ---- */
+.pricing-card__badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-red);
+    color: var(--color-white);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+/* ---- Nhãn thời hạn: "3 THÁNG" ---- */
+.pricing-card__duration {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-gray-light);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+
+/* ---- Hàng giá ---- */
+.pricing-card__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.pricing-card__price {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--color-white);
+    line-height: 1;
+}
+
+/* Giá online màu xanh lá nhỏ hơn */
+.pricing-card__price-online {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-green);
+}
+
+/* ---- Ghi chú ngắn ---- */
+.pricing-card__note {
+    font-size: 13px;
+    color: var(--color-gray-muted);
+    margin: 0 0 16px;
+}
+
+.pricing-card__saving {
+    color: var(--color-gray-light);
+}
+
+/* ---- Divider ---- */
+.pricing-card__divider {
+    border: none;
+    border-top: 1px solid var(--card-border);
+    margin: 0 0 16px;
+}
+
+/* ---- Danh sách quyền lợi ---- */
+.pricing-card__promotions {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1; /* đẩy nút xuống dưới cùng */
+}
+
+.pricing-card__promotion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--color-gray-light);
+    line-height: 1.4;
+}
+
+.pricing-card__check {
+    color: var(--color-green);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ---- Nút CTA ---- */
+.pricing-card__btn {
+    width: 100%;
+    padding: 14px 0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    border: none;
+    letter-spacing: 0.02em;
+}
+
+/* Nút nổi bật (gói popular) */
+.pricing-card__btn--primary {
+    background-color: var(--color-red);
+    color: var(--color-white);
+}
+
+.pricing-card__btn--primary:hover {
+    background-color: var(--color-red-hover);
+}
+
+/* Nút outline cho các gói thường */
+.pricing-card__btn--outline {
+    background-color: transparent;
+    color: var(--color-white);
+    border: 1.5px solid #3f3f46;
+}
+
+.pricing-card__btn--outline:hover {
+    border-color: #71717a;
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================================
+   Responsive: Tablet trở lên
+   ============================================================ */
+@media (min-width: 768px) {
+    .pricing-card {
+        padding: 28px 24px 32px;
+    }
+
+    .pricing-card__price {
+        font-size: 48px;
+    }
+}

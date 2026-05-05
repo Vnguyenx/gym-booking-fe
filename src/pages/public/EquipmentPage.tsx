@@ -5,10 +5,10 @@ import useEquipmentData from '../../hooks/useEquipmentData';
 import { useEquipmentFilter } from '../../hooks/useEquipmentFilter';
 
 // Import các component mới tách
-import EquipmentBanner from '../../components/home/equipmentPageComponent/EquipmentBanner';
-import EquipmentFilterBar from '../../components/home/equipmentPageComponent/EquipmentFilterBar';
-import EquipmentGrid from '../../components/home/equipmentPageComponent/EquipmentGrid';
-import EquipmentPagination from '../../components/home/equipmentPageComponent/EquipmentPagination';
+import EquipmentBanner from '../../components/home/equipment/EquipmentBanner';
+import EquipmentFilterBar from '../../components/home/equipment/EquipmentFilterBar';
+import EquipmentGrid from '../../components/home/equipment/EquipmentGrid';
+import EquipmentPagination from '../../components/home/equipment/EquipmentPagination';
 
 import '../../styles/pages/equipment-page.css';
 
