@@ -10,12 +10,14 @@ import useEquipmentData from "../../hooks/useEquipmentData";
 import { useGymData } from "../../hooks/useGymData";
 import { useBannerData } from "../../hooks/useBannerData";
 import {Banner, Equipment} from "../../types/models";
+import { usePTInfoData } from "../../hooks/usePTInfoData";
 
 
 const HomePage: React.FC = () => {
-    const { equipment, loading: equipmentLoading, error } = useEquipmentData();
+    const { equipment, loading: equipmentLoading, error: equipmentError } = useEquipmentData();
     const { gymInfo, loading: gymLoading } = useGymData();
     const { data: allBanners, loading: bannerLoading } = useBannerData<Banner>('banners', true);
+    const { ptInfo, loading: ptLoading, error: ptError } = usePTInfoData();
 
     // Lọc isActive + sắp xếp theo order
     const banners = allBanners
@@ -46,8 +48,9 @@ const HomePage: React.FC = () => {
         }} />
     );
 
-    if (equipmentLoading || gymLoading || bannerLoading) return <div>Đang tải...</div>;
-    if (error) return <div>{error}</div>;
+
+    if (equipmentLoading || gymLoading || bannerLoading || ptLoading) return <div>Đang tải...</div>;
+    if (equipmentError || ptError) return <div>{equipmentError || ptError}</div>;
 
     return (
         <div className="home-page">
@@ -67,7 +70,7 @@ const HomePage: React.FC = () => {
 
                 <RedDivider />
                 {/* 4. PT SECTION (Component riêng bạn đã có) */}
-                <PTSection />
+                <PTSection ptInfo={ptInfo} />
 
                 <RedDivider />
                 {/* 5. PRICING SECTION */}
@@ -103,6 +106,7 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
                 </section>
+
             </main>
             <RedDivider />
 

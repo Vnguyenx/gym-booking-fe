@@ -10,24 +10,58 @@ export interface Banner {
     title: string;
 }
 
+// Thêm interface cho object bên trong mảng Benefits của PTInfo
+export interface Benefit {
+    title: string;
+    content: string;
+}
+
+// Thêm collection pt_info
+export interface PTInfo {
+    id?: string;
+    Benefits: Benefit[];
+    description: string;
+    img: string;
+    updateAt: Date;
+}
+
+// Cập nhật lại collection pts theo đúng database
 export interface PT {
     id?: string;
-    fullname: string;
-    specialty: string;
-    imageUrl: string;
-    isActive: boolean;
-    order: number;
+    avatar: string;
+    bio: string;
+    experience: string;
+    fullName: string;
+    gender: 'Nam' | 'Nữ' | string;
+    isAvailable: boolean;
+    specialty: string[]; // Trong DB đang là mảng string
+    updateAt: Date;
 }
 
 // User này mở rộng từ User trong authSlice của bạn
 export interface UserProfile {
+    id?: string;
     uid: string;
     email: string;
     displayName: string;
     role: Role;
-    phone?: string;
-    avatarUrl?: string;
-    createdAt?: any;
+    phone: string;
+    avatarUrl: string;
+    createdAt: Date;
+}
+
+export interface PTApplication {
+    id?: string;
+    avatarUrl: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    gender: string;
+    specialty: string[];
+    experience: string;
+    bio: string;
+    status: 'pending' | 'approved' | 'rejected';
+    createdAt: any;
 }
 
 

@@ -10,7 +10,7 @@ export const ROUTES = {
     EQUIPMENT_DETAIL: '/equipment-detail/:id',
     EXERCISES: '/exercises',      // Danh sách bài tập
     PT_LIST: '/pts',              // Danh sách huấn luyện viên
-    PT_DETAIL: '/pts/:id',        // Chi tiết 1 huấn luyện viên
+    PT_DETAIL: '/pt-detail/:id',        // Chi tiết 1 huấn luyện viên
     ABOUT_DETAIL: '/about-detail', // Chi tiết Thông tin phòng gym
 
     // ── Auth routes (đăng nhập / đăng ký/ reset) ──

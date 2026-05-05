@@ -1,0 +1,239 @@
+/* ════════════════════════════════════════
+   PT DETAIL PAGE  —  Mobile-first
+════════════════════════════════════════ */
+
+/* ── Loading / Not Found ── */
+.pt-detail__loading-body,
+.pt-detail__not-found {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--muted, #888);
+}
+
+.pt-detail__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: pt-spin 0.7s linear infinite;
+}
+
+@keyframes pt-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Page wrapper ── */
+.pt-detail-page {
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--white);
+    padding-top: var(--navbar-height);
+}
+
+/* ── Main Layout ── */
+.pt-detail__main {
+    padding-top: 1.5rem;
+    padding-bottom: 4rem;
+}
+
+.pt-detail__breadcrumb {
+    margin-bottom: 1.5rem;
+}
+
+.pt-detail__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.pt-detail__back-btn:hover {
+    color: var(--red);
+}
+
+.pt-detail__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+/* ── Left: Avatar ── */
+.pt-detail__avatar-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    aspect-ratio: 3/4; /* Tỉ lệ chuẩn cho ảnh chân dung */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.pt-detail__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pt-detail__badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.badge--online { background: #22c55e; }
+.badge--busy { background: #6b7280; }
+
+/* ── Right: Info ── */
+.pt-detail__right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pt-detail__header {
+    margin-bottom: 0.5rem;
+}
+
+.pt-detail__gender {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.pt-detail__name {
+    font-family: var(--ff-display);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.pt-detail__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: var(--white);
+    background: var(--surface);
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.pt-detail__divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0.5rem 0;
+}
+
+/* ── Blocks (Specialty, Bio) ── */
+.pt-detail__block-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.pt-detail__specialties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pt-detail__specialty-tag {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: #e5e5e5;
+}
+
+.pt-detail__bio {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    white-space: pre-line; /* Giữ nguyên khoảng sút dòng nếu data có /n */
+}
+
+/* ── Action ── */
+.pt-detail__action {
+    margin-top: 1rem;
+}
+
+.pt-detail__cta {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+}
+
+.pt-detail__cta:disabled {
+    background: var(--surface-2);
+    color: var(--muted);
+    cursor: not-allowed;
+    border: 1px solid var(--border);
+}
+
+/* ════════════════════════
+   TABLET — ≥ 640px
+════════════════════════ */
+@media (min-width: 640px) {
+    .pt-detail__main {
+        padding-top: 2rem;
+    }
+
+    .pt-detail__cta {
+        width: auto;
+        min-width: 250px;
+    }
+}
+
+/* ════════════════════════
+   DESKTOP — ≥ 900px
+════════════════════════ */
+@media (min-width: 900px) {
+    .pt-detail__main {
+        padding-top: 3rem;
+        padding-bottom: 6rem;
+    }
+
+    .pt-detail__layout {
+        /* Chia 2 cột: Ảnh chiếm 4 phần, Info chiếm 6 phần */
+        grid-template-columns: 4fr 6fr;
+        gap: 4rem;
+        align-items: start;
+    }
+
+    .pt-detail__avatar-wrap {
+        position: sticky;
+        top: calc(var(--navbar-height) + 2rem);
+    }
+}

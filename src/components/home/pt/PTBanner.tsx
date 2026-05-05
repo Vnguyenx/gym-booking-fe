@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {ROUTES} from "../../../constants/routes";
+import { ROUTES } from '../../../constants/routes';
 
-const EquipmentBanner: React.FC = () => {
+const PTBanner: React.FC = () => {
     return (
-        <section className="eq-banner">
+        <section className="pt-banner">
             <div className="container">
                 <Link to={ROUTES.HOME} className="back-home">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -13,12 +13,12 @@ const EquipmentBanner: React.FC = () => {
                     Quay lại trang chủ
                 </Link>
                 <br />
-                <p className="eq-banner__tag">Cơ sở vật chất</p>
-                <h1 className="eq-banner__title">DỤNG CỤ & MÁY MÓC</h1>
-                <p className="eq-banner__desc">60+ thiết bị hiện đại, bảo dưỡng định kỳ — phục vụ mọi mục tiêu tập luyện.</p>
+                <p className="pt-banner__tag">CHUYÊN GIA</p>
+                <h1 className="pt-banner__title">ĐỘI NGŨ HUẤN LUYỆN VIÊN</h1>
+                <p className="pt-banner__desc">Đồng hành cùng bạn trên con đường chinh phục vóc dáng với giáo án chuẩn y khoa và thực đơn cá nhân hóa.</p>
             </div>
         </section>
     );
 };
 
-export default EquipmentBanner;
+export default PTBanner;

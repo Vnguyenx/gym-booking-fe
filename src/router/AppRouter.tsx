@@ -15,12 +15,17 @@ import RegisterPage from '../pages/auth/RegisterPage';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import AboutDetailPage from '../pages/public/AboutDetail';
 import EquipmentPage from "../pages/public/EquipmentPage";
+import PTPage from '../pages/public/PTPage';
+import PTDetailPage from '../pages/public/PTDetailPage';
+import PTRegisterPage from "../pages/public/PTRegisterPage";
+
 
 // Import Dashboard Pages (Bạn tạo các file này trong thư mục tương ứng)
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard from '../pages/pt/PtDashboard';
 import ProfilePage from '../pages/customer/ProfilePage';
 import EquipmentDetailPage from "../pages/public/EquipmentDetailPage";
+
 
 
 
@@ -37,6 +42,9 @@ const AppRouter = () => {
                 <Route path={ROUTES.ABOUT_DETAIL} element={<AboutDetailPage />} />
                 <Route path={ROUTES.EQUIPMENT} element={<EquipmentPage />} />
                 <Route path={ROUTES.EQUIPMENT_DETAIL} element={<EquipmentDetailPage />} />
+                <Route path={ROUTES.PT_LIST} element={<PTPage />} />
+                <Route path={ROUTES.PT_DETAIL} element={<PTDetailPage />} />
+                <Route path={ROUTES.PT_REGISTER} element={<PTRegisterPage />} />
 
                 {/* Dashboard routes */}
                 <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
