@@ -1,10 +1,18 @@
+// ============================================================
+// Page: EquipmentPage
+// src/pages/home/EquipmentPage.tsx
+//
+// useEquipmentData giờ đọc từ Redux (signature không đổi).
+// useEquipmentFilter giữ nguyên — là UI state thuần.
+// ============================================================
+
 import React from 'react';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import useEquipmentData from '../../hooks/useEquipmentData';
 import { useEquipmentFilter } from '../../hooks/useEquipmentFilter';
 
-// Import các component mới tách
+// Import các component tách
 import EquipmentBanner from '../../components/home/equipment/EquipmentBanner';
 import EquipmentFilterBar from '../../components/home/equipment/EquipmentFilterBar';
 import EquipmentGrid from '../../components/home/equipment/EquipmentGrid';
@@ -13,7 +21,9 @@ import EquipmentPagination from '../../components/home/equipment/EquipmentPagina
 import '../../styles/pages/equipment-page.css';
 
 const EquipmentPage: React.FC = () => {
+    // Lấy data từ Redux (fetch nếu chưa có, dùng cache nếu đã có)
     const { equipment, loading } = useEquipmentData();
+
     const {
         searchTerm, setSearchTerm,
         categories, selectedCategory, setSelectedCategory,

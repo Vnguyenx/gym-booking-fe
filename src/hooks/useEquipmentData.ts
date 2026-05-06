@@ -1,6 +1,15 @@
-import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy, Timestamp } from 'firebase/firestore';
-import { db } from '../config/firebase';
+// ============================================================
+// Hook: useEquipmentData
+//
+// Thay thế hook cũ (Firestore trực tiếp) bằng Redux.
+// - Dispatch fetchEquipment nếu chưa có data trong store (fetched = false).
+// - Trả về { equipment, loading, error } y hệt interface cũ → không breaking change.
+// ============================================================
+
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { fetchEquipment } from '../store/equipmentSlice';
 import { Equipment } from '../types/models';
 
 interface UseEquipmentDataReturn {
@@ -10,59 +19,17 @@ interface UseEquipmentDataReturn {
 }
 
 const useEquipmentData = (gymId: string = 'main-gym'): UseEquipmentDataReturn => {
-    const [equipment, setEquipment] = useState<Equipment[]>([]);
-    const [loading, setLoading]     = useState<boolean>(true);
-    const [error, setError]         = useState<string | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const { equipment, loading, error, fetched } = useSelector(
+        (state: RootState) => state.equipment
+    );
 
     useEffect(() => {
-        const fetchEquipment = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                const q = query(
-                    collection(db, 'equipment'),
-                    where('gymId', '==', gymId),
-                    orderBy('updatedAt', 'desc')
-                );
-
-                const snapshot = await getDocs(q);
-
-                const data: Equipment[] = snapshot.docs.map(doc => {
-                    const raw = doc.data();
-                    return {
-                        id:           doc.id,
-                        category:     raw.category     ?? '',
-                        subCategory:  raw.subCategory  ?? '',
-                        name:         raw.name         ?? '',
-                        nameVi:       raw.nameVi       ?? '',
-                        description:  raw.description  ?? '',
-                        tips:         raw.tips         ?? '',
-                        floorId:      raw.floorId      ?? '',
-                        gymId:        raw.gymId        ?? '',
-                        zoneId:       raw.zoneId       ?? '',
-                        imageUrls:    raw.imageUrls    ?? [],
-                        isActive:     raw.isActive     ?? true,
-                        quantity:     raw.quantity     ?? 0,
-                        muscleGroups: raw.muscleGroups ?? [],
-                        // Convert Firestore Timestamp → JS Date
-                        updatedAt: raw.updatedAt instanceof Timestamp
-                            ? raw.updatedAt.toDate()
-                            : new Date(raw.updatedAt ?? Date.now()),
-                    } satisfies Equipment;
-                });
-
-                setEquipment(data);
-            } catch (err) {
-                console.error('[useEquipmentData]', err);
-                setError('Không thể tải dữ liệu thiết bị. Vui lòng thử lại.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchEquipment();
-    }, [gymId]);
+        // Chỉ fetch nếu chưa có data, tránh gọi Firestore lại khi navigate
+        if (!fetched) {
+            dispatch(fetchEquipment(gymId));
+        }
+    }, [gymId, fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return { equipment, loading, error };
 };

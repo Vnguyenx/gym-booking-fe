@@ -5,7 +5,7 @@ import PTBanner from '../../components/home/pt/PTBanner';
 import PTFilterBar from '../../components/home/pt/PTFilterBar';
 import PTGrid from '../../components/home/pt/PTGrid';
 import PTPagination from '../../components/home/pt/PTPagination';
-import { usePTData } from '../../hooks/usePTData'; // Hook lấy data từ Firestore bảng 'pts'
+import usePTData  from '../../hooks/usePTData'; // Hook lấy data từ Firestore bảng 'pts'
 import { usePTFilter } from '../../hooks/usePTFilter';
 import '../../styles/pages/pt-page.css';
 

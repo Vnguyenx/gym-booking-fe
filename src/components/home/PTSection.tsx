@@ -1,18 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
-import { PTInfo } from '../../types/models'; // Import interface
-import '../../styles/home/pt-section.css'; // Import file CSS mới
+import usePTInfoData from '../../hooks/usePTInfoData';
+import '../../styles/home/pt-section.css';
 
-// Khai báo kiểu dữ liệu cho Props truyền từ HomePage xuống
-interface PTSectionProps {
-    ptInfo: PTInfo | null;
-}
-
-const PTSection: React.FC<PTSectionProps> = ({ ptInfo }) => {
+const PTSection: React.FC = () => {
     const navigate = useNavigate();
+    const { ptInfo } = usePTInfoData();
 
-    // Nếu không có dữ liệu thì không render gì cả (tránh lỗi crash app)
     if (!ptInfo) return null;
 
     // Hàm phụ trợ để render Icon tương ứng theo thứ tự (do database không lưu icon)

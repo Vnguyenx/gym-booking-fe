@@ -6,12 +6,22 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import membershipReducer from './membershipSlice';
+import bannerReducer from './bannerSlice';
+import equipmentReducer from './equipmentSlice';
+import gymReducer from './gymSlice';
+import ptReducer from './ptSlice';
+import ptInfoReducer from './ptInfoSlice';
 
 export const store = configureStore({
     reducer: {
         // auth: quản lý trạng thái đăng nhập (user hiện tại, loading, lỗi)
         auth: authReducer,
         memberships: membershipReducer,
+        banner: bannerReducer,
+        equipment: equipmentReducer,
+        gym: gymReducer,
+        pt: ptReducer,
+        ptInfo: ptInfoReducer,
     },
 });
 

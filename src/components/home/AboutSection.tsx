@@ -1,15 +1,20 @@
+// ============================================================
+// Component: AboutSection
+// src/components/home/AboutSection.tsx
+//
+// Không nhận props gymInfo/loading nữa — đọc trực tiếp từ Redux.
+// ============================================================
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GymInfo } from '../../types/models';
-import { ROUTES } from "../../constants/routes";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { ROUTES } from '../../constants/routes';
 import '../../styles/home/about-section.css';
 
-interface AboutSectionProps {
-    gymInfo: GymInfo | null;
-    loading: boolean;
-}
+const AboutSection: React.FC = () => {
+    const { gymInfo, loading } = useSelector((state: RootState) => state.gym);
 
-const AboutSection: React.FC<AboutSectionProps> = ({ gymInfo, loading }) => {
     if (loading) return <div className="about-skeleton">Đang tải giới thiệu...</div>;
 
     return (

@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../config/firebase'; // Bạn nhớ tạo file config này
+// ============================================================
+// Hook: useBannerData
+// src/hooks/useBannerData.ts
+//
+// Thay thế hook cũ (Firestore trực tiếp) bằng Redux.
+// - Subscribe Firestore realtime → dispatch vào store.
+// - Trả về data & loading từ Redux state.
+// ============================================================
 
-export const useBannerData = <T>(collectionName: string, activeOnly: boolean = false) => {
-    const [data, setData] = useState<T[]>([]);
-    const [loading, setLoading] = useState(true);
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/index';
+import { subscribeBanners } from '../store/bannerSlice';
+import { Banner } from '../types/models';
+
+export const useBannerData = <T = Banner>(
+    _collectionName: string, // giữ signature cũ để không breaking change
+    activeOnly: boolean = false
+) => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    const { data, loading } = useSelector((state: RootState) => state.banner);
 
     useEffect(() => {
-        let q = query(collection(db, collectionName), orderBy('order', 'asc'));
-
-        if (activeOnly) {
-            q = query(collection(db, collectionName),
-                where('isActive', '==', true),
-                orderBy('order', 'asc'));
-        }
-
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const result = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })) as T[];
-            setData(result);
-            setLoading(false);
-        });
-
+        // subscribeBanners trả về hàm unsubscribe
+        const unsubscribe = dispatch(subscribeBanners(activeOnly));
         return () => unsubscribe();
-    }, [collectionName, activeOnly]);
+    }, [activeOnly]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return { data, loading };
+    return { data: data as T[], loading };
 };

@@ -1,15 +1,21 @@
+// ============================================================
+// Component: EquipmentSection
+// src/components/home/EquipmentSection.tsx
+//
+// Không nhận props equipment nữa — đọc trực tiếp từ Redux.
+// ============================================================
+
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import EquipmentCard from '../common/EquipmentCard';
-import { Equipment } from '../../types/models';
+import { RootState } from '../../store';
 import '../../styles/home/equipment-section.css';
-import {ROUTES} from "../../constants/routes";
-import {Link} from "react-router-dom";
+import { ROUTES } from '../../constants/routes';
+import { Link } from 'react-router-dom';
 
-interface EquipmentSectionProps {
-    equipment: Equipment[];
-}
-
-const EquipmentSection: React.FC<EquipmentSectionProps> = ({ equipment }) => {
+const EquipmentSection: React.FC = () => {
+    // Đọc từ Redux store
+    const { equipment } = useSelector((state: RootState) => state.equipment);
 
     // Lấy ngẫu nhiên 3 thiết bị, useMemo tránh re-shuffle mỗi lần render
     const randomEquipments = useMemo(() => {

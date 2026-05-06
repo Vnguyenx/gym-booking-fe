@@ -1,8 +1,23 @@
+// ============================================================
+// Page: EquipmentDetailPage
+// src/pages/home/EquipmentDetailPage.tsx
+//
+// Ưu tiên đọc từ Redux store (equipment đã được fetch ở EquipmentPage/HomePage).
+// Fallback theo thứ tự:
+//   1. location.state (navigate với state)
+//   2. Redux store (find by id)
+//   3. Fetch Firestore trực tiếp (trường hợp user vào thẳng URL)
+// UI/class/thẻ HTML giữ nguyên hoàn toàn.
+// ============================================================
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
+import { useSelector, useDispatch } from 'react-redux';
 import { db } from '../../config/firebase';
 import { Equipment } from '../../types/models';
+import { RootState, AppDispatch } from '../../store';
+import { fetchEquipment } from '../../store/equipmentSlice';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import '../../styles/home/equipment-detail.css';
@@ -11,33 +26,64 @@ const EquipmentDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const [item, setItem] = useState<Equipment | null>(
-        (location.state as { equipment?: Equipment })?.equipment ?? null
+    // ── Đọc từ Redux store ──
+    const { equipment: allEquipment, fetched } = useSelector(
+        (state: RootState) => state.equipment
     );
-    const [loading, setLoading] = useState(!item);
+
+    // Ưu tiên 1: location.state (navigate từ card)
+    const stateItem = (location.state as { equipment?: Equipment })?.equipment ?? null;
+
+    // Ưu tiên 2: tìm trong Redux store
+    const storeItem = id ? allEquipment.find((e) => e.id === id) ?? null : null;
+
+    const [item, setItem] = useState<Equipment | null>(stateItem ?? storeItem);
+    const [loading, setLoading] = useState<boolean>(!item);
     const [activeImg, setActiveImg] = useState(0);
 
     useEffect(() => {
+        // Nếu đã có item từ state hoặc store thì không cần fetch thêm
         if (item) return;
         if (!id) return;
 
-        const fetch = async () => {
-            setLoading(true);
-            try {
-                const snap = await getDoc(doc(db, 'equipment', id));
-                if (snap.exists()) {
-                    setItem({ id: snap.id, ...snap.data() } as Equipment);
+        // Ưu tiên 3a: nếu store chưa fetch, dispatch để load toàn bộ
+        if (!fetched) {
+            dispatch(fetchEquipment('main-gym')).then((action) => {
+                if (fetchEquipment.fulfilled.match(action)) {
+                    const found = action.payload.find((e) => e.id === id) ?? null;
+                    if (found) {
+                        setItem(found);
+                        setLoading(false);
+                        return;
+                    }
                 }
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetch();
-    }, [id, item]);
+                // Ưu tiên 3b: fallback fetch doc đơn lẻ từ Firestore
+                fetchSingleDoc();
+            });
+        } else {
+            // Store đã fetch nhưng không tìm thấy id → fetch doc đơn lẻ
+            fetchSingleDoc();
+        }
+    }, [id, item, fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const fetchSingleDoc = async () => {
+        if (!id) return;
+        setLoading(true);
+        try {
+            const snap = await getDoc(doc(db, 'equipment', id));
+            if (snap.exists()) {
+                setItem({ id: snap.id, ...snap.data() } as Equipment);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ── Loading ──
     if (loading) return (
         <div className="eq-detail__loading">
             <Navbar />
@@ -49,6 +95,7 @@ const EquipmentDetailPage: React.FC = () => {
         </div>
     );
 
+    // ── Not found ──
     if (!item) return (
         <div>
             <Navbar />
@@ -71,7 +118,6 @@ const EquipmentDetailPage: React.FC = () => {
             <Navbar />
 
             <main className="eq-detail__main">
-
 
                 <div className="eq-detail__breadcrumb container">
 
@@ -147,7 +193,6 @@ const EquipmentDetailPage: React.FC = () => {
 
                     {/* ── CỘT PHẢI: Info ── */}
                     <div className="eq-detail__info">
-
 
                         {/* Category + SubCategory */}
                         <div className="eq-detail__cats">

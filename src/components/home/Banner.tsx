@@ -1,14 +1,26 @@
+// ============================================================
+// Component: BannerSection
+// src/components/home/Banner.tsx
+//
+// Không nhận props banners/loading nữa — đọc trực tiếp từ Redux.
+// UI/tên class/thẻ HTML giữ nguyên hoàn toàn.
+// ============================================================
+
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useSlideshow } from '../../hooks/useSlideshow';
-import { Banner } from '../../types/models';
+import { RootState } from '../../store'; // điều chỉnh đường dẫn theo project
 import '../../styles/home/hero.css';
 
-interface BannerSectionProps {
-    banners: Banner[];
-    loading: boolean;
-}
+const BannerSection: React.FC = () => {
+    // Lấy dữ liệu từ Redux store
+    const { data: allBanners, loading } = useSelector((state: RootState) => state.banner);
 
-const BannerSection: React.FC<BannerSectionProps> = ({ banners, loading }) => {
+    // Lọc + sắp xếp (giống logic cũ trong HomePage)
+    const banners = allBanners
+        .filter((b) => b.isActive)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
     // Toàn bộ logic slideshow nằm trong hook
     const { currentIndex, goToSlide, handlers } = useSlideshow({
         total:   banners.length,

@@ -1,34 +1,26 @@
-import { useState, useEffect } from 'react';
-import { db } from '../config/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+// Mirrors useEquipmentData — đọc từ Redux store, không fetch lại nếu đã có data
+
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { fetchPTs } from '../store/ptSlice';
 import { PT } from '../types/models';
 
-export const usePTData = () => {
-    const [pts, setPts] = useState<PT[]>([]);
-    const [loading, setLoading] = useState(true);
+interface UsePTDataReturn {
+    pts: PT[];
+    loading: boolean;
+    error: string | null;
+}
+
+const usePTData = (): UsePTDataReturn => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { pts, loading, error, fetched } = useSelector((state: RootState) => state.pt);
 
     useEffect(() => {
-        const fetchPTs = async () => {
-            try {
-                setLoading(true);
-                // Trỏ thẳng vào collection 'pts' - Nơi chứa hồ sơ chuẩn của PT
-                const querySnapshot = await getDocs(collection(db, 'pts'));
+        if (!fetched) dispatch(fetchPTs());
+    }, [fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
-                const ptsData: PT[] = [];
-                querySnapshot.forEach((doc) => {
-                    ptsData.push({ id: doc.id, ...doc.data() } as PT);
-                });
-
-                setPts(ptsData);
-            } catch (error) {
-                console.error("Lỗi khi tải danh sách PT từ bảng pts:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPTs();
-    }, []);
-
-    return { pts, loading };
+    return { pts, loading, error };
 };
+
+export default usePTData;

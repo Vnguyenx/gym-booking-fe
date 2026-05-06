@@ -1,45 +1,29 @@
-import { useState, useEffect } from 'react';
-import { db } from '../config/firebase';
-import { doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { GymInfo, Floor, Zone } from '../types/models';
+// ============================================================
+// Hook: useGymData
+// src/hooks/useGymData.ts
+//
+// Thay thế hook cũ (Firestore trực tiếp) bằng Redux.
+// Signature trả về giữ nguyên { gymInfo, floors, zones, loading }
+// → không breaking change với code đang dùng hook này.
+// ============================================================
+
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { fetchGymData } from '../store/gymSlice';
 
 export const useGymData = () => {
-    const [loading, setLoading] = useState(true);
-    const [gymInfo, setGymInfo] = useState<GymInfo | null>(null);
-    const [floors, setFloors] = useState<Floor[]>([]);
-    const [zones, setZones] = useState<Zone[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+    const { gymInfo, floors, zones, loading, error, fetched } = useSelector(
+        (state: RootState) => state.gym
+    );
 
     useEffect(() => {
-        const fetchAllGymData = async () => {
-            try {
-                setLoading(true);
-                // 1. Lấy thông tin chung
-                const gymSnap = await getDoc(doc(db, 'gym_info', 'main-gym'));
+        // Chỉ fetch nếu chưa có data, tránh gọi Firestore lại khi navigate
+        if (!fetched) {
+            dispatch(fetchGymData());
+        }
+    }, [fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
-                // 2. Lấy danh sách tầng (Sắp xếp theo số tầng)
-                const floorsQuery = query(collection(db, 'floors'), orderBy('floorNumber', 'asc'));
-                const floorsSnap = await getDocs(floorsQuery);
-
-                // 3. Lấy danh sách khu vực
-                const zonesSnap = await getDocs(collection(db, 'zones'));
-
-                if (gymSnap.exists()) {
-                    console.log("Dữ liệu từ DB:", gymSnap.data()); // <--- Dòng này
-                    setGymInfo({ id: gymSnap.id, ...gymSnap.data() } as GymInfo);
-                } else {
-                    console.log("Không tìm thấy Document với ID này!");
-                }
-                setFloors(floorsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Floor)));
-                setZones(zonesSnap.docs.map(d => ({ id: d.id, ...d.data() } as Zone)));
-            } catch (error) {
-                console.error("Lỗi khi tải dữ liệu Gym:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAllGymData();
-    }, []);
-
-    return { gymInfo, floors, zones, loading };
+    return { gymInfo, floors, zones, loading, error };
 };
