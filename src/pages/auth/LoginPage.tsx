@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../config/firebase';
+import { auth } from '../../config/firebase';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUser, setLoading, setError } from '../../store/slices/authSlice';
 import { ROUTES } from '../../constants/routes';
 import useValidator from '../../hooks/useValidator';
+import { authService } from '../../services/authService';
 import '../../styles/auth/auth-shared.css';
 import '../../styles/auth/login.css';
 
@@ -25,28 +25,27 @@ const LoginPage = () => {
         dispatch(setError(null));
 
         try {
+            // Bước 1: Dùng Firebase client SDK để xác thực email/password
+            // Mục đích: lấy idToken để gửi lên BE verify
             const userCred = await signInWithEmailAndPassword(auth, email, password);
-            const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
+            const idToken = await userCred.user.getIdToken();
 
-            if (userDoc.exists()) {
-                const data = userDoc.data();
-                dispatch(setUser({
-                    uid: userCred.user.uid,
-                    email: data.email,
-                    displayName: data.displayName,
-                    role: data.role,
-                    phone: data.phone || '',
-                    avatarUrl: data.avatarUrl || ''
-                }));
-                navigate(ROUTES.HOME);
-            }
+            // Bước 2: Gửi idToken lên BE
+            // BE verify token → tạo session cookie → trả về thông tin user
+            const data = await authService.login(idToken);
+
+            // Bước 3: Lưu thông tin user vào Redux store
+            dispatch(setUser(data.user));
+            navigate(ROUTES.HOME);
+
         } catch (err: any) {
-            dispatch(setError("Email hoặc mật khẩu không chính xác."));
+            dispatch(setError('Email hoặc mật khẩu không chính xác.'));
         } finally {
             dispatch(setLoading(false));
         }
     };
 
+    // ── UI giữ nguyên ─────────────────────────────────────
     return (
         <div className="auth-page">
             <div className="auth-card">
@@ -77,16 +76,14 @@ const LoginPage = () => {
 
                     <div className="form-group">
                         <label className="form-label">Mật khẩu</label>
-
-                            <input
-                                className={`auth-input ${error ? 'error' : ''}`}
-                                type={showPassword ? "text" : "password"}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
-                                required
-                            />
-
+                        <input
+                            className={`auth-input ${error ? 'error' : ''}`}
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
                     </div>
 
                     {error && <p className="auth-error-msg">{error}</p>}

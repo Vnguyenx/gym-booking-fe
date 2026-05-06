@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from '../../config/firebase';
-import { ROUTES } from '../../constants/routes';
-import { ROLES } from '../../constants/roles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setLoading, setError } from '../../store/slices/authSlice';
+import { ROUTES } from '../../constants/routes';
+import { authService } from '../../services/authService';
 import useValidator from '../../hooks/useValidator';
 import '../../styles/auth/auth-shared.css';
 import '../../styles/auth/register.css';
@@ -29,22 +26,25 @@ const RegisterPage = () => {
         e.preventDefault();
         dispatch(setError(null));
 
+        // Validate phía FE trước khi gửi lên BE
         if (!validatePhone(formData.phone)) return dispatch(setError('Số điện thoại không hợp lệ.'));
         if (!validatePassword(formData.password)) return dispatch(setError('Mật khẩu cần ít nhất 8 ký tự, có chữ hoa và số.'));
         if (!isMatch(formData.password, formData.confirmPassword)) return dispatch(setError('Mật khẩu nhập lại không khớp.'));
 
         dispatch(setLoading(true));
         try {
-            const userCred = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            await setDoc(doc(db, "users", userCred.user.uid), {
-                uid: userCred.user.uid,
+            // Gửi thông tin đăng ký lên BE
+            // BE sẽ tạo user trên Firebase Auth + lưu vào Firestore
+            await authService.register({
                 email: formData.email,
+                password: formData.password,
                 displayName: formData.displayName,
                 phone: formData.phone,
-                role: ROLES.CUSTOMER,
-                createdAt: serverTimestamp()
             });
+
+            // Đăng ký thành công → chuyển sang trang đăng nhập
             navigate(ROUTES.LOGIN);
+
         } catch (err: any) {
             dispatch(setError(err.message));
         } finally {
@@ -52,6 +52,7 @@ const RegisterPage = () => {
         }
     };
 
+    // ── UI giữ nguyên ─────────────────────────────────────
     return (
         <div className="auth-page">
             <div className="auth-card">
@@ -88,9 +89,8 @@ const RegisterPage = () => {
 
                     <div className="form-group">
                         <label className="form-label">Mật khẩu</label>
-                            <input className="auth-input" type={showPassword ? "text" : "password"} placeholder="••••••••"
-                                   onChange={e => setFormData({...formData, password: e.target.value})} required />
-
+                        <input className="auth-input" type={showPassword ? "text" : "password"} placeholder="••••••••"
+                               onChange={e => setFormData({...formData, password: e.target.value})} required />
                     </div>
 
                     <div className="form-group">
