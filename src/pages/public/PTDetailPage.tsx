@@ -7,11 +7,13 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import { ROUTES } from '../../constants/routes';
 import '../../styles/home/pt-detail.css';
+import useAuth from "../../hooks/useAuth";
 
 const PTDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth();
 
     // Tận dụng data truyền từ PTCard sang (nếu có) để hiển thị ngay lập tức
     const [pt, setPt] = useState<PT | null>(
@@ -67,6 +69,15 @@ const PTDetailPage: React.FC = () => {
             </div>
         );
     }
+
+    const handleBookPT = () => {
+        if (!isLoggedIn) {
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+
+        navigate(ROUTES.BOOKING, { state: { pt } });
+    };
 
     return (
         <div className="pt-detail-page">
@@ -141,7 +152,7 @@ const PTDetailPage: React.FC = () => {
                             <button
                                 className="btn-red pt-detail__cta"
                                 disabled={!pt.isAvailable}
-                                onClick={() => alert(`Tính năng đặt lịch với PT ${pt.fullName} đang được phát triển!`)}
+                                onClick={handleBookPT}
                             >
                                 {pt.isAvailable ? 'Đăng ký tập cùng PT' : 'Hiện đang kín lịch'}
                             </button>

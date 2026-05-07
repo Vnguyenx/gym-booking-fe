@@ -18,16 +18,18 @@ import EquipmentPage from "../pages/public/EquipmentPage";
 import PTPage from '../pages/public/PTPage';
 import PTDetailPage from '../pages/public/PTDetailPage';
 import PTRegisterPage from "../pages/public/PTRegisterPage";
+import PricingPage from "../pages/public/PricingPage";
+import EquipmentDetailPage from "../pages/public/EquipmentDetailPage";
 
+
+// Customer pages
+import BookingPage from '../pages/customer/BookingPage';
+import ProfilePage from '../pages/customer/ProfilePage';
 
 
 // Import Dashboard Pages (Bạn tạo các file này trong thư mục tương ứng)
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard from '../pages/pt/PtDashboard';
-import ProfilePage from '../pages/customer/ProfilePage';
-import EquipmentDetailPage from "../pages/public/EquipmentDetailPage";
-import PricingPage from "../pages/public/PricingPage";
-
 
 
 
@@ -49,10 +51,15 @@ const AppRouter = () => {
                 <Route path={ROUTES.PT_REGISTER} element={<PTRegisterPage />} />
                 <Route path={ROUTES.PRICING} element={<PricingPage />} />
 
+                {/* Customer routes — BookingPage tự xử lý redirect nếu chưa login */}
+                <Route path={ROUTES.BOOKING} element={<BookingPage />} />
+                <Route path={ROUTES.MY_PROFILE} element={<ProfilePage />} />
+
+
                 {/* Dashboard routes */}
                 <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
                 <Route path={ROUTES.PT_DASHBOARD} element={<PtDashboard />} />
-                <Route path={ROUTES.MY_PROFILE} element={<ProfilePage />} />
+
 
 
                 {/* Fallback - Link lung tung sẽ về Home */}

@@ -161,3 +161,25 @@ export interface Membership {
     /** Danh sách quyền lợi / tính năng nổi bật */
     promotions: string[];
 }
+
+// Collection: bookings
+export interface Booking {
+    id?: string;
+    customerId: string;        // uid của khách hàng
+    membershipId: string;      // ví dụ: "mem-3m"
+    ptServiceId: string;       // ví dụ: "pt-1on1" | "pt-none"
+    ptId: string;              // uid của PT, rỗng nếu không chọn PT
+    totalPrice: number;        // tổng tiền
+    status: 'pending' | 'confirmed' | 'cancelled';
+    paymentCode: string;       // mã đối chiếu VietQR
+    paidAt: Date | null;       // null = chưa thanh toán
+    createdAt: Date;
+}
+
+// Collection: pt_services
+export interface PTService {
+    id?: string;
+    name: string;              // "Thuê PT kèm riêng 1:1"
+    pricePerMonth: number;     // 1500000
+    type: 'personal' | 'group' | 'none';
+}

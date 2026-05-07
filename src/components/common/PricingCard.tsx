@@ -9,6 +9,9 @@
 import React from 'react';
 import { Membership } from '../../types/models';
 import '../../styles/home/PricingCard.css';
+import {ROUTES} from "../../constants/routes";
+import useAuth from "../../hooks/useAuth";
+import {useNavigate} from "react-router-dom";
 
 interface PricingCardProps {
     membership: Membership;
@@ -36,6 +39,12 @@ const calcSavingPercent = (price: number, priceOnline: number): number => {
 };
 
 const PricingCard: React.FC<PricingCardProps> = ({ membership, onRegister }) => {
+    const navigate = useNavigate();
+
+    // Lấy trạng thái đăng nhập từ Redux thông qua useAuth
+    const { isLoggedIn } = useAuth();
+
+
     const {
         name,
         durationMonths,
@@ -53,6 +62,16 @@ const PricingCard: React.FC<PricingCardProps> = ({ membership, onRegister }) => 
         durationMonths >= 12 && durationMonths % 12 === 0
             ? `${durationMonths / 12} NĂM`
             : `${durationMonths} THÁNG`;
+
+
+    const handleRegister = () => {
+        if (!isLoggedIn) {
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+
+        navigate(ROUTES.BOOKING, { state: { membership } });
+    };
 
     return (
         <div className={`pricing-card ${isPopular ? 'pricing-card--popular' : ''}`}>
@@ -96,7 +115,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ membership, onRegister }) => 
             {/* Nút đăng ký */}
             <button
                 className={`pricing-card__btn ${isPopular ? 'pricing-card__btn--primary' : 'pricing-card__btn--outline'}`}
-                onClick={() => onRegister?.(membership)}
+                onClick={handleRegister}
                 aria-label={`Đăng ký ${name}`}
             >
                 Đăng ký ngay

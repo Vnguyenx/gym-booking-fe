@@ -4,33 +4,40 @@ import { useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { auth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
+import { authService } from '../../services/authService';
 import useAuth from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 
-
 const ProfilePage = () => {
-    const { user, isLoggedIn, loading } = useAuth(); // Lấy data từ Redux
+    const { user, isLoggedIn, loading } = useAuth();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     if (loading) return <div>Đang tải...</div>;
 
-
-    // 1. Kiểm tra quyền truy cập (Nếu chưa login thì đá ra trang Login)
     if (!loading && !isLoggedIn) {
-        return <Navigate to={ROUTES.LOGIN} />;
+        return <Navigate to={ROUTES.HOME} />;
     }
 
     const handleLogout = async () => {
         try {
-            await signOut(auth); // Đăng xuất khỏi Firebase
-            dispatch(logout()); // Xoá data trong Redux
-            navigate(ROUTES.LOGIN);
+            // Bước 1: Đăng xuất khỏi Firebase client SDK
+            await signOut(auth);
+
+            // Bước 2: Gọi BE xoá session cookie
+            // Nếu BE đang tắt (dev mode) thì bỏ qua lỗi, vẫn logout bình thường
+            await authService.logout().catch(() => {});
+
+            // Bước 3: Xoá data trong Redux + localStorage
+            dispatch(logout());
+
+            navigate(ROUTES.HOME);
         } catch (error) {
             console.error("Lỗi đăng xuất:", error);
         }
     };
 
+    // ── UI giữ nguyên ─────────────────────────────────────
     return (
         <div className="auth-container">
             <h1 className="auth-title">THÔNG TIN CÁ NHÂN</h1>

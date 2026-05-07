@@ -10,13 +10,13 @@ import { Membership } from '../types/models';
 
 // ---------- State type ----------
 interface MembershipState {
-    memberships: Membership[];
+    list: Membership[];
     loading: boolean;
     error: string | null;
 }
 
 const initialState: MembershipState = {
-    memberships: [],
+    list: [],
     loading: false,
     error: null,
 };
@@ -69,7 +69,7 @@ const membershipSlice = createSlice({
             // Fetch thành công
             .addCase(fetchMemberships.fulfilled, (state, action: PayloadAction<Membership[]>) => {
                 state.loading = false;
-                state.memberships = action.payload;
+                state.list = action.payload;
             })
             // Fetch thất bại
             .addCase(fetchMemberships.rejected, (state, action) => {

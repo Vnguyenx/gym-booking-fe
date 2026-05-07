@@ -25,7 +25,7 @@ interface UseMembershipDataReturn {
 const useMembershipData = (): UseMembershipDataReturn => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const { memberships, loading, error } = useSelector(
+    const { list: memberships, loading, error } = useSelector(
         (state: RootState) => state.memberships
     );
 
