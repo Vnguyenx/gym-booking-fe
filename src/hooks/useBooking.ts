@@ -1,15 +1,11 @@
 // src/hooks/useBooking.ts
-// Hook quản lý toàn bộ state luồng đặt lịch
-// Hỗ trợ 3 điểm vào:
-// 1. Vào thẳng trang booking
-// 2. Từ PricingCard (đã có membership)
-// 3. Từ PTDetailPage (đã có PT)
+// Hook quản lý state trang đặt lịch dạng single page
+// Hỗ trợ 3 điểm vào: direct, fromPricing, fromPT
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Membership, PTService, PT } from '../types/models';
 import { bookingService } from '../services/bookingService';
 
-// Kết quả trả về sau khi tạo booking thành công
 interface BookingResult {
     bookingId: string;
     paymentCode: string;
@@ -17,16 +13,11 @@ interface BookingResult {
     totalPrice: number;
 }
 
-// Data truyền vào từ trang trước (nếu có)
 interface BookingInitialState {
-    membership?: Membership; // truyền từ PricingCard
-    pt?: PT;                 // truyền từ PTDetailPage
+    membership?: Membership; // từ PricingCard
+    pt?: PT;                 // từ PTDetailPage
 }
 
-// Định nghĩa từng bước theo điểm vào
-// fromPricing: Bước 1=PTService, 2=SelectPT, 3=Summary
-// fromPT:      Bước 1=PTService, 2=Membership, 3=Summary
-// direct:      Bước 1=Membership, 2=PTService, 3=SelectPT, 4=Summary
 export type EntryPoint = 'fromPricing' | 'fromPT' | 'direct';
 
 const useBooking = (initial?: BookingInitialState) => {
@@ -37,75 +28,97 @@ const useBooking = (initial?: BookingInitialState) => {
             ? 'fromPT'
             : 'direct';
 
-    // ── Bước hiện tại ────────────────────────────────────
-    const [currentStep, setCurrentStep] = useState(1);
-
     // ── Lựa chọn của user ────────────────────────────────
     const [selectedMembership, setSelectedMembership] = useState<Membership | null>(
-        initial?.membership ?? null // đã có nếu từ PricingCard
+        initial?.membership ?? null
     );
     const [selectedPTService, setSelectedPTService] = useState<PTService | null>(null);
     const [selectedPT, setSelectedPT] = useState<PT | null>(
-        initial?.pt ?? null // đã có nếu từ PTDetailPage
+        initial?.pt ?? null
     );
+
+    // ── Data từ BE/mock ───────────────────────────────────
+    const [ptServices, setPTServices] = useState<PTService[]>([]);
+    const [availablePTs, setAvailablePTs] = useState<PT[]>([]);
+    const [loadingPTServices, setLoadingPTServices] = useState(true);
+    const [loadingPTs, setLoadingPTs] = useState(false);
 
     // ── Kết quả booking ──────────────────────────────────
     const [bookingResult, setBookingResult] = useState<BookingResult | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [loadingBooking, setLoadingBooking] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // ── Fetch PT services khi mount ───────────────────────
+    useEffect(() => {
+        bookingService.getPTServices()
+            .then(data => setPTServices(data.ptServices))
+            .catch(err => console.error('Lỗi lấy PT services:', err))
+            .finally(() => setLoadingPTServices(false));
+    }, []);
+
+    // ── Fetch danh sách PT khi chọn có PT ────────────────
+    useEffect(() => {
+        // Chỉ fetch khi chọn gói có PT (không phải 'none')
+        if (!selectedPTService || selectedPTService.type === 'none') {
+            setAvailablePTs([]);
+            return;
+        }
+        setLoadingPTs(true);
+        bookingService.getAvailablePTs()
+            .then(data => setAvailablePTs(data.pts))
+            .catch(err => console.error('Lỗi lấy danh sách PT:', err))
+            .finally(() => setLoadingPTs(false));
+    }, [selectedPTService]);
 
     // ── Tính tổng tiền ───────────────────────────────────
     const calcTotalPrice = (): number => {
         if (!selectedMembership) return 0;
         const membershipPrice = selectedMembership.priceOnline;
-        const ptPrice = selectedPTService
+        const ptPrice = selectedPTService && selectedPTService.type !== 'none'
             ? selectedPTService.pricePerMonth * selectedMembership.durationMonths
             : 0;
         return membershipPrice + ptPrice;
     };
 
-    // ── Số bước tối đa theo điểm vào ────────────────────
-    const maxSteps = entryPoint === 'direct' ? 4 : 3;
+    // ── Kiểm tra đủ điều kiện thanh toán ─────────────────
+    const canCheckout = (): boolean => {
+        if (!selectedMembership) return false;
+        if (!selectedPTService) return false;
+        // Nếu chọn có PT thì phải chọn PT cụ thể
+        if (selectedPTService.type !== 'none' && !selectedPT) return false;
+        return true;
+    };
 
-    // Quay lại bước trước
-    const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+    // ── Handlers ─────────────────────────────────────────
 
-    // ── Các handler theo từng bước ───────────────────────
-
-    // Chọn gói tập (dùng khi direct hoặc fromPT)
     const handleSelectMembership = (membership: Membership) => {
         setSelectedMembership(membership);
-        setCurrentStep(prev => prev + 1);
     };
 
-    // Chọn gói dịch vụ PT
     const handleSelectPTService = (ptService: PTService) => {
         setSelectedPTService(ptService);
-
+        // Nếu đổi sang "Không PT" → bỏ PT đã chọn
+        // Nếu đến từ PTDetailPage và chọn 'none' → bỏ PT đã chọn luôn
         if (ptService.type === 'none') {
-            // Không chọn PT → bỏ qua bước chọn PT, qua thẳng Summary
             setSelectedPT(null);
-            setCurrentStep(maxSteps); // bước cuối = Summary
-        } else if (entryPoint === 'fromPT') {
-            // Đã có PT → không cần chọn PT nữa, qua Membership
-            setCurrentStep(prev => prev + 1);
-        } else {
-            // fromPricing hoặc direct → qua bước chọn PT
-            setCurrentStep(prev => prev + 1);
         }
+        // Nếu đến từ PTDetailPage và đổi sang gói khác → giữ PT đã chọn
     };
 
-    // Chọn PT cụ thể
     const handleSelectPT = (pt: PT) => {
-        setSelectedPT(pt);
-        setCurrentStep(maxSteps); // luôn qua Summary sau khi chọn PT
+        // Bấm lại PT đang chọn → bỏ chọn
+        if (selectedPT?.id === pt.id) {
+            setSelectedPT(null);
+        } else {
+            setSelectedPT(pt);
+        }
     };
 
     // Xác nhận đặt lịch → gọi BE
     const handleConfirmBooking = async () => {
-        if (!selectedMembership || !selectedPTService) return;
+        if (!canCheckout() || !selectedMembership || !selectedPTService) return;
 
-        setLoading(true);
+        setLoadingBooking(true);
         setError(null);
         try {
             const result = await bookingService.createBooking({
@@ -117,31 +130,41 @@ const useBooking = (initial?: BookingInitialState) => {
         } catch (err: any) {
             setError(err.message);
         } finally {
-            setLoading(false);
+            setLoadingBooking(false);
         }
     };
 
     return {
-        // State
-        currentStep,
-        maxSteps,
+        // Điểm vào
         entryPoint,
+
+        // Lựa chọn
         selectedMembership,
         selectedPTService,
         selectedPT,
+
+        // Data
+        ptServices,
+        availablePTs,
+
+        // Loading
+        loadingPTServices,
+        loadingPTs,
+        loadingBooking,
+
+        // Kết quả
         bookingResult,
-        loading,
         error,
 
         // Computed
         totalPrice: calcTotalPrice(),
+        canCheckout: canCheckout(),
 
         // Actions
         handleSelectMembership,
         handleSelectPTService,
         handleSelectPT,
         handleConfirmBooking,
-        prevStep,
     };
 };
 

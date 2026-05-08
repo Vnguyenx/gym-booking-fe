@@ -1,7 +1,6 @@
 // src/pages/customer/BookingPage.tsx
-// Trang đặt lịch — ghép các bước lại với nhau
-// Đọc state từ trang trước (membership hoặc PT nếu có)
-// Render đúng bước theo điểm vào
+// Trang đặt lịch dạng single page — giống trang checkout TMĐT
+// Hiển thị tất cả các mục cùng lúc, user chọn từng phần
 
 import React from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
@@ -11,82 +10,116 @@ import useBooking from '../../hooks/useBooking';
 import { ROUTES } from '../../constants/routes';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import BookingProgress from '../../components/customer/booking/BookingProgress';
-import StepMembership from '../../components/customer/booking/StepMembership';
-import StepPTService from '../../components/customer/booking/StepPTService';
-import StepSelectPT from '../../components/customer/booking/StepSelectPT';
-import StepSummary from '../../components/customer/booking/StepSummary';
+import SectionMembership from '../../components/customer/booking/SectionMembership';
+import SectionPTService from '../../components/customer/booking/SectionPTService';
+import SectionSelectPT from '../../components/customer/booking/SectionSelectPT';
+import OrderSummary from '../../components/customer/booking/OrderSummary';
 import '../../styles/booking/booking.css';
 
 const BookingPage: React.FC = () => {
     const { isLoggedIn } = useAuth();
     const location = useLocation();
 
-    // Đọc data từ trang trước (nếu có)
     const { membership, pt } = (location.state || {}) as {
         membership?: Membership;
         pt?: PT;
     };
 
+    // ✅ Hook gọi trước early return
     const booking = useBooking({ membership, pt });
 
-    // Chưa đăng nhập → về trang login
     if (!isLoggedIn) return <Navigate to={ROUTES.LOGIN} />;
 
-
-    // ── Render bước hiện tại theo entryPoint ─────────────
-    const renderStep = () => {
-        const { currentStep, entryPoint } = booking;
-
-        // ── Điểm vào: Từ PricingCard (đã có membership) ──
-        // Bước 1: Chọn gói PT service
-        // Bước 2: Chọn PT cụ thể (nếu có PT)
-        // Bước 3: Tổng hợp + thanh toán
-        if (entryPoint === 'fromPricing') {
-            if (currentStep === 1) return <StepPTService booking={booking} />;
-            if (currentStep === 2) return <StepSelectPT booking={booking} />;
-            return <StepSummary booking={booking} />;
-        }
-
-        // ── Điểm vào: Từ PTDetailPage (đã có PT) ─────────
-        // Bước 1: Chọn gói PT service
-        // Bước 2: Chọn gói tập (membership)
-        // Bước 3: Tổng hợp + thanh toán
-        if (entryPoint === 'fromPT') {
-            if (currentStep === 1) return <StepPTService booking={booking} />;
-            if (currentStep === 2) return <StepMembership booking={booking} />;
-            return <StepSummary booking={booking} />;
-        }
-
-        // ── Điểm vào: Vào thẳng trang booking ────────────
-        // Bước 1: Chọn gói tập
-        // Bước 2: Chọn gói PT service
-        // Bước 3: Chọn PT cụ thể (nếu có PT)
-        // Bước 4: Tổng hợp + thanh toán
-        if (currentStep === 1) return <StepMembership booking={booking} />;
-        if (currentStep === 2) return <StepPTService booking={booking} />;
-        if (currentStep === 3) return <StepSelectPT booking={booking} />;
-        return <StepSummary booking={booking} />;
-    };
+    // Đã thanh toán → hiển thị kết quả QR
+    if (booking.bookingResult) {
+        return (
+            <div className="booking-page">
+                <Navbar />
+                <main className="container booking-main">
+                    <BookingSuccess result={booking.bookingResult} />
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="booking-page">
             <Navbar />
-            <main className="container booking-main">
+            <main className="booking-main">
                 <h1 className="booking-title">Đăng ký gói tập</h1>
 
-                {/* Thanh tiến trình */}
-                <BookingProgress
-                    currentStep={booking.currentStep}
-                    maxSteps={booking.maxSteps}
-                />
+                <div className="booking-layout">
+                    {/* ── CỘT TRÁI: Các mục chọn ── */}
+                    <div className="booking-sections">
+                        {/* Mục 1: Chọn gói tập */}
+                        <SectionMembership booking={booking} />
 
-                {/* Nội dung từng bước */}
-                <div className="booking-content">
-                    {renderStep()}
+                        {/* Mục 2: Chọn dịch vụ PT */}
+                        <SectionPTService booking={booking} />
+
+                        {/* Mục 3: Chọn PT cụ thể — chỉ hiện khi chọn có PT */}
+                        {booking.selectedPTService &&
+                            booking.selectedPTService.type !== 'none' && (
+                                <SectionSelectPT booking={booking} />
+                            )}
+                    </div>
+
+                    {/* ── CỘT PHẢI: Tổng hợp đơn hàng ── */}
+                    <div className="booking-sidebar">
+                        <OrderSummary booking={booking} />
+                    </div>
                 </div>
             </main>
             <Footer />
+        </div>
+    );
+};
+
+// ── Component hiển thị kết quả sau khi đặt thành công ────
+interface BookingSuccessProps {
+    result: {
+        bookingId: string;
+        paymentCode: string;
+        qrImageUrl: string;
+        totalPrice: number;
+    };
+}
+
+const BookingSuccess: React.FC<BookingSuccessProps> = ({ result }) => {
+    const formatPrice = (amount: number) => amount.toLocaleString('vi-VN') + 'đ';
+
+    return (
+        <div className="booking-success">
+            <div className="booking-success__icon">✅</div>
+            <h2 className="booking-success__title">Đặt lịch thành công!</h2>
+            <p className="booking-success__sub">
+                Quét mã QR bên dưới để hoàn tất thanh toán
+            </p>
+
+            {result.qrImageUrl && (
+                <img
+                    src={result.qrImageUrl}
+                    alt="QR thanh toán"
+                    className="booking-success__qr"
+                />
+            )}
+
+            <div className="booking-success__info">
+                <div className="success-row">
+                    <span>Mã đối chiếu</span>
+                    <span className="success-code">{result.paymentCode}</span>
+                </div>
+                <div className="success-row">
+                    <span>Số tiền</span>
+                    <span className="success-price">{formatPrice(result.totalPrice)}</span>
+                </div>
+            </div>
+
+            <p className="booking-success__note">
+                ⚠️ Ghi đúng mã đối chiếu khi chuyển khoản.
+                Đơn hàng được xác nhận trong vòng 24 giờ.
+            </p>
         </div>
     );
 };

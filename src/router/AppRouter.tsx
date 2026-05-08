@@ -30,6 +30,7 @@ import ProfilePage from '../pages/customer/ProfilePage';
 // Import Dashboard Pages (Bạn tạo các file này trong thư mục tương ứng)
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard from '../pages/pt/PtDashboard';
+import CustomerProfilePage from "../pages/customer/CustomerProfilePage";
 
 
 
@@ -53,7 +54,7 @@ const AppRouter = () => {
 
                 {/* Customer routes — BookingPage tự xử lý redirect nếu chưa login */}
                 <Route path={ROUTES.BOOKING} element={<BookingPage />} />
-                <Route path={ROUTES.MY_PROFILE} element={<ProfilePage />} />
+                <Route path={ROUTES.MY_PROFILE} element={<CustomerProfilePage />} />
 
 
                 {/* Dashboard routes */}

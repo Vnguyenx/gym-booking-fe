@@ -1,0 +1,554 @@
+/*
+ * CustomerProfile.css
+ * Mobile-first styles cho trang hồ sơ khách hàng.
+ * Tổ chức theo component để dễ tìm và sửa.
+ *
+ * Thứ tự:
+ *   1. CSS Variables (màu sắc, khoảng cách)
+ *   2. Layout tổng thể
+ *   3. TabNav
+ *   4. Section chung
+ *   5. ProfileInfo
+ *   6. ClassesSection
+ *   7. BookingsSection
+ *   8. Utilities (badge, alert, btn...)
+ *   9. Responsive - tablet & desktop
+ */
+
+/* ── 1. CSS Variables ─────────────────────────────────────────────────────── */
+
+:root {
+    --color-primary: #ff9500;
+    --color-primary-light: #fff3e0;
+    --color-bg: #f5f5f5;
+    --color-surface: #ffffff;
+    --color-surface-dark: #0f0f0f;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b6b6b;
+    --color-border: #e0e0e0;
+    --color-success: #2e7d32;
+    --color-success-bg: #e8f5e9;
+    --color-error: #c62828;
+    --color-error-bg: #ffebee;
+    --color-warning: #e65100;
+    --color-warning-bg: #fff3e0;
+    --color-info: #1565c0;
+    --color-info-bg: #e3f2fd;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ── 2. Layout tổng thể ───────────────────────────────────────────────────── */
+
+.customer-profile {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    /* Chừa chỗ cho tab-nav cố định ở dưới (mobile) */
+    padding-bottom: 80px;
+}
+
+.customer-profile__header {
+    background-color: var(--color-surface-dark);
+    color: #fff;
+    padding: 20px 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.customer-profile__greeting {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.customer-profile__subtitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 4px 0 0;
+}
+
+.customer-profile__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.customer-profile__content {
+    padding: 16px;
+}
+
+/* Nút đăng xuất dưới cùng */
+.logout-wrapper {
+    padding: 8px 16px 16px;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1.5px solid var(--color-error);
+    border-radius: var(--radius-md);
+    color: var(--color-error);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-logout:hover {
+    background-color: var(--color-error-bg);
+}
+
+.btn-logout:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── 3. TabNav ────────────────────────────────────────────────────────────── */
+
+.tab-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    z-index: 100;
+    /* An toàn cho iPhone (notch) */
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.tab-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: color 0.15s;
+}
+
+.tab-nav__item--active {
+    color: var(--color-primary);
+}
+
+.tab-nav__icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-nav__label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* ── 4. Section chung ─────────────────────────────────────────────────────── */
+
+.profile-section {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-card);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.loading-text,
+.empty-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* ── 5. ProfileInfo ───────────────────────────────────────────────────────── */
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--color-border);
+    gap: 12px;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    min-width: 80px;
+}
+
+.info-value {
+    font-size: 14px;
+    color: var(--color-text);
+    text-align: right;
+    word-break: break-word;
+}
+
+.info-value--muted {
+    color: var(--color-text-muted);
+}
+
+.info-input {
+    flex: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    font-size: 14px;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.info-input:focus {
+    border-color: var(--color-primary);
+}
+
+.action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+/* ── 6. ClassesSection ────────────────────────────────────────────────────── */
+
+.class-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.class-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+
+.class-card--selected {
+    border-color: var(--color-primary);
+}
+
+.class-card__header {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+}
+
+.class-card__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.class-card__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.class-card__meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.class-card__attendance-summary {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.class-card__attendance-count {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.class-card__attendance-label {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.class-card__detail {
+    border-top: 1px solid var(--color-border);
+    padding: 12px;
+    background-color: #fafafa;
+}
+
+.detail-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+}
+
+.attendance-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attendance-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.attendance-date {
+    font-size: 13px;
+    color: var(--color-text);
+    flex-shrink: 0;
+}
+
+.attendance-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.attendance-note {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ── 7. BookingsSection ───────────────────────────────────────────────────── */
+
+.booking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.booking-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+}
+
+.booking-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.booking-card__service {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 4px;
+}
+
+.booking-card__meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.booking-card__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.booking-card__price {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.booking-card__note {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 8px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ── 8. Utilities ─────────────────────────────────────────────────────────── */
+
+/* Badge */
+.badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.badge--success { background: var(--color-success-bg); color: var(--color-success); }
+.badge--error   { background: var(--color-error-bg);   color: var(--color-error); }
+.badge--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge--info    { background: var(--color-info-bg);    color: var(--color-info); }
+.badge--neutral { background: #eeeeee; color: #555; }
+
+/* Alert */
+.alert {
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+}
+
+.alert--success { background: var(--color-success-bg); color: var(--color-success); }
+.alert--error   { background: var(--color-error-bg);   color: var(--color-error); }
+
+/* Buttons */
+.btn-primary {
+    flex: 1;
+    padding: 11px;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-outline {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-ghost {
+    flex: 1;
+    padding: 11px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ── 9. Responsive - Tablet & Desktop ────────────────────────────────────── */
+
+@media (min-width: 640px) {
+    /* Tab nav chuyển sang nằm ngang trên cùng */
+    .tab-nav {
+        position: static;
+        border-top: none;
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface-dark);
+        padding-bottom: 0;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .tab-nav__item {
+        flex-direction: row;
+        gap: 8px;
+        padding: 14px 24px;
+        color: rgba(255, 255, 255, 0.6);
+        border-radius: 0;
+        border-bottom: 3px solid transparent;
+    }
+
+    .tab-nav__item--active {
+        color: var(--color-primary);
+        border-bottom-color: var(--color-primary);
+    }
+
+    .tab-nav__icon {
+        font-size: 18px;
+    }
+
+    .tab-nav__label {
+        font-size: 14px;
+    }
+
+    .customer-profile {
+        padding-bottom: 0;
+    }
+
+    .customer-profile__content {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 24px 16px;
+    }
+
+    .logout-wrapper {
+        max-width: 640px;
+        margin: 0 auto;
+    }
+}

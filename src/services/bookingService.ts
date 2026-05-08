@@ -40,7 +40,7 @@ const MOCK_BOOKING_RESULT = {
 };
 
 // ── Bật/tắt mock (đổi thành false khi BE sẵn sàng) ───────
-const USE_MOCK = false;
+const USE_MOCK = true;
 // ─────────────────────────────────────────────────────────
 
 export const bookingService = {
