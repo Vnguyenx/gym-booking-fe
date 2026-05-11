@@ -1,24 +1,24 @@
-/* ============================================================
-   PricingSection.css
-   src/styles/home/PricingSection.css
+/* ════════════════════════════════════════
+   PRICING SECTION
+   Dùng các utility class từ base.css:
+     .sec-label  → tag nhỏ màu đỏ phía trên
+     .sec-title  → tiêu đề lớn (Bebas Neue)
+     .sec-desc   → mô tả ngắn màu muted
+   ════════════════════════════════════════ */
 
-   Layout cho section bảng giá trên trang chủ.
-   Mobile-first: column → row khi có đủ chiều rộng.
-   ============================================================ */
-
-/* ---- Section wrapper ---- */
+/* ── Wrapper chung ── */
 .pricing-section {
-    background-color: #111111;
+    background: var(--bg);
     padding: 64px 16px;
 }
 
-/* ---- Container giới hạn chiều rộng ---- */
+/* ── Container giới hạn chiều rộng ── */
 .pricing-section__container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* ---- Header: tiêu đề bên trái + nút bên phải ---- */
+/* ── Header: mobile = column, desktop = row ── */
 .pricing-section__header {
     display: flex;
     flex-direction: column;
@@ -26,91 +26,36 @@
     margin-bottom: 40px;
 }
 
-/* Nhãn nhỏ phía trên "BẢNG GIÁ" */
-.pricing-section__subtitle {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: #ef4444;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-}
-
-/* Tiêu đề lớn */
-.pricing-section__title {
-    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    font-size: clamp(40px, 8vw, 72px);
-    font-weight: 800;
-    line-height: 1.05;
-    color: #ffffff;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-    letter-spacing: -0.01em;
-}
-
-/* Mô tả nhỏ bên dưới tiêu đề */
-.pricing-section__desc {
-    font-size: 14px;
-    color: #a1a1aa;
-    margin: 0;
-    line-height: 1.5;
-}
-
 /* Nút "Chi tiết đầy đủ" — kiểu pill outline */
 .pricing-section__view-all-btn {
     align-self: flex-start;
     padding: 10px 20px;
     border-radius: 999px;
-    border: 1.5px solid #3f3f46;
+    border: 1.5px solid var(--border-lt);
     background: transparent;
-    color: #ffffff;
-    font-size: 14px;
+    color: var(--white);
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
     white-space: nowrap;
+    transition: border-color var(--transition), background var(--transition);
 }
 
 .pricing-section__view-all-btn:hover {
-    border-color: #71717a;
-    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--muted-lt);
+    background: rgba(255, 255, 255, 0.04);
 }
 
-/* ---- Lưới cards ---- */
+/* ── Grid cards: mobile = 1 cột → tablet = 2 → desktop = 3 ── */
 .pricing-section__grid {
     display: grid;
-    /* Mobile: 1 cột */
     grid-template-columns: 1fr;
     gap: 16px;
 }
 
-/* ---- Nút "Xem tất cả" ---- */
-.pricing-section__expand {
-    text-align: center;
-    margin-top: 24px;
-}
+/* ── Responsive ── */
 
-.pricing-section__expand-btn {
-    padding: 12px 32px;
-    border-radius: 8px;
-    border: 1.5px solid #3f3f46;
-    background: transparent;
-    color: #a1a1aa;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.pricing-section__expand-btn:hover {
-    border-color: #71717a;
-    color: #ffffff;
-}
-
-/* ============================================================
-   Responsive: Tablet (≥ 640px) — 2 cột
-   ============================================================ */
+/* Tablet: 640px+ → 2 cột */
 @media (min-width: 640px) {
     .pricing-section {
         padding: 72px 24px;
@@ -121,9 +66,7 @@
     }
 }
 
-/* ============================================================
-   Responsive: Desktop (≥ 1024px) — header ngang + 3 cột
-   ============================================================ */
+/* Desktop: 1024px+ → header ngang + 3 cột */
 @media (min-width: 1024px) {
     .pricing-section {
         padding: 96px 40px;
@@ -142,21 +85,20 @@
     }
 
     .pricing-section__view-all-btn {
+        /* Căn đáy với phần text mô tả bên trái */
         align-self: flex-end;
-        margin-bottom: 4px; /* căn đáy với mô tả */
+        margin-bottom: 4px;
     }
 
-    /* 3 cột bằng nhau — gói popular sẽ nhô lên bằng CSS card */
+    /* 3 cột bằng nhau — card "popular" sẽ nhô lên bằng CSS riêng của PricingCard */
     .pricing-section__grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-        align-items: start; /* để popular card có thể cao hơn tự nhiên */
+        align-items: start;
     }
 }
 
-/* ============================================================
-   Responsive: Wide desktop (≥ 1280px)
-   ============================================================ */
+/* Wide desktop: 1280px+ */
 @media (min-width: 1280px) {
     .pricing-section__grid {
         gap: 24px;

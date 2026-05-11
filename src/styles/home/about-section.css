@@ -1,31 +1,36 @@
 /* ════════════════════════════════════════
-   ABOUT SECTION (Giới thiệu)
+   ABOUT SECTION
+   Dùng các utility class từ base.css:
+     .sec-label  → tag nhỏ màu đỏ phía trên
+     .sec-title  → tiêu đề lớn (Bebas Neue)
+     .sec-desc   → mô tả ngắn màu muted
    ════════════════════════════════════════ */
-.section {
-    position: relative;
-    width: 100%;
-    overflow: visible;
-    padding: 60px 0;
+
+/* ── Wrapper chung ── */
+.about {
+    padding: 4rem 0;
 }
 
-.about { padding: 4rem 0; }
-
+/* ── Layout: mobile = column, tablet+ = row ── */
 .about__layout {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
 }
 
-.about__content .section-subtitle {
-    color: var(--red);
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    font-size: 0.75rem;
-    margin-bottom: 0.5rem;
-    display: block;
+@media (min-width: 768px) {
+    .about__layout {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .about__content,
+    .about__amenities {
+        flex: 1;
+    }
 }
 
+/* ── Phần text bên trái ── */
 .about__desc {
     color: var(--muted);
     line-height: 1.7;
@@ -40,6 +45,7 @@
     gap: 0.5rem;
 }
 
+/* ── Tiện ích bên phải ── */
 .about__amenities h3 {
     font-size: 1.1rem;
     margin-bottom: 1.2rem;
@@ -50,7 +56,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    align-items: center;
 }
 
 .amenity-item {
@@ -59,20 +64,10 @@
     border-radius: var(--radius-sm);
     font-size: 0.82rem;
     border: 1px solid var(--border);
-    transition: transform 0.3s;
+    transition: transform var(--transition), border-color var(--transition);
 }
 
 .amenity-item:hover {
     transform: translateY(-3px);
     border-color: var(--red);
-}
-
-@media (min-width: 768px) {
-    .about__layout {
-        flex-direction: row;
-        align-items: center;
-    }
-    .about__content, .about__amenities {
-        flex: 1;
-    }
 }

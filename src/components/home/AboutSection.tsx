@@ -2,7 +2,8 @@
 // Component: AboutSection
 // src/components/home/AboutSection.tsx
 //
-// Không nhận props gymInfo/loading nữa — đọc trực tiếp từ Redux.
+// Không nhận props gymInfo/loading — đọc trực tiếp từ Redux.
+// Dùng utility classes từ base.css: .sec-label, .sec-title, .sec-desc
 // ============================================================
 
 import React from 'react';
@@ -21,10 +22,12 @@ const AboutSection: React.FC = () => {
         <section className="about section" id="about">
             <div className="container">
                 <div className="about__layout">
+
                     {/* Cột trái: Text */}
                     <div className="about__content reveal">
-                        <span className="section-subtitle">Về chúng tôi</span>
-                        <h2 className="section-title">Hệ thống {gymInfo?.name}</h2>
+                        {/* sec-label, sec-title, sec-desc — chuẩn từ base.css */}
+                        <span className="sec-label">Về chúng tôi</span>
+                        <h2 className="sec-title">Hệ thống {gymInfo?.name}</h2>
                         <p className="about__desc">{gymInfo?.description}</p>
 
                         <div className="about__quick-info">
@@ -37,7 +40,7 @@ const AboutSection: React.FC = () => {
                         </Link>
                     </div>
 
-                    {/* Cột phải: Amenities (Tiện ích) */}
+                    {/* Cột phải: Tiện ích */}
                     <div className="about__amenities stagger">
                         <h3>Tiện ích tại phòng tập</h3>
                         <div className="amenity-grid">
@@ -47,6 +50,7 @@ const AboutSection: React.FC = () => {
                             {gymInfo?.amenities.locker && <div className="amenity-item">🔒 Tủ đồ an toàn</div>}
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>

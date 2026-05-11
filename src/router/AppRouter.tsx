@@ -24,13 +24,14 @@ import EquipmentDetailPage from "../pages/public/EquipmentDetailPage";
 
 // Customer pages
 import BookingPage from '../pages/customer/BookingPage';
-import ProfilePage from '../pages/customer/ProfilePage';
-
+import CustomerProfilePage from "../pages/customer/CustomerProfilePage";
+import BookingSuccessPage from "../pages/customer/BookingSuccessPage";
 
 // Import Dashboard Pages (Bạn tạo các file này trong thư mục tương ứng)
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard from '../pages/pt/PtDashboard';
-import CustomerProfilePage from "../pages/customer/CustomerProfilePage";
+
+
 
 
 
@@ -54,6 +55,7 @@ const AppRouter = () => {
 
                 {/* Customer routes — BookingPage tự xử lý redirect nếu chưa login */}
                 <Route path={ROUTES.BOOKING} element={<BookingPage />} />
+                <Route path={ROUTES.BOOKING_SUCCESS} element={<BookingSuccessPage />} />
                 <Route path={ROUTES.MY_PROFILE} element={<CustomerProfilePage />} />
 
 

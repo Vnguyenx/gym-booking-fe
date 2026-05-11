@@ -366,8 +366,8 @@
 }
 
 .booking-success__qr {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     margin: 0 auto 1.5rem;
     border-radius: var(--radius);
     border: 4px solid var(--white);
@@ -415,4 +415,58 @@
     border-radius: var(--radius-sm);
     padding: 0.75rem 1rem;
     text-align: left;
+}
+/* ── NÚT QUAY LẠI Ở SUCCESS PAGE ────────────────────────── */
+.booking-success__back-btn {
+    margin-top: 1.25rem;
+    background: transparent;
+    border: 1.5px solid var(--border-lt);
+    color: var(--muted-lt);
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition), color var(--transition);
+    width: 100%;
+}
+.booking-success__back-btn:hover {
+    border-color: var(--white);
+    color: var(--white);
+}
+/* ── PHÂN TRANG DÙNG CHUNG ───────────────────────────────── */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pagination__btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--surface-2);
+    color: var(--muted-lt);
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    cursor: pointer;
+}
+.pagination__btn:hover:not(:disabled) {
+    border-color: var(--border-lt);
+    color: var(--white);
+}
+.pagination__btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+}
+.pagination__btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }

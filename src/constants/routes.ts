@@ -21,6 +21,7 @@ export const ROUTES = {
 
     // ── Customer routes (cần đăng nhập, role: customer) ──
     BOOKING: '/booking',          // Đặt lịch tập
+    BOOKING_SUCCESS: '/booking_success',
     MY_PROFILE: '/profile',       // Trang cá nhân
     MY_BOOKINGS: '/my-bookings',  // Lịch sử đặt lịch
     ATTENDANCE: '/attendance',    // Điểm danh

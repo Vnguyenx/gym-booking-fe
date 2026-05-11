@@ -1,3 +1,10 @@
+// ============================================================
+// Component: PTSection
+// src/components/home/PTSection.tsx
+//
+// Dùng utility classes từ base.css: .sec-label, .sec-title, .sec-desc
+// ============================================================
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
@@ -10,13 +17,13 @@ const PTSection: React.FC = () => {
 
     if (!ptInfo) return null;
 
-    // Hàm phụ trợ để render Icon tương ứng theo thứ tự (do database không lưu icon)
+    // Render icon theo thứ tự vì database không lưu icon
     const renderIcon = (index: number) => {
         const icons = [
-            '💰', // 0: Thu nhập (Tiền)
-            '📅', // 1: Lịch (Lịch dạy)
-            '🏋️‍♂️', // 2: Tạ (Tập miễn phí)
-            '📈'  // 3: Biểu đồ (Thương hiệu cá nhân)
+            '💰', // 0: Thu nhập
+            '📅', // 1: Lịch dạy
+            '🏋️‍♂️', // 2: Tập miễn phí
+            '📈'  // 3: Thương hiệu cá nhân
         ];
         return <span className="pt-icon">{icons[index] || '🔥'}</span>;
     };
@@ -25,20 +32,19 @@ const PTSection: React.FC = () => {
         <section id="pt" className="pt-section">
             <div className="container pt-container">
 
-                {/* CỘT TRÁI: Nội dung chữ và các khối Benefits */}
+                {/* Cột trái: Text + Benefits */}
                 <div className="pt-content stagger">
-                    <span className="pt-tag">ĐỘI NGŨ PT</span>
-
-                    <h2 className="pt-title">
-                        GIA NHẬP ĐỘI NGŨ <br/>
+                    {/* sec-label, sec-title — chuẩn từ base.css */}
+                    <span className="sec-label">ĐỘI NGŨ PT</span>
+                    <h2 className="sec-title">
+                        GIA NHẬP ĐỘI NGŨ <br />
                         HUẤN LUYỆN VIÊN <span className="highlight-text">GYMXYZ</span>
                     </h2>
 
-                    <p className="pt-desc">
-                        {ptInfo.description}
-                    </p>
+                    {/* sec-desc không dùng vì cần max-width rộng hơn — dùng class riêng */}
+                    <p className="pt-desc">{ptInfo.description}</p>
 
-                    {/* Danh sách 4 lợi ích (Grid 2x2 trên desktop) */}
+                    {/* Danh sách lợi ích — grid 2x2 trên tablet+ */}
                     <div className="pt-benefits-grid">
                         {ptInfo.Benefits?.map((benefit, index) => (
                             <div className="benefit-card" key={index}>
@@ -64,7 +70,7 @@ const PTSection: React.FC = () => {
                     </div>
                 </div>
 
-                {/* CỘT PHẢI: Hình ảnh minh họa */}
+                {/* Cột phải: Hình ảnh */}
                 <div className="pt-image-wrapper reveal">
                     <img
                         src={ptInfo.img}
@@ -73,6 +79,7 @@ const PTSection: React.FC = () => {
                         loading="lazy"
                     />
                 </div>
+
             </div>
         </section>
     );

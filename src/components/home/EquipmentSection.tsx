@@ -2,7 +2,8 @@
 // Component: EquipmentSection
 // src/components/home/EquipmentSection.tsx
 //
-// Không nhận props equipment nữa — đọc trực tiếp từ Redux.
+// Không nhận props equipment — đọc trực tiếp từ Redux.
+// Dùng utility classes từ base.css: .sec-label, .sec-title, .sec-desc
 // ============================================================
 
 import React, { useMemo } from 'react';
@@ -14,7 +15,6 @@ import { ROUTES } from '../../constants/routes';
 import { Link } from 'react-router-dom';
 
 const EquipmentSection: React.FC = () => {
-    // Đọc từ Redux store
     const { equipment } = useSelector((state: RootState) => state.equipment);
 
     // Lấy ngẫu nhiên 3 thiết bị, useMemo tránh re-shuffle mỗi lần render
@@ -29,16 +29,17 @@ const EquipmentSection: React.FC = () => {
                 {/* Header */}
                 <div className="equipment-header">
                     <div className="equipment-header__text">
-                        <p className="equipment-header__tag">Cơ sở vật chất</p>
-                        <h2 className="equipment-header__title">
+                        {/* sec-label, sec-title, sec-desc — chuẩn từ base.css */}
+                        <span className="sec-label">Cơ sở vật chất</span>
+                        <h2 className="sec-title">
                             DỤNG CỤ & <br /> MÁY MÓC
                         </h2>
-                        <p className="equipment-header__desc">
+                        <p className="sec-desc">
                             Thiết bị hiện đại, bảo dưỡng định kỳ — đủ cho mọi mục tiêu.
                         </p>
                     </div>
 
-                    {/* Nút "Xem tất cả" — ẩn trên mobile, hiện từ tablet */}
+                    {/* Nút "Xem tất cả" — ẩn trên mobile, hiện từ desktop (992px+) */}
                     <Link to={ROUTES.EQUIPMENT} className="equipment-header__link">
                         Xem tất cả
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">

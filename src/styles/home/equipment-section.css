@@ -1,15 +1,18 @@
 /* ════════════════════════════════════════
    EQUIPMENT SECTION
-   Import trong EquipmentSection.tsx
-════════════════════════════════════════ */
+   Dùng các utility class từ base.css:
+     .sec-label  → tag nhỏ màu đỏ phía trên
+     .sec-title  → tiêu đề lớn (Bebas Neue)
+     .sec-desc   → mô tả ngắn màu muted
+   ════════════════════════════════════════ */
 
-/* ── Section wrapper ─────────────────── */
+/* ── Wrapper chung ── */
 .equipment-section {
     background: var(--bg);
     padding: clamp(3rem, 8vw, 6rem) 0;
 }
 
-/* ── Header ──────────────────────────── */
+/* ── Header: mobile = column, desktop = row ── */
 .equipment-header {
     display: flex;
     flex-direction: column;
@@ -17,33 +20,7 @@
     margin-bottom: clamp(2rem, 5vw, 3rem);
 }
 
-.equipment-header__tag {
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 0.4rem;
-}
-
-.equipment-header__title {
-    font-family: var(--ff-display);
-    font-size: clamp(2.2rem, 8vw, 3.8rem);
-    font-weight: 900;
-    line-height: 1.05;
-    color: var(--white);
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-}
-
-.equipment-header__desc {
-    font-size: clamp(0.88rem, 2.2vw, 1rem);
-    color: var(--muted);
-    max-width: 38ch;
-    line-height: 1.6;
-}
-
-/* Nút "Xem tất cả" — ẩn trên mobile */
+/* Nút "Xem tất cả" — ẩn trên mobile, hiện từ desktop */
 .equipment-header__link {
     display: none;
     align-items: center;
@@ -51,22 +28,27 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--white);
-    transition: color var(--transition);
     white-space: nowrap;
     align-self: flex-end;
+    transition: color var(--transition);
 }
 
-.equipment-header__link:hover { color: var(--red); }
-.equipment-header__link svg   { flex-shrink: 0; }
+.equipment-header__link:hover {
+    color: var(--red);
+}
 
-/* ── Grid ────────────────────────────── */
+.equipment-header__link svg {
+    flex-shrink: 0;
+}
+
+/* ── Grid thiết bị: mobile = 1 cột → tablet = 2 → desktop = 3 ── */
 .equipment-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.25rem;
 }
 
-/* ── CTA footer ──────────────────────── */
+/* ── CTA cuối trang ── */
 .equipment-footer {
     margin-top: clamp(2rem, 5vw, 3rem);
     display: flex;
@@ -93,9 +75,7 @@
     transform: translateY(-2px);
 }
 
-/* ════════════════════════════════════════
-   RESPONSIVE BREAKPOINTS
-════════════════════════════════════════ */
+/* ── Responsive ── */
 
 /* Tablet: 600px+ → 2 cột */
 @media (min-width: 600px) {
@@ -105,7 +85,7 @@
     }
 }
 
-/* Desktop: 992px+ → 3 cột + header ngang */
+/* Desktop: 992px+ → 3 cột + header chuyển sang ngang */
 @media (min-width: 992px) {
     .equipment-header {
         flex-direction: row;

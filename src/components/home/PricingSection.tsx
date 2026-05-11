@@ -3,7 +3,7 @@
 // src/components/home/PricingSection.tsx
 //
 // Section "Bảng giá" trên trang chủ.
-// Nhận memberships qua props từ HomePage (đã fetch bằng Redux).
+// Dùng utility classes từ base.css: .sec-label, .sec-title, .sec-desc
 // ============================================================
 
 import React from 'react';
@@ -19,39 +19,33 @@ interface PricingSectionProps {
     onRegister?: (membership: Membership) => void;
 }
 
-/**
- * PricingSection
- *
- * Hiển thị:
- *  - Header: tiêu đề + nút "Chi tiết đầy đủ"
- *  - Lưới các PricingCard (mặc định chỉ hiện 3 gói phổ biến nhất)
- *  - Nút "Xem tất cả gói" để mở rộng
- */
 const PricingSection: React.FC<PricingSectionProps> = ({
                                                            memberships,
                                                            onViewAll,
                                                            onRegister,
                                                        }) => {
     // Chỉ lấy 3 gói giữa để hiển thị trên trang chủ
-    const displayedMemberships = memberships.slice(1, 4); // index 1=3tháng, 2=6tháng, 3=12tháng
+    // index 1=3tháng, 2=6tháng, 3=12tháng
+    const displayedMemberships = memberships.slice(1, 4);
 
     return (
         <section className="pricing-section" id="pricing" aria-label="Bảng giá gói tập">
             <div className="pricing-section__container">
 
-                {/* ---- Header ---- */}
+                {/* Header */}
                 <div className="pricing-section__header">
                     <div className="pricing-section__header-left">
-                        <span className="pricing-section__subtitle">BẢNG GIÁ</span>
-                        <h2 className="pricing-section__title">
+                        {/* sec-label, sec-title, sec-desc — chuẩn từ base.css */}
+                        <span className="sec-label">BẢNG GIÁ</span>
+                        <h2 className="sec-title">
                             CHỌN GÓI<br />PHÙ HỢP
                         </h2>
-                        <p className="pricing-section__desc">
+                        <p className="sec-desc">
                             Tất cả gói bao gồm toàn bộ thiết bị và thư viện bài tập.
                         </p>
                     </div>
 
-                    {/* Nút "Chi tiết đầy đủ" — dẫn sang trang pricing riêng */}
+                    {/* Nút dẫn sang trang pricing riêng */}
                     <button
                         className="pricing-section__view-all-btn"
                         onClick={onViewAll}
@@ -61,7 +55,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                     </button>
                 </div>
 
-                {/* ---- Lưới cards ---- */}
+                {/* Lưới cards */}
                 <div className="pricing-section__grid">
                     {displayedMemberships.map((membership) => (
                         <PricingCard

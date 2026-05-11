@@ -1,10 +1,9 @@
-// src/components/booking/SectionSelectPT.tsx
-// Mục chọn PT cụ thể — chỉ hiện khi chọn gói có PT
-// fromPT: PT ban đầu được highlight sẵn, bấm lại để bỏ chọn
-
+// src/components/customer/booking/SectionSelectPT.tsx
 import React from 'react';
 import { PT } from '../../../types/models';
 import useBooking from '../../../hooks/useBooking';
+import usePagination from '../../../hooks/useBookingsPagination';
+import Pagination from '../../common/BookingsPagination';
 
 interface SectionSelectPTProps {
     booking: ReturnType<typeof useBooking>;
@@ -12,6 +11,8 @@ interface SectionSelectPTProps {
 
 const SectionSelectPT: React.FC<SectionSelectPTProps> = ({ booking }) => {
     const { selectedPT, handleSelectPT, availablePTs, loadingPTs } = booking;
+
+    const pagination = usePagination(availablePTs, 4);
 
     if (loadingPTs) {
         return (
@@ -31,12 +32,10 @@ const SectionSelectPT: React.FC<SectionSelectPTProps> = ({ booking }) => {
                 <span className="booking-section__num">3</span>
                 Chọn huấn luyện viên
             </h2>
-            <p className="booking-section__sub">
-                Bấm lại để bỏ chọn
-            </p>
+            <p className="booking-section__sub">Bấm lại để bỏ chọn</p>
 
             <div className="booking-pt-list">
-                {availablePTs.map((pt: PT) => {
+                {pagination.currentItems.map((pt: PT) => {
                     const isSelected = selectedPT?.id === pt.id;
                     return (
                         <div
@@ -58,7 +57,6 @@ const SectionSelectPT: React.FC<SectionSelectPTProps> = ({ booking }) => {
                                     ))}
                                 </div>
                             </div>
-                            {/* Dấu tick khi được chọn */}
                             {isSelected && (
                                 <div className="booking-pt-card__check">✓</div>
                             )}
@@ -66,6 +64,11 @@ const SectionSelectPT: React.FC<SectionSelectPTProps> = ({ booking }) => {
                     );
                 })}
             </div>
+
+            {/* Phân trang dùng chung */}
+            {pagination.showPagination && (
+                <Pagination {...pagination} />
+            )}
         </div>
     );
 };

@@ -1,90 +1,71 @@
 /* ════════════════════════════════════════
-   PT SECTION (MOBILE FIRST) - CẬP NHẬT
-════════════════════════════════════════ */
+   PT SECTION
+   Dùng các utility class từ base.css:
+     .sec-label  → tag nhỏ màu đỏ phía trên
+     .sec-title  → tiêu đề lớn (Bebas Neue)
+     .sec-desc   → mô tả ngắn màu muted
+   ════════════════════════════════════════ */
 
+/* ── Wrapper chung ── */
 .pt-section {
     background: var(--bg);
-    padding: clamp(2.5rem, 6vw, 5rem) 0; /* Thu gọn khoảng cách padding trên dưới một chút */
+    padding: clamp(2.5rem, 6vw, 5rem) 0;
     color: var(--white);
 }
 
+/* ── Layout: mobile = column, desktop = row ── */
 .pt-container {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
 }
 
-/* --- TEXT CONTENT --- */
+/* ── Phần text bên trái ── */
 .pt-content {
     display: flex;
     flex-direction: column;
 }
 
-.pt-tag {
-    font-size: 0.7rem; /* Nhỏ lại một chút để thanh lịch hơn */
-    font-weight: 800;
-    letter-spacing: 0.18em; /* Kéo giãn khoảng cách chữ để tạo điểm nhấn */
-    color: var(--red);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-}
-
-.pt-title {
-    font-family: var(--ff-display);
-    /* Giảm kích thước chữ tối đa từ 3.5rem xuống 2.8rem */
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 900;
-    line-height: 1.15;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Thêm viền bóng mờ giúp chữ nổi bật khỏi nền */
-}
-
-/* Làm nổi bật chữ GYMXYZ */
+/* Làm nổi bật chữ GYMXYZ trong tiêu đề */
 .pt-title .highlight-text {
     color: var(--red);
     position: relative;
     display: inline-block;
 }
 
-.pt-desc {
-    color: #d1d5db; /* Dùng mã màu sáng hơn var(--muted) một chút để dễ đọc hơn */
-    font-size: clamp(0.85rem, 1.5vw, 0.95rem); /* Giảm size đoạn văn */
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    max-width: 500px;
-}
-
-/* --- BENEFITS GRID --- */
+/* ── Benefits Grid: mobile = 1 cột, tablet+ = 2 cột ── */
 .pt-benefits-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
     margin-bottom: 2.5rem;
+    margin-top: 1.5rem;
 }
 
+/* Thẻ benefit đơn lẻ */
 .benefit-card {
-    background: rgba(255, 255, 255, 0.04); /* Làm nền sáng lên 1 chút (0.03 -> 0.04) */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Làm viền rõ hơn một chút */
-    border-radius: 12px;
-    padding: 1rem 1.25rem; /* Thu nhỏ padding thẻ */
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
     display: flex;
     gap: 1rem;
     align-items: flex-start;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
 }
 
 .benefit-card:hover {
     transform: translateY(-3px);
-    border-color: rgba(239, 68, 68, 0.4);
-    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1); /* Thêm hiệu ứng phát sáng mờ màu đỏ khi hover */
+    border-color: rgba(255, 59, 48, 0.4); /* var(--red) với opacity */
+    box-shadow: 0 4px 20px rgba(255, 59, 48, 0.1);
 }
 
+/* Icon wrapper hình vuông bo góc */
 .benefit-icon-wrapper {
     background: rgba(255, 255, 255, 0.08);
     width: 38px;
     height: 38px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,19 +77,19 @@
 }
 
 .benefit-title {
-    font-size: 0.95rem; /* Thu nhỏ tiêu đề thẻ */
+    font-size: 0.95rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
-    color: #ffffff; /* Trắng tinh để nổi bật */
+    color: var(--white);
 }
 
 .benefit-content {
-    font-size: 0.82rem; /* Thu nhỏ nội dung thẻ */
-    color: #9ca3af;
+    font-size: 0.82rem;
+    color: var(--muted-lt);
     line-height: 1.5;
 }
 
-/* --- CỤM NÚT ACTION --- */
+/* ── Cụm nút hành động ── */
 .pt-actions {
     display: flex;
     flex-wrap: wrap;
@@ -116,33 +97,35 @@
     align-items: center;
 }
 
+/* Nút đỏ đặc */
 .btn-solid-red {
     background: var(--red);
-    color: #fff;
+    color: var(--white);
     border: none;
-    padding: 0.75rem 1.6rem; /* Làm nút gọn lại một chút */
-    border-radius: 6px;
+    padding: 0.75rem 1.6rem;
+    border-radius: var(--radius-sm);
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: background var(--transition), transform 0.2s;
 }
 
 .btn-solid-red:hover {
-    background: #dc2626;
+    background: var(--red-dk);
     transform: scale(1.02);
 }
 
+/* Nút outline mờ */
 .btn-outline-text {
     background: transparent;
-    color: #d1d5db;
+    color: var(--muted);
     border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 0.75rem 1.4rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color var(--transition), border-color var(--transition);
 }
 
 .btn-outline-text:hover {
@@ -150,10 +133,10 @@
     border-color: var(--white);
 }
 
-/* --- IMAGE --- */
+/* ── Hình ảnh bên phải ── */
 .pt-image-wrapper {
     width: 100%;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
@@ -165,9 +148,9 @@
     display: block;
 }
 
-/* ════════════════════════════════════════
-   RESPONSIVE
-════════════════════════════════════════ */
+/* ── Responsive ── */
+
+/* Tablet: 600px+ → benefits thành 2 cột */
 @media (min-width: 600px) {
     .pt-benefits-grid {
         grid-template-columns: 1fr 1fr;
@@ -175,10 +158,11 @@
     }
 }
 
+/* Desktop: 992px+ → layout chuyển sang 2 cột ngang */
 @media (min-width: 992px) {
     .pt-container {
         flex-direction: row;
-        align-items: center; /* Canh giữa 2 cột theo chiều dọc */
+        align-items: center;
         gap: 4rem;
     }
 
