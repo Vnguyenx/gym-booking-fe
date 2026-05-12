@@ -1,4 +1,6 @@
+// src/types/models.ts
 import { Role } from '../constants/roles';
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
 
 export interface Banner {
     id?: string;
@@ -10,13 +12,15 @@ export interface Banner {
     title: string;
 }
 
-// Thêm interface cho object bên trong mảng Benefits của PTInfo
+// ── PT ────────────────────────────────────────────────────────────────────────
+
+// Object bên trong mảng Benefits của PTInfo
 export interface Benefit {
     title: string;
     content: string;
 }
 
-// Thêm collection pt_info
+// Collection: pt_info
 export interface PTInfo {
     id?: string;
     Benefits: Benefit[];
@@ -25,7 +29,7 @@ export interface PTInfo {
     updateAt: Date;
 }
 
-// Cập nhật lại collection pts theo đúng database
+// Collection: pts
 export interface PT {
     id?: string;
     avatar: string;
@@ -34,20 +38,8 @@ export interface PT {
     fullName: string;
     gender: 'Nam' | 'Nữ' | string;
     isAvailable: boolean;
-    specialty: string[]; // Trong DB đang là mảng string
+    specialty: string[];
     updateAt: Date;
-}
-
-// User này mở rộng từ User trong authSlice của bạn
-export interface UserProfile {
-    id?: string;
-    uid: string;
-    email: string;
-    displayName: string;
-    role: Role;
-    phone: string;
-    avatarUrl: string;
-    createdAt: Date;
 }
 
 export interface PTApplication {
@@ -64,25 +56,53 @@ export interface PTApplication {
     createdAt: any;
 }
 
-
-export interface Floor {
+// Collection: pt_services
+export interface PTService {
     id?: string;
-    name: string;
-    floorNumber: number;
-    description: string;
-    gymId: string;
-    area: number;
-    img: string;
+    name: string;              // "Thuê PT kèm riêng 1:1"
+    pricePerMonth: number;     // 1500000
+    type: 'personal' | 'group' | 'none';
 }
 
+// ── User ──────────────────────────────────────────────────────────────────────
+
+// Mở rộng từ User trong authSlice
+export interface UserProfile {
+    id?: string;
+    uid: string;
+    email: string;
+    displayName: string;
+    role: Role;
+    phone: string;
+    avatarUrl: string;
+    createdAt: Date;
+}
+export type ProfileFormData = Pick<UserProfile, 'displayName' | 'phone' | 'email'>;
+
+export interface UseProfileReturn {
+    formData: ProfileFormData;
+    isEditing: boolean;
+    isSaving: boolean;
+    successMessage: string;
+    errorMessage: string;
+    avatarUrl: string;
+    isUploadingAvatar: boolean;
+    handleEdit: () => void;
+    handleCancel: () => void;
+    handleChange: (field: keyof ProfileFormData, value: string) => void;
+    handleSave: () => Promise<void>;
+    handleAvatarSave: (url: string) => Promise<void>;
+}
+
+// ── Gym ───────────────────────────────────────────────────────────────────────
 
 export interface Location {
-   latitude: number;
-   longitude: number;
-   mapUrl: string;
+    latitude: number;
+    longitude: number;
+    mapUrl: string;
 }
 
-export interface Amenities{
+export interface Amenities {
     locker: boolean;
     parking: boolean;
     parkingNote: string;
@@ -106,7 +126,16 @@ export interface GymInfo {
     totalFloors: number;
     coverImageUrl: string;
     amenities: Amenities;
+}
 
+export interface Floor {
+    id?: string;
+    name: string;
+    floorNumber: number;
+    description: string;
+    gymId: string;
+    area: number;
+    img: string;
 }
 
 export interface Zone {
@@ -119,30 +148,23 @@ export interface Zone {
 
 export interface Equipment {
     id?: string;
-
     name: string;
     nameVi: string;
-
     description: string;
     category: string;
     subCategory: string;
-
     floorId: string;
     gymId: string;
     zoneId: string;
-
     imageUrls: string[];
-
     isActive: boolean;
     quantity: number;
-
     muscleGroups: string[];
-
     tips: string;
-
     updatedAt: Date;
-
 }
+
+// ── Membership & Booking ──────────────────────────────────────────────────────
 
 export interface Membership {
     id?: string;
@@ -162,24 +184,60 @@ export interface Membership {
     promotions: string[];
 }
 
-// Collection: bookings
+/**
+ * GymBooking — Collection: bookings
+ * Đặt gói tập / mua dịch vụ PT (khác với lịch hẹn trong useBookingHistory)
+ * Đổi tên từ Booking → GymBooking để tránh conflict với BookingHistory.Booking
+ */
+// ── Booking History ───────────────────────────────────────────────────────────
+
+// Khớp đúng với schema Firestore collection: bookings
 export interface Booking {
-    id?: string;
-    customerId: string;        // uid của khách hàng
-    membershipId: string;      // ví dụ: "mem-3m"
-    ptServiceId: string;       // ví dụ: "pt-1on1" | "pt-none"
-    ptId: string;              // uid của PT, rỗng nếu không chọn PT
-    totalPrice: number;        // tổng tiền
-    status: 'pending' | 'confirmed' | 'cancelled';
-    paymentCode: string;       // mã đối chiếu VietQR
-    paidAt: Date | null;       // null = chưa thanh toán
-    createdAt: Date;
+    id: string;
+    customerId: string;
+    membershipId: string;   // VD: "mem-1m", "mem-3m"
+    ptServiceId: string;    // VD: "pt-none", "pt-1on1"
+    ptId: string;           // uid PT, rỗng nếu không chọn PT
+    totalPrice: number;     // Đơn vị: VND
+    status: BookingStatus;
+    createdAt: string | null;  // ISO string sau khi BE convert
+    paidAt: string | null;     // ISO string sau khi BE convert
+    paymentCode: String;
 }
 
-// Collection: pt_services
-export interface PTService {
-    id?: string;
-    name: string;              // "Thuê PT kèm riêng 1:1"
-    pricePerMonth: number;     // 1500000
-    type: 'personal' | 'group' | 'none';
+export interface UseBookingsReturn {
+    bookings: Booking[];
+    isLoading: boolean;
+    error: string | null;
+    handleCancel: (id: string) => Promise<void>;
+}
+
+// ── Classes & Attendance ──────────────────────────────────────────────────────
+
+export type AttendanceStatus = 'present' | 'absent' | 'late';
+
+export interface AttendanceRecord {
+    date: string;          // VD: "2025-05-01"
+    status: AttendanceStatus;
+    note?: string;
+}
+
+export interface ClassItem {
+    id: string;
+    className: string;     // Tên lớp học
+    courseName: string;    // Tên khoá học (nếu có, rỗng nếu điểm danh lẻ)
+    instructor: string;    // Tên giáo viên
+    schedule: string;      // VD: "Thứ 2, 4, 6 – 18:00"
+    isEnrolled: boolean;   // Có đăng ký khoá học không
+    attendance: AttendanceRecord[];
+}
+
+export interface UseClassesReturn {
+    classes: ClassItem[];
+    isLoading: boolean;
+    error: string | null;
+    selectedClassId: string | null;
+    selectedClass: ClassItem | undefined;
+    selectClass: (id: string) => void;
+    clearSelection: () => void;
 }

@@ -1,10 +1,13 @@
 // src/hooks/useBooking.ts
 // Hook quản lý state trang đặt lịch dạng single page
 // Hỗ trợ 3 điểm vào: direct, fromPricing, fromPT
+// Data lấy từ Redux store thay vì fetch trực tiếp từ BE
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Membership, PTService, PT } from '../types/models';
 import { bookingService } from '../services/bookingService';
+import usePTServiceData from './usePTServiceData';
+import usePTData from './usePTData';
 
 interface BookingResult {
     bookingId: string;
@@ -14,8 +17,8 @@ interface BookingResult {
 }
 
 interface BookingInitialState {
-    membership?: Membership; // từ PricingCard
-    pt?: PT;                 // từ PTDetailPage
+    membership?: Membership;
+    pt?: PT;
 }
 
 export type EntryPoint = 'fromPricing' | 'fromPT' | 'direct';
@@ -37,38 +40,19 @@ const useBooking = (initial?: BookingInitialState) => {
         initial?.pt ?? null
     );
 
-    // ── Data từ BE/mock ───────────────────────────────────
-    const [ptServices, setPTServices] = useState<PTService[]>([]);
-    const [availablePTs, setAvailablePTs] = useState<PT[]>([]);
-    const [loadingPTServices, setLoadingPTServices] = useState(true);
-    const [loadingPTs, setLoadingPTs] = useState(false);
-
     // ── Kết quả booking ──────────────────────────────────
     const [bookingResult, setBookingResult] = useState<BookingResult | null>(null);
     const [loadingBooking, setLoadingBooking] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // ── Fetch PT services khi mount ───────────────────────
-    useEffect(() => {
-        bookingService.getPTServices()
-            .then(data => setPTServices(data.ptServices))
-            .catch(err => console.error('Lỗi lấy PT services:', err))
-            .finally(() => setLoadingPTServices(false));
-    }, []);
+    // ── Data từ Redux (không fetch trực tiếp từ BE nữa) ──
+    const { ptServices, loading: loadingPTServices } = usePTServiceData();
+    const { pts: allPTs, loading: loadingPTs } = usePTData();
 
-    // ── Fetch danh sách PT khi chọn có PT ────────────────
-    useEffect(() => {
-        // Chỉ fetch khi chọn gói có PT (không phải 'none')
-        if (!selectedPTService || selectedPTService.type === 'none') {
-            setAvailablePTs([]);
-            return;
-        }
-        setLoadingPTs(true);
-        bookingService.getAvailablePTs()
-            .then(data => setAvailablePTs(data.pts))
-            .catch(err => console.error('Lỗi lấy danh sách PT:', err))
-            .finally(() => setLoadingPTs(false));
-    }, [selectedPTService]);
+    // Lọc PT available — chỉ hiện khi chọn gói có PT
+    const availablePTs: PT[] = selectedPTService && selectedPTService.type !== 'none'
+        ? allPTs.filter(pt => pt.isAvailable)
+        : [];
 
     // ── Tính tổng tiền ───────────────────────────────────
     const calcTotalPrice = (): number => {
@@ -84,7 +68,6 @@ const useBooking = (initial?: BookingInitialState) => {
     const canCheckout = (): boolean => {
         if (!selectedMembership) return false;
         if (!selectedPTService) return false;
-        // Nếu chọn có PT thì phải chọn PT cụ thể
         if (selectedPTService.type !== 'none' && !selectedPT) return false;
         return true;
     };
@@ -97,12 +80,10 @@ const useBooking = (initial?: BookingInitialState) => {
 
     const handleSelectPTService = (ptService: PTService) => {
         setSelectedPTService(ptService);
-        // Nếu đổi sang "Không PT" → bỏ PT đã chọn
-        // Nếu đến từ PTDetailPage và chọn 'none' → bỏ PT đã chọn luôn
+        // Đổi sang "Không PT" → bỏ PT đã chọn
         if (ptService.type === 'none') {
             setSelectedPT(null);
         }
-        // Nếu đến từ PTDetailPage và đổi sang gói khác → giữ PT đã chọn
     };
 
     const handleSelectPT = (pt: PT) => {
@@ -143,7 +124,7 @@ const useBooking = (initial?: BookingInitialState) => {
         selectedPTService,
         selectedPT,
 
-        // Data
+        // Data từ Redux
         ptServices,
         availablePTs,
 

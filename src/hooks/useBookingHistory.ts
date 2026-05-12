@@ -1,91 +1,27 @@
 import { useState, useEffect } from 'react';
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export type BookingStatus = 'confirmed' | 'cancelled' | 'completed' | 'pending';
-
-export interface Booking {
-    id: string;
-    serviceName: string;   // Tên dịch vụ / lớp đặt
-    instructor: string;
-    date: string;          // VD: "2025-05-10"
-    time: string;          // VD: "09:00"
-    duration: number;      // Số phút
-    status: BookingStatus;
-    price: number;         // Đơn vị: VND
-    note?: string;
-}
-
-export interface UseBookingsReturn {
-    bookings: Booking[];
-    isLoading: boolean;
-}
-
-// ─── Dữ liệu giả (mock data) ─────────────────────────────────────────────────
-// TODO: Thay bằng API call thật khi backend sẵn sàng
-
-const MOCK_BOOKINGS: Booking[] = [
-    {
-        id: 'bk-001',
-        serviceName: 'Yoga 1-1 cùng cô Minh Tâm',
-        instructor: 'Cô Minh Tâm',
-        date: '2025-05-12',
-        time: '08:00',
-        duration: 60,
-        status: 'confirmed',
-        price: 350000,
-    },
-    {
-        id: 'bk-002',
-        serviceName: 'Pilates Nhóm Nhỏ',
-        instructor: 'Thầy Hoàng Nam',
-        date: '2025-04-28',
-        time: '19:00',
-        duration: 75,
-        status: 'completed',
-        price: 200000,
-        note: 'Buổi học rất tốt!',
-    },
-    {
-        id: 'bk-003',
-        serviceName: 'Thử lớp Yoga Buổi Sáng',
-        instructor: 'Cô Minh Tâm',
-        date: '2025-04-20',
-        time: '06:30',
-        duration: 60,
-        status: 'cancelled',
-        price: 0,
-        note: 'Khách hàng huỷ trước 24h',
-    },
-];
-
-// ─── Hook ────────────────────────────────────────────────────────────────────
+import { customerService } from '../services/customerService';
+import { Booking, UseBookingsReturn } from '../types/models';
 
 /**
  * useBookings
- * Lấy danh sách lịch sử booking của customer.
- * Sắp xếp theo ngày mới nhất lên đầu.
+ * Lấy lịch sử đăng ký gói tập của customer.
+ * Booking có status "pending" thì cho phép huỷ.
  */
 const useBookings = (): UseBookingsReturn => {
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError]         = useState<string | null>(null);
 
     useEffect(() => {
         const fetchBookings = async () => {
             setIsLoading(true);
+            setError(null);
             try {
-                // TODO: Thay bằng API call thật
-                // const data = await bookingService.getMyBookings();
-                // setBookings(data);
-
-                await new Promise((resolve) => setTimeout(resolve, 500));
-                // Sắp xếp mới nhất lên đầu
-                const sorted = [...MOCK_BOOKINGS].sort(
-                    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
-                setBookings(sorted);
-            } catch (error) {
-                console.error('Lỗi tải lịch sử booking:', error);
+                const data = await customerService.getMyBookings();
+                setBookings(data);
+            } catch (err: any) {
+                console.error('Lỗi tải lịch sử booking:', err);
+                setError(err.message ?? 'Không thể tải lịch sử đăng ký. Vui lòng thử lại.');
             } finally {
                 setIsLoading(false);
             }
@@ -94,7 +30,18 @@ const useBookings = (): UseBookingsReturn => {
         fetchBookings();
     }, []);
 
-    return { bookings, isLoading };
+    const handleCancel = async (id: string) => {
+        try {
+            await customerService.cancelBooking(id);
+            setBookings((prev) =>
+                prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b))
+            );
+        } catch (err: any) {
+            alert(err.message ?? 'Huỷ thất bại. Vui lòng thử lại.');
+        }
+    };
+
+    return { bookings, isLoading, error, handleCancel };
 };
 
 export default useBookings;

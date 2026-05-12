@@ -10,6 +10,7 @@ interface UsePTDataReturn {
     pts: PT[];
     loading: boolean;
     error: string | null;
+    getPTName: (ptId: string) => string;
 }
 
 const usePTData = (): UsePTDataReturn => {
@@ -20,7 +21,13 @@ const usePTData = (): UsePTDataReturn => {
         if (!fetched) dispatch(fetchPTs());
     }, [fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return { pts, loading, error };
+    const getPTName = (ptId: string): string => {
+        if (!ptId) return 'Không có';
+        const pt = pts.find((p) => p.id === ptId);
+        return pt?.fullName ?? 'Không có';
+    };
+
+    return { pts, loading, error, getPTName };
 };
 
 export default usePTData;

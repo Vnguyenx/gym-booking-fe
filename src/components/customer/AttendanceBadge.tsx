@@ -1,5 +1,5 @@
 import React from 'react';
-import { AttendanceStatus } from '../../hooks/useClasses';
+import { AttendanceStatus } from '../../types/models';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

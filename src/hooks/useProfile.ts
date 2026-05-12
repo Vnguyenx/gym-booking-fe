@@ -1,97 +1,103 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-// import { updateProfile } from '../../../store/slices/authSlice'; // Uncomment khi có API thật
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export interface ProfileFormData {
-    displayName: string;
-    phone: string;
-    email: string; // email chỉ hiển thị, không cho sửa
-}
-
-export interface UseProfileReturn {
-    formData: ProfileFormData;
-    isEditing: boolean;
-    isSaving: boolean;
-    successMessage: string;
-    errorMessage: string;
-    handleEdit: () => void;
-    handleCancel: () => void;
-    handleChange: (field: keyof ProfileFormData, value: string) => void;
-    handleSave: () => Promise<void>;
-}
+import { updateUserInStore } from '../store/slices/authSlice';
+import { customerService } from '../services/customerService';
+import { ProfileFormData, UseProfileReturn } from '../types/models';
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
-
 /**
  * useProfile
  * Quản lý logic xem và chỉnh sửa thông tin cá nhân của user.
  * Tách biệt hoàn toàn với UI để dễ test và tái sử dụng.
+ *
+ * Luồng avatar: FE upload ImgBB → lấy URL → handleAvatarSave(url) → gọi API BE
+ * Luồng profile: handleSave() → gọi API BE → cập nhật Redux store
  */
 const useProfile = (): UseProfileReturn => {
     const dispatch = useAppDispatch();
 
-    // Lấy thông tin user từ Redux store
-     const user = useAppSelector((state) => state.auth.user);
+    const user = useAppSelector((state) => state.auth.user);
 
-
-
-    // State cho form chỉnh sửa
+    // ── Form state ────────────────────────────────────────
     const [formData, setFormData] = useState<ProfileFormData>({
         displayName: user?.displayName ?? '',
-        phone: user?.phone ?? '',
-        email: user?.email ?? '',
+        phone:       user?.phone       ?? '',
+        email:       user?.email       ?? '',
     });
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    const [isEditing,      setIsEditing]      = useState(false);
+    const [isSaving,       setIsSaving]       = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage,   setErrorMessage]   = useState('');
 
-    // Bật chế độ chỉnh sửa
+    // ── Avatar state ──────────────────────────────────────
+    const [avatarUrl,         setAvatarUrl]         = useState(user?.avatarUrl ?? '');
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
+    // ── Handlers form ─────────────────────────────────────
+
     const handleEdit = () => {
         setIsEditing(true);
         setSuccessMessage('');
         setErrorMessage('');
     };
 
-    // Huỷ chỉnh sửa, khôi phục dữ liệu gốc
     const handleCancel = () => {
         setFormData({
             displayName: user?.displayName ?? '',
-            phone: user?.phone ?? '',
-            email: user?.email ?? '',
+            phone:       user?.phone       ?? '',
+            email:       user?.email       ?? '',
         });
         setIsEditing(false);
         setErrorMessage('');
     };
 
-    // Cập nhật giá trị một field trong form
     const handleChange = (field: keyof ProfileFormData, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
-    // Lưu thông tin - gọi API rồi cập nhật Redux
     const handleSave = async () => {
         setIsSaving(true);
         setErrorMessage('');
-
         try {
-            // TODO: Thay bằng dispatch(updateProfile(formData)) khi có API thật
-            // await dispatch(updateProfile(formData)).unwrap();
-
-            // Giả lập gọi API mất 1 giây
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
+            await customerService.updateProfile({
+                displayName: formData.displayName,
+                phone:       formData.phone,
+                avatarUrl,
+            });
+            dispatch(updateUserInStore({
+                displayName: formData.displayName,
+                phone:       formData.phone,
+            }));
             setSuccessMessage('Cập nhật thông tin thành công!');
             setIsEditing(false);
-        } catch (error) {
-            setErrorMessage('Cập nhật thất bại. Vui lòng thử lại.');
+        } catch (error: any) {
+            setErrorMessage(error.message ?? 'Cập nhật thất bại. Vui lòng thử lại.');
         } finally {
             setIsSaving(false);
         }
     };
+
+    // ── Handler avatar ────────────────────────────────────
+
+    const handleAvatarSave = async (url: string) => {
+        setIsUploadingAvatar(true);
+        try {
+            await customerService.updateProfile({
+                displayName: formData.displayName,
+                phone:       formData.phone,
+                avatarUrl:   url,
+            });
+            setAvatarUrl(url);
+            dispatch(updateUserInStore({ avatarUrl: url }));
+        } catch (error: any) {
+            throw new Error(error.message ?? 'Không thể lưu ảnh đại diện.');
+        } finally {
+            setIsUploadingAvatar(false);
+        }
+    };
+
+    // ── Return ────────────────────────────────────────────
 
     return {
         formData,
@@ -99,10 +105,13 @@ const useProfile = (): UseProfileReturn => {
         isSaving,
         successMessage,
         errorMessage,
+        avatarUrl,
+        isUploadingAvatar,
         handleEdit,
         handleCancel,
         handleChange,
         handleSave,
+        handleAvatarSave,
     };
 };
 

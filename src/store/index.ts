@@ -11,6 +11,7 @@ import equipmentReducer from './equipmentSlice';
 import gymReducer from './gymSlice';
 import ptReducer from './ptSlice';
 import ptInfoReducer from './ptInfoSlice';
+import ptServiceReducer from './ptServiceSlice';
 
 export const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
         gym: gymReducer,
         pt: ptReducer,
         ptInfo: ptInfoReducer,
+        ptServices: ptServiceReducer,
     },
 });
 

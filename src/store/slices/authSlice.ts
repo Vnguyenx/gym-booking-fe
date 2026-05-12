@@ -1,36 +1,24 @@
 // store/slices/authSlice.ts
-// Slice quản lý trạng thái xác thực người dùng (authentication)
-// Một "slice" trong Redux Toolkit = 1 phần của store,
-// bao gồm: state ban đầu + các action để thay đổi state
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Role } from '../../constants/roles';
 
-// Định nghĩa kiểu dữ liệu của 1 User trong hệ thống
 interface User {
-    uid: string;           // ID duy nhất từ Firebase Auth
-    email: string;         // Email đăng nhập
-    displayName: string;   // Tên hiển thị
-    role: Role;            // Phân quyền: customer | pt | admin
-    phone: string;         // Số Zalo liên hệ
-    avatarUrl: string;     // Link ảnh đại diện
+    uid: string;
+    email: string;
+    displayName: string;
+    role: Role;
+    phone: string;
+    avatarUrl: string;
 }
 
-// Định nghĩa kiểu dữ liệu của auth state trong store
 interface AuthState {
-    user: User | null;     // null = chưa đăng nhập
-    loading: boolean;      // true = đang xử lý (đăng nhập, đăng ký...)
-    error: string | null;  // null = không có lỗi
+    user: User | null;
+    loading: boolean;
+    error: string | null;
 }
 
-// Key dùng để lưu vào localStorage
 const STORAGE_KEY = 'auth_user';
 
-/**
- * Đọc user từ localStorage khi app mới mở
- * Mục đích: giữ trạng thái đăng nhập khi F5, không cần gọi BE
- * Dùng try/catch để tránh lỗi nếu dữ liệu bị hỏng
- */
 const loadUserFromStorage = (): User | null => {
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -40,9 +28,8 @@ const loadUserFromStorage = (): User | null => {
     }
 };
 
-// Giá trị khởi tạo — đọc từ localStorage nếu có
 const initialState: AuthState = {
-    user: loadUserFromStorage(), // ← thay vì null cứng
+    user: loadUserFromStorage(),
     loading: false,
     error: null,
 };
@@ -58,7 +45,6 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = null;
 
-            // Lưu vào localStorage để FE không cần BE khi dev
             if (action.payload) {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(action.payload));
             }
@@ -82,14 +68,23 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = null;
 
-            // Xoá khỏi localStorage khi đăng xuất
             localStorage.removeItem(STORAGE_KEY);
+        },
+
+        // updateUserInStore: cập nhật một phần thông tin user (displayName, phone, avatarUrl...)
+        // Dùng sau khi gọi API chỉnh sửa profile thành công
+        // Đồng thời sync lại localStorage để F5 không mất dữ liệu mới
+        updateUserInStore: (state, action: PayloadAction<Partial<User>>) => {
+            if (state.user) {
+                state.user = { ...state.user, ...action.payload };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user));
+            }
         },
     },
 });
 
 // Export các action để dùng trong component
-export const { setUser, setLoading, setError, logout } = authSlice.actions;
+export const { setUser, setLoading, setError, logout, updateUserInStore } = authSlice.actions;
 
 // Export reducer để đăng ký vào store
 export default authSlice.reducer;
