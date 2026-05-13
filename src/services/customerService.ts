@@ -56,4 +56,26 @@ export const customerService = {
         if (!res.ok) throw new Error(json.error);
         return json.pts;
     },
+    /**
+     * checkin
+     * Customer nhập mã bí mật để điểm danh buổi tập hôm nay.
+     *
+     * BE kiểm tra: mã đúng không, gói còn hạn không, hôm nay đã điểm chưa...
+     * Nếu hợp lệ → tạo attendance record và tăng usedSessions.
+     *
+     * @param classId    - ID class muốn điểm danh
+     * @param secretCode - Mã bí mật 6 ký tự (đổi mỗi ngày lúc 00:00)
+     * @returns AttendanceRecord mới (để dispatch addAttendanceRecord vào Redux)
+     */
+    checkin: async (classId: string, secretCode: string) => {
+        const res = await fetch(`${BASE_URL}/api/customer/checkin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ classId, secretCode }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error);
+        return json.record; // AttendanceRecord mới
+    },
 };

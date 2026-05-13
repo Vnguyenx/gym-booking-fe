@@ -1,50 +1,34 @@
 // src/hooks/useClasses.ts
-import { useState, useEffect } from 'react';
-import { customerService } from '../services/customerService';
-import { ClassItem, AttendanceStatus, AttendanceRecord, UseClassesReturn } from '../types/models';
-/**
- * useClasses
- * Quản lý danh sách lớp học và điểm danh của customer.
- * Hỗ trợ cả trường hợp có và không có đăng ký khoá học.
- */
+// Mirrors usePTData — đọc từ Redux store, không fetch lại nếu đã có data.
+// Mọi component dùng hook này đều share cùng 1 cache.
+
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { AppDispatch, RootState } from '../store';
+import { fetchClasses, selectClass, clearSelection } from '../store/classSlice';
+import { UseClassesReturn } from '../types/models';
+
 const useClasses = (): UseClassesReturn => {
-    const [classes, setClasses] = useState<ClassItem[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
 
+    const { classes, loading, error, fetched, selectedClassId } =
+        useSelector((state: RootState) => state.classes);
+
+    // Chỉ fetch khi chưa có data — giống pattern của usePTData
     useEffect(() => {
-        const fetchClasses = async () => {
-            setIsLoading(true);
-            setError(null);
-
-            try {
-                const data = await customerService.getMyClasses();
-                setClasses(data);
-            } catch (err: any) {
-                console.error('Lỗi tải danh sách lớp học:', err);
-                setError(err.message ?? 'Không thể tải danh sách lớp học. Vui lòng thử lại.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchClasses();
-    }, []);
+        if (!fetched) dispatch(fetchClasses());
+    }, [fetched]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const selectedClass = classes.find((c) => c.id === selectedClassId);
 
-    const selectClass = (id: string) => setSelectedClassId(id);
-    const clearSelection = () => setSelectedClassId(null);
-
     return {
         classes,
-        isLoading,
+        isLoading: loading,
         error,
         selectedClassId,
         selectedClass,
-        selectClass,
-        clearSelection,
+        selectClass:    (id: string) => dispatch(selectClass(id)),
+        clearSelection: ()           => dispatch(clearSelection()),
     };
 };
 

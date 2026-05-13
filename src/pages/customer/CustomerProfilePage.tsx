@@ -9,10 +9,6 @@ import ClassesSection from '../../components/customer/ClassesSection';
 import BookingsSection from '../../components/customer/BookingsSection';
 
 import '../../styles/customer/CustomerProfile.css';
-
-const getInitial = (name?: string | null): string =>
-    name?.charAt(0)?.toUpperCase() ?? '?';
-
 /**
  * CustomerProfilePage
  *
@@ -54,7 +50,7 @@ const CustomerProfilePage: React.FC = () => {
                 </div>
 
                 <div className="customer-profile__avatar" aria-hidden="true">
-                    {getInitial(user?.displayName)}
+                    <img className="avt_profile" src={user?.avatarUrl} alt="avatar"/>
                 </div>
             </header>
 

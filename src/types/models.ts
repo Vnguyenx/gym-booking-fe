@@ -212,23 +212,36 @@ export interface UseBookingsReturn {
     handleCancel: (id: string) => Promise<void>;
 }
 
-// ── Classes & Attendance ──────────────────────────────────────────────────────
+/// ── Classes & Attendance ──────────────────────────────────────────────────────
 
-export type AttendanceStatus = 'present' | 'absent' | 'late';
+export type ClassStatus     = 'active' | 'expired';
+export type ClassType       = 'membership_only' | 'pt_coaching';
+export type AttendanceType  = 'membership_checkin' | 'pt_session' | null;
+export type CustomerStatus  = 'confirmed' | null;
+export type PTStatus        = 'none' | 'confirmed' | null;
 
 export interface AttendanceRecord {
-    date: string;          // VD: "2025-05-01"
-    status: AttendanceStatus;
-    note?: string;
+    id: string;
+    date: any;                  // ISO string sau khi BE convert
+    isSuccess: boolean | null;
+    type: AttendanceType;
+    customerStatus: CustomerStatus;
+    ptStatus: PTStatus;
+    secretCodeUsed: string | null;
 }
 
 export interface ClassItem {
     id: string;
-    className: string;     // Tên lớp học
-    courseName: string;    // Tên khoá học (nếu có, rỗng nếu điểm danh lẻ)
-    instructor: string;    // Tên giáo viên
-    schedule: string;      // VD: "Thứ 2, 4, 6 – 18:00"
-    isEnrolled: boolean;   // Có đăng ký khoá học không
+    customerId: string;
+    type: ClassType;
+    status: ClassStatus;
+    startDate: string;             // ISO string
+    endDate: string;               // ISO string
+    ptId: string;
+    totalSessions: number;
+    usedSessions: number;
+    createdBy: string;
+    creatorRole: string;
     attendance: AttendanceRecord[];
 }
 
