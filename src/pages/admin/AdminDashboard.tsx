@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks';
-import { logout } from '../../store/slices/authSlice';
+import { logout } from '../../store/authSlice';
 import { auth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
 import useAuth from '../../hooks/useAuth';

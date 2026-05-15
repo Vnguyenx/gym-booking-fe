@@ -1,6 +1,6 @@
 // store/slices/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Role } from '../../constants/roles';
+import { Role } from '../constants/roles';
 
 interface User {
     uid: string;

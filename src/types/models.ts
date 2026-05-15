@@ -215,7 +215,7 @@ export interface UseBookingsReturn {
 /// ── Classes & Attendance ──────────────────────────────────────────────────────
 
 export type ClassStatus     = 'active' | 'expired';
-export type ClassType       = 'membership_only' | 'pt_coaching';
+export type ClassType = 'pt-none' | 'pt-1on1' | 'pt-group';
 export type AttendanceType  = 'membership_checkin' | 'pt_session' | null;
 export type CustomerStatus  = 'confirmed' | null;
 export type PTStatus        = 'none' | 'confirmed' | null;
@@ -233,6 +233,7 @@ export interface AttendanceRecord {
 export interface ClassItem {
     id: string;
     customerId: string;
+    classGroupId: string | null;
     type: ClassType;
     status: ClassStatus;
     startDate: string;             // ISO string
@@ -253,4 +254,73 @@ export interface UseClassesReturn {
     selectedClass: ClassItem | undefined;
     selectClass: (id: string) => void;
     clearSelection: () => void;
+}
+
+// ── PT Dashboard ──────────────────────────────────────────────────────────────
+// Types dùng riêng cho luồng PT đã đăng nhập (dashboard, students, notifications)
+
+/**
+ * Thống kê tổng hợp hiển thị trên dashboard của PT.
+ * Tính toán ở FE từ dữ liệu Redux store, không call API riêng.
+ */
+export interface PTDashboardStats {
+    activeCount: number;        // Số lớp đang active
+    active1on1Count: number;    // Số lớp 1:1 active
+    activeGroupCount: number;   // Số nhóm active (unique classGroupId)
+    sessionsThisMonth: number;  // Tổng buổi điểm danh thành công trong tháng
+    pendingConfirmCount: number; // Số buổi chờ PT xác nhận (ptStatus === 'none')
+    expiredCount: number;       // Số lớp đã hết hạn
+}
+
+/**
+ * Một buổi chờ PT xác nhận — dùng ở tab Thông báo.
+ * Flatten từ ClassItem + AttendanceRecord để component không cần drill sâu.
+ */
+export interface PendingConfirmItem {
+    attendanceId: string;       // ID của attendance record
+    classId: string;            // ID của class chứa attendance này
+    customerName: string;       // Tên học viên
+    groupName: string | null;   // Tên nhóm nếu pt-group, null nếu 1:1
+    classType: ClassType;
+    checkinTime: string;        // ISO string
+}
+
+/** Filter tab ở màn hình Học viên của PT */
+export type StudentFilter = 'all' | '1on1' | 'group' | 'expired';
+
+/**
+ * Một nhóm học viên cùng classGroupId — dùng để render group-card.
+ * FE tự group từ danh sách classes trả về BE.
+ */
+export interface GroupedClass {
+    groupId: string;            // classGroupId dùng làm key
+    groupName: string;          // "Nhóm {groupId}" hoặc tên thực nếu có
+    members: ClassItem[];       // Danh sách class trong nhóm
+    endDate: string;            // endDate xa nhất trong nhóm
+}
+
+/**
+ * Dữ liệu form chỉnh sửa hồ sơ PT.
+ * Khớp với các field BE cho phép sửa: PUT /api/pt/profile
+ */
+export interface PTProfileFormData {
+    bio: string;
+    specialty: string[];
+    experience: string;
+    isAvailable: boolean;       // true = đang nhận học viên
+}
+
+// ── PT Dashboard API Response shapes ─────────────────────────────────────────
+// Khớp đúng với response JSON từ ptController.js
+
+export interface GetStudentsResponse {
+    classes: ClassItem[];
+}
+
+export interface ConfirmAttendanceResponse {
+    message: string;
+}
+
+export interface UpdatePTProfileResponse {
+    message: string;
 }

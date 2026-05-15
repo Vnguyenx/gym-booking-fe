@@ -4,7 +4,7 @@
 // mọi component đều có thể đọc và cập nhật dữ liệu từ đây
 
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
+import authReducer from './authSlice';
 import membershipReducer from './membershipSlice';
 import bannerReducer from './bannerSlice';
 import equipmentReducer from './equipmentSlice';
@@ -14,6 +14,7 @@ import ptInfoReducer from './ptInfoSlice';
 import ptServiceReducer from './ptServiceSlice';
 import classReducer from './classSlice';
 import bookingReducer from './bookingSlice';
+import ptDashboardReducer from "./ptDashBoardSlice";
 
 export const store = configureStore({
     reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
         ptServices: ptServiceReducer,
         classes: classReducer,
         bookings: bookingReducer,
+        ptDashboard: ptDashboardReducer,
     },
 });
 

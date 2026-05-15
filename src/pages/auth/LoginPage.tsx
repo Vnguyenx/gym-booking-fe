@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setUser, setLoading, setError } from '../../store/slices/authSlice';
+import { setUser, setLoading, setError } from '../../store/authSlice';
 import { ROUTES } from '../../constants/routes';
 import useValidator from '../../hooks/useValidator';
 import { authService } from '../../services/authService';

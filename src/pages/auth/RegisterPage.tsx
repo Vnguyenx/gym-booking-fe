@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setLoading, setError } from '../../store/slices/authSlice';
+import { setLoading, setError } from '../../store/authSlice';
 import { ROUTES } from '../../constants/routes';
 import { authService } from '../../services/authService';
 import useValidator from '../../hooks/useValidator';

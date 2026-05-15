@@ -10,10 +10,10 @@ import CheckinModal from './CheckinModal';
 
 // ─── Config hiển thị ──────────────────────────────────────────────────────────
 
-// Map type gói tập → nhãn tiếng Việt
 const CLASS_TYPE_LABEL: Record<ClassType, string> = {
-    membership_only: 'Gói tập',
-    pt_coaching:     'PT Coaching',
+    'pt-none':  'Gói tập',
+    'pt-1on1':  'PT 1:1',
+    'pt-group': 'PT Nhóm',
 };
 
 // Map status → badge CSS

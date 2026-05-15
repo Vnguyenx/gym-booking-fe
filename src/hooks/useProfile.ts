@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { updateUserInStore } from '../store/slices/authSlice';
+import { updateUserInStore } from '../store/authSlice';
 import { customerService } from '../services/customerService';
 import { ProfileFormData, UseProfileReturn } from '../types/models';
 
