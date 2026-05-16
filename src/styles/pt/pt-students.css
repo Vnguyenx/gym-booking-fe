@@ -1,0 +1,348 @@
+/* src/styles/pt/pt-students.css
+ *
+ * Style tab Học viên: filter chips, student card accordion, group card accordion.
+ * BEM: .filter-chips, .student-card, .group-card, .badge, .att-row
+ * Mobile-first.
+ *
+ * Variables từ base.css:
+ *   --bg, --surface, --surface-2, --border, --border-lt
+ *   --text, --muted-lt
+ *   --orange, --red, --green
+ *   --radius-sm (8px), --radius (12px), --radius-lg (18px)
+ *   --transition
+ */
+
+/* ═══════════════════════════════════════════════════════
+   FILTER CHIPS
+   ═══════════════════════════════════════════════════════ */
+
+.filter-chips {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    /* Scroll ngang nếu nhiều chip — ít gặp nhưng safe */
+    overflow-x: auto;
+    padding-bottom: 2px;
+    /* Ẩn scrollbar nhưng vẫn scroll được */
+    scrollbar-width: none;
+}
+.filter-chips::-webkit-scrollbar { display: none; }
+
+.filter-chips__btn {
+    flex-shrink: 0;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted-lt);
+    font-size: 12px;
+    font-family: var(--ff-body);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition),
+    border-color var(--transition);
+    /* Vùng bấm đủ cho ngón tay */
+    min-height: 32px;
+}
+
+.filter-chips__btn--active {
+    background: var(--orange);
+    color: #000;
+    border-color: transparent;
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STUDENT CARD — accordion 1:1 / expired
+   ═══════════════════════════════════════════════════════ */
+
+.student-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+/* Header — bấm để toggle */
+.student-card__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    /* Không có background riêng, dùng của card */
+}
+
+.student-card__head:hover {
+    background: var(--surface-2);
+}
+
+/* Avatar tròn màu */
+.student-card__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.student-card__info { flex: 1; min-width: 0; }
+
+.student-card__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.student-card__sub {
+    font-size: 11px;
+    color: var(--muted-lt);
+    margin-top: 2px;
+}
+
+/* Progress bên phải */
+.student-card__progress {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.student-card__prog-txt {
+    font-size: 11px;
+    color: var(--muted-lt);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.student-card__prog-bar {
+    width: 64px;
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: auto;
+}
+
+.student-card__prog-fill {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--orange);
+    transition: width 0.3s var(--ease);
+}
+
+/* Mũi tên toggle */
+.student-card__chevron {
+    font-size: 16px;
+    color: var(--muted-lt);
+    flex-shrink: 0;
+    transition: transform var(--transition);
+}
+
+.student-card__chevron--open {
+    transform: rotate(180deg);
+}
+
+/* Chi tiết attendance — phần mở rộng */
+.student-card__detail {
+    border-top: 0.5px solid var(--border);
+    background: var(--surface-2);
+    padding: 4px 14px;
+}
+
+.student-card__empty {
+    font-size: 12px;
+    color: var(--muted-lt);
+    text-align: center;
+    padding: 12px 0;
+    opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ATTENDANCE ROW + BADGES
+   ═══════════════════════════════════════════════════════ */
+
+.att-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+}
+
+.att-row:last-child { border-bottom: none; }
+
+.att-row__date { color: var(--muted-lt); }
+
+/* Badge chung */
+.badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+/* Xanh lá — đã xác nhận */
+.badge--ok {
+    background: rgba(48, 209, 88, 0.15);
+    color: var(--green);
+}
+
+/* Vàng/cam — chờ xác nhận */
+.badge--warn {
+    background: rgba(255, 149, 0, 0.15);
+    color: var(--orange);
+}
+
+/* Đỏ — vắng */
+.badge--err {
+    background: rgba(255, 59, 48, 0.15);
+    color: var(--red);
+}
+
+/* Xám — trung tính (dùng khi cần) */
+.badge--neu {
+    background: var(--surface-2);
+    color: var(--muted-lt);
+    border: 0.5px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════
+   GROUP CARD — accordion nhóm học viên
+   ═══════════════════════════════════════════════════════ */
+
+.group-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+/* Header có nền surface-2 để phân biệt với student card */
+.group-card__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: filter var(--transition);
+}
+
+.group-card__head:hover {
+    filter: brightness(1.08);
+}
+
+/* Icon nhóm — nền tím brand */
+.group-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: #3C3489;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #CECBF6;
+}
+
+.group-card__info { flex: 1; min-width: 0; }
+
+.group-card__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.group-card__sub {
+    font-size: 11px;
+    color: var(--muted-lt);
+    margin-top: 2px;
+}
+
+.group-card__chevron {
+    font-size: 16px;
+    color: var(--muted-lt);
+    flex-shrink: 0;
+    transition: transform var(--transition);
+}
+
+.group-card__chevron--open {
+    transform: rotate(180deg);
+}
+
+/* Danh sách member */
+.group-card__body { padding: 0; }
+
+.group-card__member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-top: 0.5px solid var(--border);
+}
+
+.group-card__member:hover {
+    background: var(--surface-2);
+}
+
+/* Avatar nhỏ hơn student card */
+.group-card__member-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.group-card__member-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.group-card__member-prog {
+    font-size: 12px;
+    color: var(--muted-lt);
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════ */
+
+.students-empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--muted-lt);
+}
+
+.students-empty__icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.4;
+}
+
+.students-empty p {
+    font-size: 13px;
+    opacity: 0.7;
+}

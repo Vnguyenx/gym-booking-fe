@@ -1,0 +1,246 @@
+/* src/styles/pt/pt-dashboard.css
+ *
+ * Variables từ base.css:
+ *   --bg         #0F0F0F  nền chính
+ *   --surface    #1A1A1A  nền card
+ *   --surface-2  #242424  nền card lồng nhau
+ *   --border     #2C2C2E  viền
+ *   --border-lt  #3A3A3C  viền sáng hơn
+ *   --text       #F2F2F7  chữ chính
+ *   --muted-lt   #AEAEB2  chữ phụ
+ *   --orange     #FF9500  accent (thay --E9A84C gốc HTML)
+ *   --red        #FF3B30  badge/error
+ *   --radius-sm  8px
+ *   --radius     12px
+ *   --radius-lg  18px
+ */
+
+/* ═══════════════════════════════════════════════════════
+   STAT CARDS — lưới 2 cột
+   ═══════════════════════════════════════════════════════ */
+
+.pt-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border: 0.5px solid var(--border);
+}
+
+.stat-card__label {
+    font-size: 11px;
+    color: var(--muted-lt);
+    margin-bottom: 4px;
+}
+
+.stat-card__value {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.1;
+}
+
+.stat-card__sub {
+    font-size: 11px;
+    color: var(--muted-lt);
+    margin-top: 2px;
+    opacity: 0.7;
+}
+
+/* Variant nổi bật — nền orange */
+.stat-card--accent {
+    background: var(--orange);
+    border-color: transparent;
+}
+
+.stat-card--accent .stat-card__label,
+.stat-card--accent .stat-card__sub {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+.stat-card--accent .stat-card__value {
+    color: #000;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ĐIỀU HƯỚNG THÁNG
+   ═══════════════════════════════════════════════════════ */
+
+.pt-month-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 14px 0 10px;
+}
+
+.pt-month-bar__label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.pt-month-bar__nav {
+    background: none;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 4px 12px;
+    font-size: 16px;
+    color: var(--muted-lt);
+    cursor: pointer;
+    line-height: 1;
+    min-height: 32px;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.pt-month-bar__nav:hover {
+    background: var(--surface);
+    border-color: var(--border-lt);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BAR CHART
+   ═══════════════════════════════════════════════════════ */
+
+.bar-chart {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 4px;
+}
+
+.bar-chart__title {
+    font-size: 12px;
+    color: var(--muted-lt);
+    margin-bottom: 10px;
+}
+
+.bar-chart__empty {
+    font-size: 13px;
+    color: var(--muted-lt);
+    text-align: center;
+    padding: 20px 0;
+    opacity: 0.6;
+}
+
+.bar-chart__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.bar-chart__row:last-child { margin-bottom: 0; }
+
+.bar-chart__name {
+    font-size: 12px;
+    color: var(--muted-lt);
+    width: 72px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-chart__track {
+    flex: 1;
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-chart__fill {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--orange);
+    transition: width 0.3s var(--ease);
+}
+
+.bar-chart__count {
+    font-size: 12px;
+    color: var(--text);
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RECENT SESSION LIST
+   ═══════════════════════════════════════════════════════ */
+
+.pt-section-label {
+    font-size: 11px;
+    color: var(--muted-lt);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 16px 0 8px;
+    opacity: 0.7;
+}
+
+.recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.recent-list__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+}
+
+.recent-list__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.recent-list__info { flex: 1; min-width: 0; }
+
+.recent-list__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-list__type {
+    font-size: 11px;
+    color: var(--muted-lt);
+    margin-top: 2px;
+}
+
+.recent-list__count { text-align: right; flex-shrink: 0; }
+
+.recent-list__count-num {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+}
+
+.recent-list__count-unit {
+    font-size: 11px;
+    color: var(--muted-lt);
+}

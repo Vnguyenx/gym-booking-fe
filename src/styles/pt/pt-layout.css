@@ -1,0 +1,189 @@
+/* src/styles/pt/pt-layout.css
+ *
+ * Style layout PT: Header + TabBar + page wrapper.
+ * BEM naming: .pt-hdr__xxx  /  .pt-tab-bar__xxx
+ * Mobile-first — scale lên ở 768px+
+ *
+ * Variables từ base.css:
+ *   --bg, --surface, --surface-2  (nền)
+ *   --text, --muted-lt            (chữ)
+ *   --border, --border-lt         (viền)
+ *   --radius-sm, --radius         (bo góc)
+ *   --red, --orange               (màu trạng thái)
+ *   --ff-body                     (font)
+ *   --transition                  (animation)
+ */
+
+/* ═══════════════════════════════════════════════════════
+   PAGE WRAPPER
+   ═══════════════════════════════════════════════════════ */
+
+.pt-page {
+    font-family: var(--ff-body);
+    color: var(--text);
+    background: var(--bg);
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100dvh;
+}
+
+.pt-content {
+    padding: 14px 16px;
+    padding-bottom: 80px; /* tránh tab bar che nội dung */
+}
+
+/* ═══════════════════════════════════════════════════════
+   PT HEADER  (.pt-hdr)
+   ═══════════════════════════════════════════════════════ */
+
+.pt-hdr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 20;
+}
+
+/* Avatar tròn — chữ tắt trên nền tím brand */
+.pt-hdr__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #3C3489;
+    color: #CECBF6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.pt-hdr__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pt-hdr__name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pt-hdr__role {
+    font-size: 12px;
+    color: var(--muted-lt);
+    margin-top: 1px;
+}
+
+/* Nút chuông — vùng bấm 44px (WCAG) */
+.pt-hdr__notif-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: var(--muted-lt);
+    line-height: 1;
+    position: relative;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition), background var(--transition);
+}
+
+.pt-hdr__notif-btn:hover {
+    color: var(--text);
+    background: var(--surface);
+}
+
+/* Chấm đỏ */
+.pt-hdr__notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 1.5px var(--bg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PT TAB BAR  (.pt-tab-bar)
+   ═══════════════════════════════════════════════════════ */
+
+.pt-tab-bar {
+    display: flex;
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 72px; /* chiều cao header */
+    background: var(--bg);
+    z-index: 10;
+}
+
+.pt-tab-bar__btn {
+    flex: 1;
+    padding: 10px 2px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--muted-lt);
+    transition: color var(--transition), border-color var(--transition);
+}
+
+/* Tab active → màu orange từ base.css */
+.pt-tab-bar__btn--active {
+    color: var(--orange);
+    border-bottom-color: var(--orange);
+}
+
+.pt-tab-bar__icon-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.pt-tab-bar__label {
+    font-size: 11px;
+    line-height: 1;
+}
+
+/* Chấm đỏ trên tab Thông báo */
+.pt-tab-bar__dot {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 1.5px var(--bg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+    .pt-hdr    { padding: 16px 24px; }
+    .pt-content{ padding: 16px 24px 80px; }
+}

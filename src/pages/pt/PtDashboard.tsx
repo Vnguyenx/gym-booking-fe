@@ -1,52 +1,50 @@
-import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
-import { logout } from '../../store/authSlice';
-import { auth } from '../../config/firebase';
-import { signOut } from 'firebase/auth';
-import useAuth from '../../hooks/useAuth';
-import { ROUTES } from '../../constants/routes';
+// src/pages/pt/PtDashboard.tsx
+// Trang dashboard chính của PT.
+// Quản lý tab active, fetch data 1 lần khi mount.
 
-const ProfilePage = () => {
-    const { user, isLoggedIn, loading } = useAuth(); // Lấy data từ Redux
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchPTStudents } from '../../store/ptDashBoardSlice';
+
+import PtHeader           from '../../components/pt/PtHeader';
+import PtTabBar           from '../../components/pt/PtTabBar';
+import PtTabDashboard     from '../../components/pt/PtTabDashboard';
+import PtTabStudents      from '../../components/pt/PtTabStudents';
+import PtTabNotifications from '../../components/pt/PtTabNotifications';
+import PtTabProfile       from '../../components/pt/PtTabProfile';
+
+import '../../styles/pt/pt-dashboard.css';
+import '../../styles/pt/pt-layout.css';
+import '../../styles/pt/pt-students.css';
+
+export type PtTab = 'dash' | 'students' | 'notif' | 'profile';
+
+const PtDashboard: React.FC = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState<PtTab>('dash');
 
-    // 1. Kiểm tra quyền truy cập (Nếu chưa login thì đá ra trang Login)
-    if (!loading && !isLoggedIn) {
-        return <Navigate to={ROUTES.LOGIN} />;
-    }
+    const { studentsLoaded } = useAppSelector((s) => s.ptDashboard);
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth); // Đăng xuất khỏi Firebase
-            dispatch(logout()); // Xoá data trong Redux
-            navigate(ROUTES.LOGIN);
-        } catch (error) {
-            console.error("Lỗi đăng xuất:", error);
+    // Fetch 1 lần duy nhất khi vào dashboard
+    useEffect(() => {
+        if (!studentsLoaded) {
+            dispatch(fetchPTStudents());
         }
-    };
+    }, [studentsLoaded, dispatch]);
 
     return (
-        <div className="auth-container">
-            <h1 className="auth-title">THÔNG TIN CÁ NHÂN</h1>
+        <div className="pt-page">
+            <PtHeader onNotifClick={() => setActiveTab('notif')} />
+            <PtTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-            {user ? (
-                <div style={{ backgroundColor: '#0F0F0F', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
-                    <p><strong>Họ tên:</strong> {user.displayName}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Số Zalo:</strong> {user.phone}</p>
-                    <p><strong>Vai trò:</strong> <span style={{ color: '#FF9500' }}>{user.role.toUpperCase()}</span></p>
-                </div>
-            ) : (
-                <p>Đang tải dữ liệu...</p>
-            )}
-
-            <button className="auth-btn" onClick={handleLogout}>
-                ĐĂNG XUẤT
-            </button>
+            <div className="pt-content">
+                {activeTab === 'dash'     && <PtTabDashboard />}
+                {activeTab === 'students' && <PtTabStudents />}
+                {/*{activeTab === 'notif'    && <PtTabNotifications />}*/}
+                {activeTab === 'profile'  && <PtTabProfile />}
+            </div>
         </div>
     );
 };
 
-export default ProfilePage;
+export default PtDashboard;

@@ -1,3 +1,4 @@
+// src/store/ptDashBoardSlice.ts
 // Redux slice quản lý toàn bộ state của luồng PT.
 //
 // State gồm 3 phần chính:
@@ -5,36 +6,35 @@
 //   2. profile    — trạng thái form chỉnh sửa hồ sơ
 //   3. confirm    — trạng thái xác nhận từng buổi điểm danh
 //
+// Selectors nằm riêng ở: src/store/selectors/ptSelectors.ts
+//
 // Quy tắc fetch:
 //   - Fetch 1 lần khi PT mở app, lưu vào store
 //   - Không fetch lại trừ khi user bấm refresh hoặc sau khi thực hiện action
-//   - Dùng isLoaded flag để tránh fetch trùng
+//   - Dùng studentsLoaded flag để tránh fetch trùng
 
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ClassItem, PTProfileFormData } from '../types/models';
 import * as ptService from '../services/ptService';
 
 // ─── State shape ──────────────────────────────────────────────────────────────
 
 interface PTState {
-    // Danh sách lớp học
-    activeClasses: ClassItem[];
-    expiredClasses: ClassItem[];
+    activeClasses:   ClassItem[];
+    expiredClasses:  ClassItem[];
 
-    // Trạng thái loading / error riêng cho từng fetch
     studentsLoading: boolean;
-    studentsError: string | null;
+    studentsError:   string | null;
     /** true sau khi đã fetch thành công lần đầu — tránh fetch lại khi chuyển tab */
-    studentsLoaded: boolean;
+    studentsLoaded:  boolean;
 
-    // Xác nhận điểm danh — track từng attendanceId đang xử lý
-    confirmingIds: string[];   // attendanceId đang gọi API
-    confirmError: string | null;
+    /** attendanceId đang gọi API confirm — để disable nút tương ứng */
+    confirmingIds:   string[];
+    confirmError:    string | null;
 
-    // Cập nhật hồ sơ PT
-    profileSaving: boolean;
-    profileError: string | null;
-    profileSuccess: boolean;
+    profileSaving:   boolean;
+    profileError:    string | null;
+    profileSuccess:  boolean;
 }
 
 const initialState: PTState = {
@@ -53,9 +53,8 @@ const initialState: PTState = {
 // ─── Async Thunks ─────────────────────────────────────────────────────────────
 
 /**
- * Fetch cả active lẫn expired song song.
- * Dùng Promise.all để giảm thời gian chờ.
- * Gọi trong PtLayout hoặc khi app khởi động.
+ * Fetch cả active lẫn expired song song dùng Promise.all.
+ * Gọi 1 lần duy nhất khi PT vào dashboard — xem usePTDashboard hook.
  */
 export const fetchPTStudents = createAsyncThunk(
     'ptDashboard/fetchStudents',
@@ -87,7 +86,6 @@ export const confirmAttendance = createAsyncThunk(
     ) => {
         try {
             await ptService.confirmAttendance(attendanceId, classId);
-            // Trả về để reducer biết cần update record nào
             return { attendanceId, classId };
         } catch (err: any) {
             return rejectWithValue(err.message ?? 'Xác nhận thất bại');
@@ -97,26 +95,23 @@ export const confirmAttendance = createAsyncThunk(
 
 /**
  * Cập nhật hồ sơ PT.
- * Không cần reload page — profile trong authSlice sẽ được sync riêng nếu cần.
+ * Không cần reload — profileSuccess flag báo cho component biết đã xong.
  */
 export const updatePTProfile = createAsyncThunk(
     'ptDashboard/updateProfile',
     async (data: PTProfileFormData, { rejectWithValue }) => {
         try {
             await ptService.updatePTProfile(data);
-            return data; // trả lại data để component dùng nếu cần
+            return data;
         } catch (err: any) {
             return rejectWithValue(err.message ?? 'Cập nhật thất bại');
         }
     },
 );
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helper ───────────────────────────────────────────────────────────────────
 
-/**
- * Cập nhật ptStatus của một attendance record trong danh sách classes.
- * Dùng chung cho cả activeClasses và expiredClasses.
- */
+/** Cập nhật ptStatus của 1 attendance record trong danh sách classes */
 function updateAttendanceInList(
     classes: ClassItem[],
     classId: string,
@@ -136,7 +131,7 @@ function updateAttendanceInList(
 
 // ─── Slice ────────────────────────────────────────────────────────────────────
 
-const ptSlice = createSlice({
+const ptDashboardSlice = createSlice({
     name: 'ptDashboard',
     initialState,
 
@@ -145,16 +140,14 @@ const ptSlice = createSlice({
         clearConfirmError(state) {
             state.confirmError = null;
         },
-
-        /** Xoá lỗi + success flag của profile form — dùng khi đóng form */
+        /** Xoá lỗi + success flag của profile form — dùng khi mở lại form */
         clearProfileStatus(state) {
             state.profileError   = null;
             state.profileSuccess = false;
         },
-
         /**
-         * Buộc fetch lại lần sau (vd: sau khi admin thêm lớp mới cho PT).
-         * Đặt studentsLoaded = false để fetchPTStudents chạy lại.
+         * Buộc fetch lại lần sau (vd: admin vừa thêm lớp mới cho PT).
+         * Đặt studentsLoaded = false → fetchPTStudents sẽ chạy lại lần sau.
          */
         invalidateStudents(state) {
             state.studentsLoaded = false;
@@ -162,7 +155,7 @@ const ptSlice = createSlice({
     },
 
     extraReducers: (builder) => {
-        // ── fetchPTStudents ───────────────────────────────────────────────────────
+        // ── fetchPTStudents ───────────────────────────────────────────
         builder
             .addCase(fetchPTStudents.pending, (state) => {
                 state.studentsLoading = true;
@@ -179,7 +172,7 @@ const ptSlice = createSlice({
                 state.studentsError   = action.payload as string;
             });
 
-        // ── confirmAttendance ─────────────────────────────────────────────────────
+        // ── confirmAttendance ─────────────────────────────────────────
         builder
             .addCase(confirmAttendance.pending, (state, action) => {
                 // Ghi nhận ID đang xử lý để disable nút Xác nhận tương ứng
@@ -188,11 +181,8 @@ const ptSlice = createSlice({
             })
             .addCase(confirmAttendance.fulfilled, (state, action) => {
                 const { attendanceId, classId } = action.payload;
-
-                // Xoá khỏi danh sách đang xử lý
-                state.confirmingIds = state.confirmingIds.filter((id) => id !== attendanceId);
-
-                // Cập nhật ptStatus trực tiếp trong store — không fetch lại
+                state.confirmingIds  = state.confirmingIds.filter((id) => id !== attendanceId);
+                // Cập nhật store local — không fetch lại
                 state.activeClasses  = updateAttendanceInList(state.activeClasses,  classId, attendanceId, 'confirmed');
                 state.expiredClasses = updateAttendanceInList(state.expiredClasses, classId, attendanceId, 'confirmed');
             })
@@ -203,7 +193,7 @@ const ptSlice = createSlice({
                 state.confirmError = action.payload as string;
             });
 
-        // ── updatePTProfile ───────────────────────────────────────────────────────
+        // ── updatePTProfile ───────────────────────────────────────────
         builder
             .addCase(updatePTProfile.pending, (state) => {
                 state.profileSaving  = true;
@@ -227,6 +217,6 @@ export const {
     clearConfirmError,
     clearProfileStatus,
     invalidateStudents,
-} = ptSlice.actions;
+} = ptDashboardSlice.actions;
 
-export default ptSlice.reducer;
+export default ptDashboardSlice.reducer;
