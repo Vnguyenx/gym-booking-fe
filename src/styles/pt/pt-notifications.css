@@ -1,0 +1,244 @@
+/* src/styles/pt/pt-notifications.css
+ *
+ * Style tab Thông báo PT.
+ * BEM: .pt-tab-notif, .notif-card, .error-toast, .notif-empty
+ * Mobile-first.
+ *
+ * Variables từ base.css:
+ *   --bg, --surface, --surface-2   nền
+ *   --border, --border-lt          viền
+ *   --text, --muted-lt             chữ
+ *   --orange, --red, --green       màu trạng thái
+ *   --radius-sm (8px), --radius (12px)
+ *   --transition, --ease
+ */
+
+/* ═══════════════════════════════════════════════════════
+   HEADER TAB
+   ═══════════════════════════════════════════════════════ */
+
+.pt-tab-notif__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.pt-tab-notif__title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* Badge đếm số lượng */
+.pt-tab-notif__count {
+    background: var(--orange);
+    color: #000;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 999px;
+    line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DANH SÁCH CARD
+   ═══════════════════════════════════════════════════════ */
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NOTIF CARD — 1 buổi chờ xác nhận
+   ═══════════════════════════════════════════════════════ */
+
+.notif-card {
+    display: flex;
+    gap: 12px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    /* Viền trái màu cam để nổi bật */
+    border-left: 3px solid var(--orange);
+    transition: opacity var(--transition);
+}
+
+/* Đang gọi API → mờ nhẹ để báo hiệu đang xử lý */
+.notif-card--loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Chấm màu cam bên trái */
+.notif-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+    margin-top: 5px; /* căn với dòng đầu tiên */
+}
+
+.notif-card__body {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Tiêu đề: "Nguyễn Văn An đã check-in" */
+.notif-card__title {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.notif-card__name {
+    font-weight: 500;
+}
+
+/* Meta: loại lớp · thời gian */
+.notif-card__meta {
+    font-size: 11px;
+    color: var(--muted-lt);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.notif-card__sep {
+    opacity: 0.5;
+}
+
+/* Nút Xác nhận */
+.notif-card__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--orange);
+    color: #000;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--ff-body);
+    cursor: pointer;
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+.notif-card__btn:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.notif-card__btn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.notif-card__btn:disabled {
+    cursor: not-allowed;
+}
+
+/* Spinner nhỏ khi đang loading */
+.notif-card__spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ERROR TOAST
+   ═══════════════════════════════════════════════════════ */
+
+.error-toast {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 59, 48, 0.12); /* --red với opacity */
+    border: 0.5px solid var(--red);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+
+    /* Slide xuống khi xuất hiện */
+    animation: slideDown 0.2s var(--ease);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.error-toast__icon {
+    font-size: 16px;
+    color: var(--red);
+    flex-shrink: 0;
+}
+
+.error-toast__msg {
+    flex: 1;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.error-toast__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--muted-lt);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color var(--transition);
+    flex-shrink: 0;
+}
+
+.error-toast__close:hover {
+    color: var(--text);
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════ */
+
+.notif-empty {
+    text-align: center;
+    padding: 48px 0 32px;
+    color: var(--muted-lt);
+}
+
+.notif-empty__icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.35;
+}
+
+.notif-empty__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.notif-empty__sub {
+    font-size: 12px;
+    opacity: 0.6;
+    line-height: 1.5;
+}

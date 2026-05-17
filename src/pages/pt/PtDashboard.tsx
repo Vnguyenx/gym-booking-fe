@@ -16,6 +16,10 @@ import PtTabProfile       from '../../components/pt/PtTabProfile';
 import '../../styles/pt/pt-dashboard.css';
 import '../../styles/pt/pt-layout.css';
 import '../../styles/pt/pt-students.css';
+import '../../styles/pt/pt-notifications.css';
+import '../../styles/pt/pt-profile.css';
+
+
 
 export type PtTab = 'dash' | 'students' | 'notif' | 'profile';
 
@@ -40,7 +44,7 @@ const PtDashboard: React.FC = () => {
             <div className="pt-content">
                 {activeTab === 'dash'     && <PtTabDashboard />}
                 {activeTab === 'students' && <PtTabStudents />}
-                {/*{activeTab === 'notif'    && <PtTabNotifications />}*/}
+                {activeTab === 'notif'    && <PtTabNotifications />}
                 {activeTab === 'profile'  && <PtTabProfile />}
             </div>
         </div>

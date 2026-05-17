@@ -83,8 +83,22 @@ const AppRouter = () => {
                 />
 
                 {/* ── Customer routes ─────────────────────────────────── */}
-                <Route path={ROUTES.BOOKING}         element={<BookingPage />} />
-                <Route path={ROUTES.BOOKING_SUCCESS} element={<BookingSuccessPage />} />
+                <Route
+                    path={ROUTES.BOOKING}
+                    element={
+                        <ProtectedRoute allowedRoles={['customer']}>
+                            <BookingPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path={ROUTES.BOOKING_SUCCESS}
+                    element={
+                        <ProtectedRoute allowedRoles={['customer']}>
+                            <BookingSuccessPage />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path={ROUTES.MY_PROFILE}
                     element={
