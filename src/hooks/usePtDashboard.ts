@@ -130,7 +130,7 @@ export function usePtDashboard(): PtDashboardData {
                 id:          cls.id,
                 name,
                 sessions,
-                total:       cls.attendance.length || 20,
+                total: cls.totalSessions || 20,
                 type: cls.type === 'pt-1on1' ? '1:1' : 'Nhóm',
                 initials:    getInitials(name),
                 avatarCus: cls.customerAvatar,
@@ -158,7 +158,6 @@ export function usePtDashboard(): PtDashboardData {
         const recentData: RecentSessionItem[] = sorted.slice(0, 6).map(item => ({
             id: item.id,
             name: item.name,
-            avatar: item.avatarBg,
             type: item.type,
             sessions: item.sessions,
             initials: item.initials,

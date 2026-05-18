@@ -20,7 +20,16 @@ const ProfileInfoView: React.FC<ProfileInfoViewProps> = ({ info, onEditOpen, onL
             {/* ── Avatar lớn + tên + status ── */}
             <div className="profile-view__top">
                 <div className="profile-view__avatar" aria-hidden="true">
-                    {info.avatarInitials}
+                    {info.avatarUrl ? (
+                        <img
+                            src={info.avatarUrl}
+                            alt={info.fullName}
+                            className="pt-hdr__avatar-img"
+                            style={{ borderRadius: '100%' }}
+                        />
+                    ) : (
+                        info.avatarInitials
+                    )}
                 </div>
                 <div className="profile-view__hero">
                     <div className="profile-view__name">{info.fullName}</div>

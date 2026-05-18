@@ -1,29 +1,10 @@
-// src/components/pt/PtTabStudents.tsx
-//
-// Layout chính của tab Học viên.
-// Ghép 3 sub-component:
-//   - FilterChips  — chip lọc all / 1on1 / group / expired
-//   - StudentCard  — accordion cho lớp 1:1 và expired
-//   - GroupCard    — accordion cho nhóm
-//
-// Logic lọc + expand/collapse nằm trong usePtStudents hook.
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePtStudents } from '../../hooks/usePtStudents';
-import FilterChips       from './students/FilterChips';
-import StudentCard       from './students/StudentCard';
-import GroupCard         from './students/GroupCard';
+import FilterChips from './students/FilterChips';
+import StudentCard from './students/StudentCard';
+import GroupCard from './students/GroupCard';
 
-// ─── Empty state ──────────────────────────────────────────────────────────────
-
-const EmptyState: React.FC<{ message: string }> = ({ message }) => (
-    <div className="students-empty">
-        <i className="ti ti-user-off students-empty__icon" aria-hidden="true" />
-        <p>{message}</p>
-    </div>
-);
-
-// ─── Component ────────────────────────────────────────────────────────────────
+const ITEMS_PER_PAGE = 3;
 
 const PtTabStudents: React.FC = () => {
     const {
@@ -35,54 +16,68 @@ const PtTabStudents: React.FC = () => {
         toggleExpand,
     } = usePtStudents();
 
-    // Tab "group" render GroupCard, còn lại render StudentCard
+    const [currentPage, setCurrentPage] = useState(1);
     const isGroupView = activeFilter === 'group';
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeFilter]);
+
+    const rawData = isGroupView ? groupedClasses : filteredClasses;
+    const totalPages = Math.ceil(rawData.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const paginatedData = rawData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     return (
         <div className="pt-tab-students">
+            <FilterChips activeFilter={activeFilter} onFilterChange={onFilterChange} />
 
-            {/* ── Filter chips ── */}
-            <FilterChips
-                activeFilter={activeFilter}
-                onFilterChange={onFilterChange}
-            />
+            <div className="students-list">
+                {paginatedData.length === 0 ? (
+                    <div className="students-empty">
+                        <i className="ti ti-user-off students-empty__icon" />
+                        <p>Không có dữ liệu</p>
+                    </div>
+                ) : (
+                    paginatedData.map((item, idx) => (
+                        isGroupView ? (
+                            <GroupCard
+                                key={(item as any).groupId}
+                                group={item as any}
+                                isExpanded={expandedIds.has((item as any).groupId)}
+                                onToggle={() => toggleExpand((item as any).groupId)}
+                            />
+                        ) : (
+                            <StudentCard
+                                key={(item as any).id}
+                                cls={item as any}
+                                colorIndex={idx}
+                                isExpanded={expandedIds.has((item as any).id)}
+                                onToggle={() => toggleExpand((item as any).id)}
+                            />
+                        )
+                    ))
+                )}
+            </div>
 
-            {/* ── Danh sách ── */}
-            {isGroupView ? (
-                // ── Tab Nhóm → GroupCard ──
-                groupedClasses.length === 0 ? (
-                    <EmptyState message="Không có nhóm nào đang hoạt động" />
-                ) : (
-                    groupedClasses.map((group) => (
-                        <GroupCard
-                            key={group.groupId}
-                            group={group}
-                            isExpanded={expandedIds.has(group.groupId)}
-                            onToggle={() => toggleExpand(group.groupId)}
-                        />
-                    ))
-                )
-            ) : (
-                // ── Tab All / 1on1 / Expired → StudentCard ──
-                filteredClasses.length === 0 ? (
-                    <EmptyState
-                        message={
-                            activeFilter === 'expired'
-                                ? 'Chưa có học viên hết hạn'
-                                : 'Không có học viên nào'
-                        }
-                    />
-                ) : (
-                    filteredClasses.map((cls, idx) => (
-                        <StudentCard
-                            key={cls.id}
-                            cls={cls}
-                            colorIndex={idx}
-                            isExpanded={expandedIds.has(cls.id)}
-                            onToggle={() => toggleExpand(cls.id)}
-                        />
-                    ))
-                )
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button
+                        className="pagination__btn"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(p => p - 1)}
+                    >
+                        <i className="ti ti-chevron-left" />
+                    </button>
+                    <span className="pagination__info">Trang {currentPage} / {totalPages}</span>
+                    <button
+                        className="pagination__btn"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(p => p + 1)}
+                    >
+                        <i className="ti ti-chevron-right" />
+                    </button>
+                </div>
             )}
         </div>
     );
