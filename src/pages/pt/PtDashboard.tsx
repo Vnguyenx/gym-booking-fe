@@ -37,15 +37,20 @@ const PtDashboard: React.FC = () => {
     }, [studentsLoaded, dispatch]);
 
     return (
-        <div className="pt-page">
-            <PtHeader onNotifClick={() => setActiveTab('notif')} />
-            <PtTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-            <div className="pt-content">
-                {activeTab === 'dash'     && <PtTabDashboard />}
-                {activeTab === 'students' && <PtTabStudents />}
-                {activeTab === 'notif'    && <PtTabNotifications />}
-                {activeTab === 'profile'  && <PtTabProfile />}
+        <div className="pt-page">
+            {/* TabBar giờ đóng vai trò Sidebar trên Web */}
+            <PtHeader onNotifClick={() => setActiveTab('notif')} />
+
+            {/* Wrapper mới để quản lý Header và Content bên phải Sidebar */}
+            <div className="pt-content-wrapper">
+                <PtTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+                <main className="pt-content">
+                    {activeTab === 'dash'     && <PtTabDashboard />}
+                    {activeTab === 'students' && <PtTabStudents />}
+                    {activeTab === 'notif'    && <PtTabNotifications />}
+                    {activeTab === 'profile'  && <PtTabProfile />}
+                </main>
             </div>
         </div>
     );

@@ -81,6 +81,8 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, isExpanded, onToggle }) =>
                 <div className="group-card__body">
                     {group.members.map((cls, idx) => {
                         const { bg, color } = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+                        const displayName   = (cls as any).customerName || cls.customerId;
+                        const avatarUrl     = (cls as any).customerAvatar as string | undefined;
                         const initials      = getInitials(cls.customerId);
                         const done          = cls.attendance.filter((a) => a.isSuccess).length;
                         const total         = cls.attendance.length || 1;
@@ -90,15 +92,23 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, isExpanded, onToggle }) =>
                                 {/* Avatar */}
                                 <div
                                     className="group-card__member-avatar"
-                                    style={{ background: bg, color }}
+                                    style={avatarUrl ? undefined : {background: bg, color}}
                                     aria-hidden="true"
                                 >
-                                    {initials}
+                                    {avatarUrl ? (
+                                        <img
+                                            src={avatarUrl}
+                                            alt={displayName}
+                                            className="group-card__member-avatar-img"
+                                        />
+                                    ) : (
+                                        initials
+                                    )}
                                 </div>
 
                                 {/* Tên */}
                                 <div className="group-card__member-name">
-                                    {cls.customerId}
+                                    {displayName}
                                 </div>
 
                                 {/* Số buổi */}

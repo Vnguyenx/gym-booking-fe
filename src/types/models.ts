@@ -233,6 +233,8 @@ export interface AttendanceRecord {
 export interface ClassItem {
     id: string;
     customerId: string;
+    customerName?: string;
+    customerAvatar: string;
     classGroupId: string | null;
     type: ClassType;
     status: ClassStatus;

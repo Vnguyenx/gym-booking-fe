@@ -1,6 +1,5 @@
 // src/components/pt/PtTabProfile.tsx
-// Cập nhật: truyền thêm avatarPreview, avatarInitials, isUploadingAvatar, onAvatarChange
-// xuống ProfileEditForm.
+// Cập nhật: truyền info xuống ProfileEditForm cho read-only fields
 
 import React from 'react';
 import { usePtProfile }  from '../../hooks/usePtProfile';
@@ -30,10 +29,10 @@ const PtTabProfile: React.FC = () => {
             {isEditing ? (
                 <ProfileEditForm
                     formData={formData}
+                    info={info}                         // ← thêm để hiện read-only
                     isSaving={isSaving}
                     saveError={saveError}
                     avatarPreview={avatarPreview}
-                    avatarInitials={info.avatarInitials}
                     isUploadingAvatar={isUploadingAvatar}
                     onAvatarChange={onAvatarChange}
                     onFieldChange={onFieldChange}

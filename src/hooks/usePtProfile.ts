@@ -1,26 +1,26 @@
 // src/hooks/pt/usePtProfile.ts
 //
-// Hook cho tab Cá nhân của PT đang đăng nhập.
-//
-// Thay đổi so với bản trước:
-//   1. specialty: string[] thay vì string — khớp đúng PTProfileFormData trong models.ts
-//   2. Tích hợp uploadImageToImgBB — PT có thể đổi avatar
-//   3. avatarUrl state riêng để preview ảnh mới trước khi lưu
+// Thay đổi: dùng usePtProfileData thay vì (state as any).auth?.user
+// → merge đúng auth + ptProfile từ 2 slice
 
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate }                       from 'react-router-dom';
 import { useAppDispatch, useAppSelector }    from '../store/hooks';
 import { updatePTProfile, clearProfileStatus } from '../store/ptDashBoardSlice';
+import { updatePtProfileInStore }            from '../store/ptProfileSlice';
+import { logout }                            from '../store/authSlice';
 import {
     selectProfileSaving,
     selectProfileError,
     selectProfileSuccess,
 } from '../store/selectors/ptSelectors';
+import { usePtProfileData }  from './usePtProfileData';
 import { PTProfileFormData } from '../types/models';
 import { ROUTES }            from '../constants/routes';
 import { uploadImageToImgBB } from '../services/uploadService';
+import { authService }        from '../services/authService';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types export ────────────────────────────────────────────────────────────
 
 export interface PtProfileInfo {
     fullName:       string;
@@ -29,40 +29,31 @@ export interface PtProfileInfo {
     phone:          string;
     experience:     string;
     bio:            string;
-    specialties:    string[];   // string[] từ PT.specialty trong models.ts
+    specialties:    string[];
     isAvailable:    boolean;
-    avatarUrl:      string;     // URL ảnh thật (từ PT.avatar)
-    avatarInitials: string;     // fallback khi không có ảnh
+    avatarUrl:      string;
+    avatarInitials: string;
 }
 
 export interface PtProfileData {
-    // Thông tin hiển thị
-    info: PtProfileInfo;
-
-    // Form chỉnh sửa
-    isEditing:      boolean;
-    formData:       PTProfileFormData;
-    onFieldChange:  (field: keyof PTProfileFormData, value: string | boolean | string[]) => void;
-    onEditOpen:     () => void;
-    onEditCancel:   () => void;
-    onEditSubmit:   () => void;
-
-    // Upload avatar
+    info:              PtProfileInfo;
+    isEditing:         boolean;
+    formData:          PTProfileFormData;
+    onFieldChange:     (field: keyof PTProfileFormData, value: string | boolean | string[]) => void;
+    onEditOpen:        () => void;
+    onEditCancel:      () => void;
+    onEditSubmit:      () => void;
     isUploadingAvatar: boolean;
-    avatarPreview:     string;   // URL preview (có thể là blob URL tạm)
+    avatarPreview:     string;
     onAvatarChange:    (file: File) => Promise<void>;
-
-    // Trạng thái API
-    isSaving:      boolean;
-    saveError:     string | null;
-    saveSuccess:   boolean;
-    onClearStatus: () => void;
-
-    // Logout
-    onLogout: () => void;
+    isSaving:          boolean;
+    saveError:         string | null;
+    saveSuccess:       boolean;
+    onClearStatus:     () => void;
+    onLogout:          () => void;
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
+// ─── Helper ──────────────────────────────────────────────────────────────────
 
 function getInitials(name: string): string {
     const words = name.trim().split(/\s+/);
@@ -70,53 +61,47 @@ function getInitials(name: string): string {
     return words.slice(0, 3).map((w) => w[0].toUpperCase()).join('');
 }
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+// ─── Hook ────────────────────────────────────────────────────────────────────
 
 export function usePtProfile(): PtProfileData {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    // TODO: đổi selector đúng với auth slice của project
-    const user = useAppSelector((state) => (state as any).auth?.user);
+    // Dùng hook merge — không còn (state as any).auth?.user
+    const { ptUser } = usePtProfileData();
 
     const isSaving    = useAppSelector(selectProfileSaving);
     const saveError   = useAppSelector(selectProfileError);
     const saveSuccess = useAppSelector(selectProfileSuccess);
 
-    // ── Info hiển thị — map từ user (khớp UserProfile + PT trong models.ts) ──
+    // Map sang PtProfileInfo
     const info: PtProfileInfo = {
-        fullName:       user?.fullName    ?? user?.displayName ?? 'PT',
-        gender:         user?.gender      ?? '—',
-        email:          user?.email       ?? '—',
-        phone:          user?.phone       ?? '—',
-        experience:     user?.experience  ?? '—',
-        bio:            user?.bio         ?? '',
-        // PT.specialty là string[] — dùng trực tiếp, không split/join
-        specialties:    Array.isArray(user?.specialty) ? user.specialty : [],
-        isAvailable:    user?.isAvailable ?? false,
-        avatarUrl:      user?.avatar      ?? user?.avatarUrl ?? '',
-        avatarInitials: getInitials(user?.fullName ?? user?.displayName ?? 'PT'),
+        fullName:       ptUser?.fullName    ?? ptUser?.displayName ?? 'PT',
+        gender:         ptUser?.gender      ?? '—',
+        email:          ptUser?.email       ?? '—',
+        phone:          ptUser?.phone       ?? '—',
+        experience:     ptUser?.experience  ?? '—',
+        bio:            ptUser?.bio         ?? '',
+        specialties:    ptUser?.specialty   ?? [],
+        isAvailable:    ptUser?.isAvailable ?? false,
+        avatarUrl:      ptUser?.avatar      ?? '',
+        avatarInitials: getInitials(ptUser?.fullName ?? ptUser?.displayName ?? 'PT'),
     };
 
-    // ── Avatar preview — bắt đầu từ URL thật, update sau khi upload ──────────
-    const [avatarPreview,      setAvatarPreview]      = useState(info.avatarUrl);
-    const [isUploadingAvatar,  setIsUploadingAvatar]  = useState(false);
-
-    // ── Form state ────────────────────────────────────────────────────────────
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData]   = useState<PTProfileFormData>({
+    const [isEditing,         setIsEditing]         = useState(false);
+    const [avatarPreview,     setAvatarPreview]      = useState(info.avatarUrl);
+    const [isUploadingAvatar, setIsUploadingAvatar]  = useState(false);
+    const [formData,          setFormData]           = useState<PTProfileFormData>({
         bio:         info.bio,
-        specialty:   info.specialties,   // string[] — đúng với models.ts
+        specialty:   info.specialties,
         experience:  info.experience,
         isAvailable: info.isAvailable,
     });
 
-    // Khi save thành công → tự đóng form
+    // Tự đóng form khi save thành công
     useEffect(() => {
         if (saveSuccess) setIsEditing(false);
     }, [saveSuccess]);
-
-    // ── Handlers form ─────────────────────────────────────────────────────────
 
     const onEditOpen = useCallback(() => {
         setFormData({
@@ -145,16 +130,21 @@ export function usePtProfile(): PtProfileData {
 
     const onEditSubmit = useCallback(() => {
         dispatch(updatePTProfile(formData));
+        // Sau khi BE xác nhận, sync lại ptProfileSlice để UI reflect ngay
+        dispatch(updatePtProfileInStore({
+            bio:         formData.bio,
+            specialty:   formData.specialty,
+            experience:  formData.experience,
+            isAvailable: formData.isAvailable,
+        }));
     }, [dispatch, formData]);
 
     const onClearStatus = useCallback(() => {
         dispatch(clearProfileStatus());
     }, [dispatch]);
 
-    // ── Upload avatar ──────────────────────────────────────────────────────────
-    // Flow: chọn file → preview blob URL ngay → upload lên imgBB → lưu URL thật
+    // Upload avatar → imgBB → sync store
     const onAvatarChange = useCallback(async (file: File) => {
-        // Preview ngay không cần đợi upload
         const blobUrl = URL.createObjectURL(file);
         setAvatarPreview(blobUrl);
         setIsUploadingAvatar(true);
@@ -163,21 +153,23 @@ export function usePtProfile(): PtProfileData {
             const uploadedUrl = await uploadImageToImgBB(file);
             if (uploadedUrl) {
                 setAvatarPreview(uploadedUrl);
+                // Sync URL mới vào ptProfileSlice
+                dispatch(updatePtProfileInStore({ avatar: uploadedUrl }));
             } else {
-                // Upload thất bại → rollback về ảnh cũ
-                setAvatarPreview(info.avatarUrl);
+                setAvatarPreview(info.avatarUrl); // rollback
             }
         } finally {
             setIsUploadingAvatar(false);
-            // Giải phóng blob URL tránh memory leak
             URL.revokeObjectURL(blobUrl);
         }
-    }, [info.avatarUrl]);
+    }, [dispatch, info.avatarUrl]);
 
-    // ── Logout ────────────────────────────────────────────────────────────────
-    const onLogout = useCallback(() => {
+    // Logout: gọi authService xoá cookie → dispatch logout action → về HOME
+    const onLogout = useCallback(async () => {
+        await authService.logout();
+        dispatch(logout());
         navigate(ROUTES.HOME, { replace: true });
-    }, [navigate]);
+    }, [dispatch, navigate]);
 
     return {
         info,

@@ -242,3 +242,14 @@
     opacity: 0.6;
     line-height: 1.5;
 }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — Desktop
+   ═══════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+    .notif-card          { padding: 16px; }
+    .notif-card__title   { font-size: 14px; }
+    .notif-card__meta    { font-size: 12px; }
+    .notif-card__btn     { font-size: 13px; padding: 7px 18px; }
+}

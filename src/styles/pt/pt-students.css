@@ -346,3 +346,16 @@
     font-size: 13px;
     opacity: 0.7;
 }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — Desktop
+   ═══════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+    .student-card__head { padding: 13px 16px; }
+    .student-card__name { font-size: 14px; }
+    .group-card__head   { padding: 13px 16px; }
+    .group-card__name   { font-size: 14px; }
+    .att-row            { font-size: 13px; }
+    .badge              { font-size: 12px; padding: 3px 10px; }
+}

@@ -18,14 +18,23 @@ const RecentSessionList: React.FC<RecentSessionListProps> = ({ items }) => {
     return (
         <div className="recent-list">
             {items.map((item) => (
-                <div key={item.name} className="recent-list__item">
+                <div key={item.id} className="recent-list__item">
                     {/* Avatar màu */}
-                    <div
-                        className="recent-list__avatar"
-                        style={{ background: item.avatarBg, color: item.avatarColor }}
-                        aria-hidden="true"
-                    >
-                        {item.initials}
+                    <div className="recent-list__avatar">
+                        {item.avatarCus ? (
+                            <img
+                                src={item.avatarCus}
+                                alt={item.name}
+                                className="recent-list__avatar-img"
+                            />
+                        ) : (
+                            <div
+                                className="recent-list__avatar-fallback"
+                                style={{background: item.avatarBg, color: item.avatarColor}}
+                            >
+                                {item.initials}
+                            </div>
+                        )}
                     </div>
 
                     {/* Tên + loại lớp */}
@@ -37,7 +46,7 @@ const RecentSessionList: React.FC<RecentSessionListProps> = ({ items }) => {
                     {/* Số buổi */}
                     <div className="recent-list__count">
                         <span className="recent-list__count-num">{item.sessions}</span>
-                        <span className="recent-list__count-unit">buổi</span>
+                        <span className="recent-list__count-unit"> buổi</span>
                     </div>
                 </div>
             ))}

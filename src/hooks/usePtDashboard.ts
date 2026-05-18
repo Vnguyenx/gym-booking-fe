@@ -17,6 +17,7 @@ import { ClassItem } from '../types/models';
 
 /** Dữ liệu cho biểu đồ cột - Hiển thị mức độ chăm chỉ của học viên */
 export interface BarChartItem {
+    id:          string;
     name:        string;
     sessions:    number;   // Số buổi đã tập trong tháng
     total:       number;   // Tổng số buổi trong gói (ví dụ gói 20 buổi)
@@ -27,7 +28,9 @@ export interface BarChartItem {
 
 /** Dữ liệu cho danh sách buổi tập gần đây */
 export interface RecentSessionItem {
+    id:          string;
     name:        string;
+    avatarCus:   string;
     type:        string;   // "1:1" hoặc "Nhóm"
     sessions:    number;
     initials:    string;
@@ -120,14 +123,17 @@ export function usePtDashboard(): PtDashboardData {
         const processedItems = activeClasses.map((cls, idx) => {
             const colorPair = AVATAR_COLORS[idx % AVATAR_COLORS.length];
             const sessions  = countSessionsInMonth(cls, month, year);
-            const name      = cls.customerId; // Tạm thời dùng ID, sau này map sang tên thật
+            const name = (cls as any).customerName || cls.customerId; // fallback nếu data cũ
+
 
             return {
+                id:          cls.id,
                 name,
                 sessions,
                 total:       cls.attendance.length || 20,
-                type:        cls.type === 'pt-1on1' ? 'pt-none' : 'pt-group', // Gán nhãn loại lớp
+                type: cls.type === 'pt-1on1' ? '1:1' : 'Nhóm',
                 initials:    getInitials(name),
+                avatarCus: cls.customerAvatar,
                 avatarBg:    colorPair.bg,
                 avatarColor: colorPair.color,
             };
@@ -140,6 +146,7 @@ export function usePtDashboard(): PtDashboardData {
 
         // Bước C: Tách ra 2 mảng riêng biệt khớp với định dạng Interface yêu cầu (Clean data)
         const chartData: BarChartItem[] = sorted.slice(0, 6).map(item => ({
+            id: item.id,
             name: item.name,
             sessions: item.sessions,
             total: item.total,
@@ -149,10 +156,13 @@ export function usePtDashboard(): PtDashboardData {
         }));
 
         const recentData: RecentSessionItem[] = sorted.slice(0, 6).map(item => ({
+            id: item.id,
             name: item.name,
+            avatar: item.avatarBg,
             type: item.type,
             sessions: item.sessions,
             initials: item.initials,
+            avatarCus: item.avatarCus,
             avatarBg: item.avatarBg,
             avatarColor: item.avatarColor
         }));

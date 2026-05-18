@@ -15,6 +15,8 @@ import ptServiceReducer from './ptServiceSlice';
 import classReducer from './classSlice';
 import bookingReducer from './bookingSlice';
 import ptDashboardReducer from "./ptDashBoardSlice";
+import ptProfileReducer from './ptProfileSlice';
+
 
 export const store = configureStore({
     reducer: {
@@ -30,6 +32,7 @@ export const store = configureStore({
         classes: classReducer,
         bookings: bookingReducer,
         ptDashboard: ptDashboardReducer,
+        ptProfile:    ptProfileReducer,
     },
 });
 

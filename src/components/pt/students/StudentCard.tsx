@@ -61,6 +61,8 @@ const StudentCard: React.FC<StudentCardProps> = ({ cls, colorIndex, isExpanded, 
     const initials       = getInitials(cls.customerId);
     const { done, total, pct } = getProgress(cls);
     const typeLabel      = cls.type === 'pt-1on1' ? '1:1' : 'Nhóm';
+    const displayName          = (cls as any).customerName || cls.customerId;
+    const avatarUrl            = (cls as any).customerAvatar as string | undefined;
 
     return (
         <div className="student-card">
@@ -77,15 +79,23 @@ const StudentCard: React.FC<StudentCardProps> = ({ cls, colorIndex, isExpanded, 
                 {/* Avatar */}
                 <div
                     className="student-card__avatar"
-                    style={{ background: bg, color }}
+                    style={avatarUrl ? undefined : {background: bg, color}}
                     aria-hidden="true"
                 >
-                    {initials}
+                    {avatarUrl ? (
+                        <img
+                            src={avatarUrl}
+                            alt={displayName}
+                            className="student-card__avatar-img"
+                        />
+                    ) : (
+                        initials
+                    )}
                 </div>
 
                 {/* Tên + loại lớp */}
                 <div className="student-card__info">
-                    <div className="student-card__name">{cls.customerId}</div>
+                    <div className="student-card__name">{displayName}</div>
                     <div className="student-card__sub">
                         {typeLabel} · Hết hạn {formatDate(cls.endDate)}
                     </div>
@@ -97,7 +107,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ cls, colorIndex, isExpanded, 
                     <div className="student-card__prog-bar">
                         <div
                             className="student-card__prog-fill"
-                            style={{ width: `${pct}%` }}
+                            style={{width: `${pct}%`}}
                         />
                     </div>
                 </div>

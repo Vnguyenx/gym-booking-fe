@@ -28,7 +28,7 @@ const SessionBarChart: React.FC<SessionBarChartProps> = ({ items }) => {
             {items.map((item) => {
                 const pct = Math.min(Math.round((item.sessions / item.total) * 100), 100);
                 return (
-                    <div key={item.name} className="bar-chart__row">
+                    <div key={item.id} className="bar-chart__row">
                         {/* Tên học viên */}
                         <span className="bar-chart__name" title={item.name}>
                             {item.name}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import {useNavigate, Link, useLocation} from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -9,15 +9,25 @@ import useValidator from '../../hooks/useValidator';
 import { authService } from '../../services/authService';
 import '../../styles/auth/auth-shared.css';
 import '../../styles/auth/login.css';
+import {getRoleHomePath} from "../../hooks/useRoleRedirect";
+
+interface LocationState {
+    from?: { pathname: string };
+}
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const location  = useLocation();
     const dispatch = useAppDispatch();
     const { showPassword } = useValidator();
     const { loading, error } = useAppSelector((state) => state.auth);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [localErr, setLocalErr] = useState<string | null>(null);
+
+    const from = (location.state as LocationState)?.from?.pathname;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,13 +40,16 @@ const LoginPage = () => {
             const userCred = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCred.user.getIdToken();
 
-            // Bước 2: Gửi idToken lên BE
-            // BE verify token → tạo session cookie → trả về thông tin user
-            const data = await authService.login(idToken);
+            // Bước 2: Gửi idToken lên BE → BE tạo session cookie và trả về user
+            const { user } = await authService.login(idToken);
 
-            // Bước 3: Lưu thông tin user vào Redux store
-            dispatch(setUser(data.user));
-            navigate(ROUTES.HOME);
+            // Bước 3: Lưu user vào Redux + localStorage
+            dispatch(setUser(user));
+
+            // Bước 4: Redirect về đúng trang
+            const redirectTo = from ?? getRoleHomePath(user.role);
+            navigate(redirectTo, { replace: true });
+
 
         } catch (err: any) {
             dispatch(setError('Email hoặc mật khẩu không chính xác.'));

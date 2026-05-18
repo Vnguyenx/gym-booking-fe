@@ -9,7 +9,7 @@ import {
     GetStudentsResponse,
     ConfirmAttendanceResponse,
     UpdatePTProfileResponse,
-    PTProfileFormData,
+    PTProfileFormData, PT,
 } from '../types/models';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -87,3 +87,11 @@ export const updatePTProfile = (
         method: 'PUT',
         body: JSON.stringify(data),
     });
+
+
+/**
+ * Lấy thông tin PT đang đăng nhập từ collection `pts`.
+ * GET /api/pt/me
+ */
+export const fetchMyPtProfile = (): Promise<{ pt: PT }> =>
+    apiFetch<{ pt: PT }>('/api/pt/me');
