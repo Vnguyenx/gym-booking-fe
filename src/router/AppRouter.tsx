@@ -35,8 +35,32 @@ import CustomerProfilePage from '../pages/customer/CustomerProfilePage';
 import BookingSuccessPage  from '../pages/customer/BookingSuccessPage';
 
 // Dashboard pages
-import AdminDashboard from '../pages/admin/AdminDashboard';
 import PtDashboard    from '../pages/pt/PtDashboard';
+
+// ── Admin pages ───────────────────────────────────────────
+import AdminDashboard    from '../pages/admin/AdminDashboard';
+// import AdminUsersPage    from '../pages/admin/AdminUsersPage';
+// import AdminPTsPage      from '../pages/admin/AdminPTsPage';
+// import AdminClassesPage  from '../pages/admin/AdminClassesPage';
+// import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
+// import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
+// import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
+// import AdminContentPage     from '../pages/admin/AdminContentPage';
+// import AdminRevenuePage     from '../pages/admin/AdminRevenuePage';
+// import AdminSettingsPage    from '../pages/admin/AdminSettingsPage';
+
+// ── Admin Layout ──────────────────────────────────────────
+import AdminLayout from '../components/admin/layout/AdminLayout';
+
+
+const AdminRoute = ({ children }: { children: React.ReactNode }) => (
+    <ProtectedRoute allowedRoles={['admin']}>
+        <AdminLayout>
+            {children}
+        </AdminLayout>
+    </ProtectedRoute>
+);
+
 
 const AppRouter = () => {
     const { isLoggedIn, user } = useAuth();
@@ -119,14 +143,36 @@ const AppRouter = () => {
                 />
 
                 {/* ── Admin routes ────────────────────────────────────── */}
-                <Route
-                    path={ROUTES.ADMIN_DASHBOARD}
-                    element={
-                        <ProtectedRoute allowedRoles={['admin']}>
-                            <AdminDashboard />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path={ROUTES.ADMIN_DASHBOARD}
+                       element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+
+                {/*<Route path={ROUTES.ADMIN_USERS}*/}
+                {/*       element={<AdminRoute><AdminUsersPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_PTS}*/}
+                {/*       element={<AdminRoute><AdminPTsPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_CLASSES}*/}
+                {/*       element={<AdminRoute><AdminClassesPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_BOOKINGS}*/}
+                {/*       element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_MEMBERSHIPS}*/}
+                {/*       element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_EQUIPMENT}*/}
+                {/*       element={<AdminRoute><AdminEquipmentPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_CONTENT}*/}
+                {/*       element={<AdminRoute><AdminContentPage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_REVENUE}*/}
+                {/*       element={<AdminRoute><AdminRevenuePage /></AdminRoute>} />*/}
+
+                {/*<Route path={ROUTES.ADMIN_SETTINGS}*/}
+                {/*       element={<AdminRoute><AdminSettingsPage /></AdminRoute>} />*/}
+
 
                 {/* ── Fallback ────────────────────────────────────────── */}
                 <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />

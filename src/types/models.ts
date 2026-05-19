@@ -326,3 +326,17 @@ export interface ConfirmAttendanceResponse {
 export interface UpdatePTProfileResponse {
     message: string;
 }
+
+// Cho adminRevenueController
+export interface RevenueByMonth {
+    month: number;
+    year: number;
+    totalRevenue: number;
+    count: number;
+    byDay: Record<number, number>;
+    bookings: Booking[];
+}
+
+export interface RevenueSummary {
+    summary: Record<string, number>; // { "2025-01": 5000000, ... }
+}
