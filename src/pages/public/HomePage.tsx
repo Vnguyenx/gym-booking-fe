@@ -79,8 +79,6 @@ const HomePage: React.FC = () => {
             <main>
                 <BannerSection />
                 <RedDivider />
-                <AboutSection />
-                <RedDivider />
                 <EquipmentSection />
                 <RedDivider />
                 <PTSection />
@@ -90,6 +88,8 @@ const HomePage: React.FC = () => {
                     onViewAll={handleViewAllPricing}
                     onRegister={handleRegister}
                 />
+                <RedDivider />
+                <AboutSection />
             </main>
             <RedDivider />
             <Footer />

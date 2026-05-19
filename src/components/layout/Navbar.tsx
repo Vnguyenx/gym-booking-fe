@@ -16,10 +16,10 @@ import { useGymData } from '../../hooks/useGymData';
 // ─── Danh sách link menu ──────────────────────────────────────────────────────
 
 const NAV_LINKS = [
-    { href: '#about',     spy: 'about',     label: 'Giới thiệu' },
     { href: '#equipment', spy: 'equipment',  label: 'Dụng cụ'    },
     { href: '#pt',        spy: 'pt',         label: 'PT'          },
     { href: '#pricing',   spy: 'pricing',    label: 'Bảng giá'   },
+    { href: '#about',     spy: 'about',     label: 'Giới thiệu' },
 ];
 
 // ─── Label hiển thị theo role ─────────────────────────────────────────────────

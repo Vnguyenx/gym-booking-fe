@@ -32,9 +32,15 @@ export const ROUTES = {
     PT_STUDENTS: '/pt/students',    // Danh sách học viên
 
     // ── Admin routes (cần đăng nhập, role: admin) ──
-    ADMIN_DASHBOARD: '/admin/dashboard',    // Tổng quan
-    ADMIN_BOOKINGS: '/admin/bookings',      // Quản lý đặt lịch
-    ADMIN_PTS: '/admin/pts',               // Quản lý PT
-    ADMIN_COURSES: '/admin/courses',        // Quản lý khoá học
-    ADMIN_COMMENTS: '/admin/comments',      // Kiểm duyệt bình luận
+    ADMIN_DASHBOARD:    '/admin/dashboard',
+    ADMIN_USERS:        '/admin/users',          // Quản lý học viên
+    ADMIN_PTS:          '/admin/pts',            // Quản lý PT
+    ADMIN_PT_APPS:      '/admin/pt-applications',// Đơn đăng ký làm PT
+    ADMIN_CLASSES:      '/admin/classes',        // Lớp học
+    ADMIN_BOOKINGS:     '/admin/bookings',       // Đơn đặt gói
+    ADMIN_MEMBERSHIPS:  '/admin/memberships',    // Gói tập + PT service
+    ADMIN_EQUIPMENT:    '/admin/equipment',      // Máy móc
+    ADMIN_CONTENT:      '/admin/content',        // Trang chủ (gym info, banner, zone...)
+    ADMIN_REVENUE:      '/admin/revenue',        // Doanh thu
+    ADMIN_SETTINGS:     '/admin/settings',       // Cài đặt + cá nhân
 } as const;
