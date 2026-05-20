@@ -18,6 +18,7 @@ const AdminBookingsPage: React.FC = () => {
         filterStatus,
         updating,
         selectedBooking,
+        selectedDetail,
         pendingAction,
         handleFilterChange,
         handleActionClick,
@@ -132,7 +133,7 @@ const AdminBookingsPage: React.FC = () => {
                 onConfirm={handleConfirmAction}
                 onClose={handleCloseModal}
                 isUpdating={!!updating}
-            />
+                selectedDetail={selectedDetail}/>
         </div>
     );
 };

@@ -6,7 +6,7 @@ import {
     reviewPTApplication,
     setPTAppFilter,
     type PTApplicationStatusFilter,
-} from '../../../store/admin/adminUserSlice';
+} from '../../../store/admin/adminPTApplicationSlice';
 import type { PTApplication } from '../../../types/models';
 import PTApplicationDetailModal from './PTApplicationDetailModal';
 import '../../../styles/admin/AdminPtsPage.css';
@@ -24,7 +24,7 @@ const PTApplications: React.FC = () => {
     const dispatch = useAppDispatch();
     const {
         ptApplications, ptAppLoading, ptAppError, ptAppFilter,
-    } = useAppSelector((s) => s.adminUser);
+    } = useAppSelector((s) => s.adminPTApplication);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [previewApp, setPreviewApp] = useState<PTApplication | null>(null);

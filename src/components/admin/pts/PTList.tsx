@@ -5,7 +5,7 @@ import {
     fetchAdminPTs,
     fetchPTById,
     clearSelectedPT,
-} from '../../../store/admin/adminUserSlice';
+} from '../../../store/admin/adminPTSlice';
 import PTDetailModal from './PTDetailModal';
 import '../../../styles/admin/AdminPtsPage.css';
 
@@ -16,7 +16,7 @@ const PTList: React.FC = () => {
     const {
         pts, ptsLoading, ptsError,
         selectedPT, ptDetailLoading,
-    } = useAppSelector((s) => s.adminUser);
+    } = useAppSelector((s) => s.adminPT);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);

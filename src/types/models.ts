@@ -168,19 +168,12 @@ export interface Equipment {
 
 export interface Membership {
     id?: string;
-    /** Tên gói tập, ví dụ: "Gói tập 3 tháng" */
     name: string;
-    /** Số tháng của gói */
     durationMonths: number;
-    /** Giá gốc (đồng) */
     price: number;
-    /** Giá khi đăng ký online (đồng) */
     priceOnline: number;
-    /** Ghi chú ngắn, ví dụ: "330K/tháng" */
     note: string;
-    /** Có phải gói phổ biến nhất không */
     isPopular?: boolean;
-    /** Danh sách quyền lợi / tính năng nổi bật */
     promotions: string[];
 }
 
@@ -204,6 +197,11 @@ export interface Booking {
     paidAt: string | null;     // ISO string sau khi BE convert
     paymentCode: String;
     vnpay_TransactionNo?: string;
+    customerName?: string;
+    customerPhone?: string;
+    membershipName?: string;
+    ptServiceName?: string;
+    ptName?: string;
 }
 
 export interface UseBookingsReturn {

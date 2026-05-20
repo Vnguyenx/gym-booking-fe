@@ -18,12 +18,20 @@ const BookingCardList: React.FC<BookingTableProps> = ({ bookings, updating, onAc
 
                 <div className="ab-card-body">
                     <div className="ab-card-row">
+                        <span className="ab-card-label">Khách hàng</span>
+                        <span>{booking.customerName}</span>
+                    </div>
+                    <div className="ab-card-row">
                         <span className="ab-card-label">Gói tập</span>
-                        <span>{booking.membershipId}</span>
+                        <span>{booking.membershipName}</span>
                     </div>
                     <div className="ab-card-row">
                         <span className="ab-card-label">Dịch vụ PT</span>
-                        <span>{booking.ptServiceId}</span>
+                        <span>{booking.ptServiceName}</span>
+                    </div>
+                    <div className="ab-card-row">
+                        <span className="ab-card-label">PT</span>
+                        <span>{booking.ptName}</span>
                     </div>
                     <div className="ab-card-row">
                         <span className="ab-card-label">Tổng tiền</span>

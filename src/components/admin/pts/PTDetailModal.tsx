@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import {editPT, clearSelectedPT} from '../../../store/admin/adminUserSlice';
+import {editPT, clearSelectedPT} from '../../../store/admin/adminPTSlice';
 import type { PT } from '../../../types/models';
 import { uploadImageToImgBB } from '../../../services/uploadService';
 import '../../../styles/admin/AdminPtsPage.css';
@@ -16,7 +16,7 @@ type EditableFields = Partial<Omit<PT, 'id' | 'updateAt'>>;
 
 const PTDetailModal: React.FC<Props> = ({ pt, onClose }) => {
     const dispatch = useAppDispatch();
-    const { ptDetailLoading, ptDetailError } = useAppSelector((s) => s.adminUser);
+    const { ptDetailLoading, ptDetailError } = useAppSelector((s) => s.adminPT);
 
     const [form, setForm] = useState<EditableFields>({
         fullName:    pt.fullName    ?? '',

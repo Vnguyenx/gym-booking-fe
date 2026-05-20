@@ -23,6 +23,8 @@ interface AdminBookingState {
     error:        string | null;      // lỗi fetch
     filterStatus: BookingStatusFilter;// bộ lọc đang chọn
     updating:     string | null;      // bookingId đang được cập nhật (tránh click 2 lần)
+    selectedDetail: Booking | null;
+    loadingDetail: boolean;
 }
 
 const initialState: AdminBookingState = {
@@ -31,6 +33,8 @@ const initialState: AdminBookingState = {
     error:        null,
     filterStatus: 'all',
     updating:     null,
+    selectedDetail: null,
+    loadingDetail: false
 };
 
 // ── Async thunks ──────────────────────────────────────────────────────────────
@@ -72,6 +76,18 @@ export const changeBookingStatus = createAsyncThunk(
     }
 );
 
+export const getBookingDetail = createAsyncThunk(
+    'adminBooking/getDetail',
+    async (bookingId: string, { rejectWithValue }) => {
+        try {
+            const data = await adminService.fetchBookingById(bookingId);
+            return data.booking; // Trả về object đã có đầy đủ customerName, membershipName...
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
 // ── Slice ─────────────────────────────────────────────────────────────────────
 
 const adminBookingSlice = createSlice({
@@ -82,6 +98,10 @@ const adminBookingSlice = createSlice({
         setFilterStatus: (state, action) => {
             state.filterStatus = action.payload;
         },
+        clearSelectedDetail: (state) => {
+            state.selectedDetail = null;
+            state.loadingDetail = false; // Đảm bảo reset cả loading
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -101,20 +121,35 @@ const adminBookingSlice = createSlice({
 
             // ── changeBookingStatus ───────────────────────────────────────
             .addCase(changeBookingStatus.pending, (state, action) => {
-                // Lưu lại ID đang xử lý để disable nút bấm
                 state.updating = action.meta.arg.bookingId;
             })
             .addCase(changeBookingStatus.fulfilled, (state, action) => {
                 state.updating = null;
-                // Cập nhật status trực tiếp trong store — không cần fetch lại
                 const booking = state.bookings.find(b => b.id === action.payload.bookingId);
                 if (booking) booking.status = action.payload.status;
+
+                // Cập nhật đồng bộ cho selectedDetail
+                if (state.selectedDetail?.id === action.payload.bookingId) {
+                    state.selectedDetail.status = action.payload.status;
+                }
             })
             .addCase(changeBookingStatus.rejected, (state) => {
                 state.updating = null;
+            })
+
+            // getBookingDetail (Đầy đủ 3 trạng thái)
+            .addCase(getBookingDetail.pending, (state) => {
+                state.loadingDetail = true;
+            })
+            .addCase(getBookingDetail.fulfilled, (state, action) => {
+                state.selectedDetail = action.payload;
+                state.loadingDetail = false;
+            })
+            .addCase(getBookingDetail.rejected, (state) => {
+                state.loadingDetail = false;
             });
     },
 });
 
-export const { setFilterStatus } = adminBookingSlice.actions;
+export const { setFilterStatus, clearSelectedDetail } = adminBookingSlice.actions;
 export default adminBookingSlice.reducer;

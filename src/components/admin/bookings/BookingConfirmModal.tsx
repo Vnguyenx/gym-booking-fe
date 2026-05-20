@@ -11,14 +11,20 @@ interface BookingConfirmModalProps {
     onConfirm:  () => void;
     onClose:    () => void;
     isUpdating: boolean;
+    selectedDetail: Booking | null;
 }
 
-const BookingConfirmModal: React.FC<BookingConfirmModalProps> = ({
-                                                                     booking, action, onConfirm, onClose, isUpdating,
-                                                                 }) => {
+const BookingConfirmModal:
+    React.FC<BookingConfirmModalProps> = ({booking,
+                                              action,
+                                              onConfirm,
+                                              onClose,
+                                              isUpdating,
+                                              selectedDetail,  }) => {
     if (!booking || !action) return null;
 
     const isConfirm = action === 'confirmed';
+    const displayData = selectedDetail || booking;
 
     return (
         <div className="ab-modal-overlay" onClick={onClose}>
@@ -27,13 +33,23 @@ const BookingConfirmModal: React.FC<BookingConfirmModalProps> = ({
                 <h3 className="ab-modal-title">
                     {isConfirm ? 'Xác nhận duyệt đơn?' : 'Xác nhận huỷ đơn?'}
                 </h3>
-                <p className="ab-modal-desc">
-                    Đơn hàng <strong>#{booking.id.slice(0, 8)}</strong>
-                    {' '}trị giá <strong>{formatPrice(booking.totalPrice)}</strong>
-                    {' '}sẽ được {isConfirm ? 'xác nhận và tạo lớp học' : 'huỷ bỏ'}.
-                </p>
+                <span className="ab-modal-desc">
+                    Mã đơn: <span className="ab-mono">#{displayData.id.slice(0, 8)}</span>
+                    <br/>
+                    Khách hàng: <strong>{displayData.customerName || 'Đang tải...'}</strong>
+                    <br/>
+                    Gói tập: <strong>{displayData.membershipName || '...'}</strong>
+                    <br/>
+                    Dịch vụ: <strong>{displayData.ptServiceName}</strong>
+                    <br/>
+                    {displayData.ptName && (
+                        <span>Huấn luyện viên: <strong>{displayData.ptName}</strong></span>
+                    )}
+                    <br/>
+                    Trị giá: <strong>{formatPrice(displayData.totalPrice)}</strong>
+                </span>
                 <div className="ab-modal-actions">
-                    <button onClick={onClose} className="ab-modal-btn-cancel">
+                <button onClick={onClose} className="ab-modal-btn-cancel">
                         Không
                     </button>
                     <button

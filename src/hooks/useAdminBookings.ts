@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
     fetchAdminBookings,
     changeBookingStatus,
+    getBookingDetail,
+    clearSelectedDetail,
     setFilterStatus,
     BookingStatusFilter,
 } from '../store/admin/adminBookingSlice';
@@ -17,8 +19,13 @@ const useAdminBookings = () => {
     const dispatch = useAppDispatch();
 
     // Lấy state từ Redux store
-    const { bookings, loading, error, filterStatus, updating } =
-        useAppSelector(state => state.adminBooking);
+    const { bookings,
+        loading,
+        error,
+        filterStatus,
+        updating,
+        loadingDetail,
+        selectedDetail } = useAppSelector(state => state.adminBooking);
 
     // State cho modal xác nhận hành động (confirm/cancel)
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -48,21 +55,25 @@ const useAdminBookings = () => {
 
     /** Mở modal xác nhận trước khi thực hiện hành động */
     const handleActionClick = (booking: Booking, action: 'confirmed' | 'cancelled') => {
-        setSelectedBooking(booking);
-        setPendingAction(action);
-    };
+            setSelectedBooking(booking);
+            setPendingAction(action);
+
+            // Kích hoạt fetch dữ liệu "xịn" (có tên khách, tên gói...) từ BE
+            dispatch(getBookingDetail(booking.id));
+        };
 
     /** Đóng modal, huỷ hành động */
     const handleCloseModal = () => {
         setSelectedBooking(null);
         setPendingAction(null);
+        dispatch(clearSelectedDetail()); // Quan trọng: Reset selectedDetail trong Redux
     };
 
     /** Xác nhận hành động sau khi user bấm "Đồng ý" trong modal */
     const handleConfirmAction = async () => {
         if (!selectedBooking || !pendingAction) return;
         await dispatch(changeBookingStatus({
-            bookingId: selectedBooking.id!,
+            bookingId: selectedBooking.id,
             status:    pendingAction,
         }));
         handleCloseModal();
@@ -83,6 +94,8 @@ const useAdminBookings = () => {
 
         // Modal state
         selectedBooking,
+        selectedDetail,
+        loadingDetail,
         pendingAction,
 
         // Actions
