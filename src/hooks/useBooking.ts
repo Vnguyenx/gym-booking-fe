@@ -11,8 +11,7 @@ import usePTData from './usePTData';
 
 interface BookingResult {
     bookingId: string;
-    paymentCode: string;
-    qrImageUrl: string;
+    paymentUrl: string;   // link VNPay
     totalPrice: number;
 }
 
@@ -107,7 +106,10 @@ const useBooking = (initial?: BookingInitialState) => {
                 ptServiceId: selectedPTService.id!,
                 ptId: selectedPT?.id || '',
             });
-            setBookingResult(result);
+
+            // Redirect thẳng sang trang thanh toán VNPay
+            window.location.href = result.paymentUrl;
+
         } catch (err: any) {
             setError(err.message);
         } finally {

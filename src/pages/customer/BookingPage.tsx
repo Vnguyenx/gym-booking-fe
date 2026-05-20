@@ -1,8 +1,6 @@
 // src/pages/customer/BookingPage.tsx
 // Trang đặt lịch dạng single page — giống trang checkout TMĐT
-
-import React, {useEffect} from 'react';
-import { useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { useLocation, Navigate} from 'react-router-dom';
 import { Membership, PT } from '../../types/models';
 import useAuth from '../../hooks/useAuth';
 import useBooking from '../../hooks/useBooking';
@@ -18,7 +16,6 @@ import '../../styles/booking/booking.css';
 const BookingPage: React.FC = () => {
     const { isLoggedIn } = useAuth();
     const location = useLocation();
-    const navigate = useNavigate();
 
     const { membership, pt } = (location.state || {}) as {
         membership?: Membership;
@@ -27,15 +24,6 @@ const BookingPage: React.FC = () => {
 
     const booking = useBooking({ membership, pt });
 
-    // Đã confirm → chuyển sang trang Success kèm kết quả
-    useEffect(() => {
-        if (booking.bookingResult) {
-            navigate(ROUTES.BOOKING_SUCCESS, {
-                state: { result: booking.bookingResult },
-                replace: true,
-            });
-        }
-    }, [booking.bookingResult, navigate]);
 
     if (!isLoggedIn) return <Navigate to={ROUTES.LOGIN} />;
 

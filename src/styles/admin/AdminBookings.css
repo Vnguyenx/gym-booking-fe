@@ -1,0 +1,434 @@
+/* src/styles/admin/AdminBookings.css — mobile first */
+
+/* ══════════════════════════════════════
+   BASE (mobile)
+══════════════════════════════════════ */
+
+.ab-page {
+    padding: 16px;
+    color: #f1f1f1;
+}
+
+.ab-page-header {
+    margin-bottom: 20px;
+}
+
+.ab-page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.ab-page-subtitle {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 4px 0 0;
+}
+
+/* ── Filter bar ── */
+.ab-filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.ab-filter-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ab-filter-tab {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.ab-filter-tab--active {
+    background: #e53e3e;
+    border-color: #e53e3e;
+    color: #fff;
+}
+
+.ab-filter-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ab-total-count {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.ab-refresh-btn {
+    background: transparent;
+    border: 1px solid #333;
+    color: #aaa;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.ab-refresh-btn:hover {
+    background: #1a1a1a;
+    color: #f1f1f1;
+}
+
+/* ── State box ── */
+.ab-state-box {
+    padding: 32px 16px;
+    text-align: center;
+    color: #888;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-size: 0.875rem;
+}
+
+.ab-state-box--error {
+    color: #ef4444;
+}
+
+/* ── Shared: monospace ── */
+.ab-mono {
+    font-family: monospace;
+    color: #888;
+    font-size: 0.8rem;
+}
+
+/* ── Status badge ── */
+.ab-status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ── Action buttons ── */
+.ab-action-btn {
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.ab-action-btn + .ab-action-btn {
+    margin-left: 8px;
+}
+
+.ab-action-btn--confirm {
+    background: #166534;
+    color: #86efac;
+}
+
+.ab-action-btn--cancel {
+    background: #7f1d1d;
+    color: #fca5a5;
+}
+
+.ab-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Card list (mobile default) ── */
+.ab-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ab-card {
+    background: #1a1a1a;
+    border-radius: 10px;
+    border: 1px solid #222;
+    overflow: hidden;
+}
+
+.ab-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #222;
+    background: #111;
+}
+
+.ab-card-body {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ab-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.ab-card-label {
+    color: #888;
+}
+
+.ab-card-price {
+    color: #e53e3e;
+    font-weight: 700;
+}
+
+.ab-card-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #222;
+    background: #111;
+}
+
+/* ── Responsive toggle ── */
+.ab-desktop-only { display: none; }
+.ab-mobile-only  { display: block; }
+
+/* ── Table (desktop only) ── */
+.ab-table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #222;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ab-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.ab-table thead tr {
+    background: #1a1a1a;
+}
+
+.ab-table th {
+    padding: 12px 16px;
+    text-align: left;
+    color: #aaa;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid #222;
+}
+
+.ab-table tbody tr {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background 0.15s;
+}
+
+.ab-table tbody tr:hover {
+    background: #1a1a1a;
+}
+
+.ab-table td {
+    padding: 12px 16px;
+    color: #ddd;
+    white-space: nowrap;
+}
+
+.ab-td--price {
+    color: #e53e3e;
+    font-weight: 600;
+}
+
+.ab-td--muted {
+    color: #555;
+}
+
+/* ── Pagination ── */
+.ab-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 20px;
+}
+
+.ab-page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ab-page-btn:hover:not(:disabled) {
+    background: #1a1a1a;
+    color: #f1f1f1;
+}
+
+.ab-page-btn--active {
+    background: #e53e3e;
+    border-color: #e53e3e;
+    color: #fff;
+    font-weight: 600;
+}
+
+.ab-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.ab-page-info {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 4px;
+}
+
+/* ── Modal ── */
+.ab-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: flex-end;   /* mobile: slide up từ dưới */
+    justify-content: center;
+    z-index: 1000;
+    padding: 0;
+}
+
+.ab-modal-box {
+    background: #1a1a1a;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #333;
+    border-bottom: none;
+    padding: 28px 24px 32px;
+    width: 100%;
+    text-align: center;
+}
+
+.ab-modal-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.ab-modal-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+.ab-modal-desc {
+    color: #aaa;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.ab-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.ab-modal-btn-cancel {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.ab-modal-btn-confirm {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.ab-modal-btn-confirm--approve { background: #22c55e; }
+.ab-modal-btn-confirm--cancel  { background: #ef4444; }
+
+.ab-modal-btn-confirm:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════
+   DESKTOP — từ 768px
+══════════════════════════════════════ */
+@media (min-width: 768px) {
+
+    .ab-page {
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .ab-page-header {
+        margin-bottom: 24px;
+    }
+
+    .ab-page-title {
+        font-size: 1.5rem;
+    }
+
+    .ab-page-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .ab-filter-bar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .ab-filter-tab {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+    }
+
+    .ab-desktop-only { display: block; }
+    .ab-mobile-only  { display: none;  }
+
+    /* Modal: centered popup trên desktop */
+    .ab-modal-overlay {
+        align-items: center;
+        padding: 16px;
+    }
+
+    .ab-modal-box {
+        border-radius: 12px;
+        border-bottom: 1px solid #333;
+        max-width: 400px;
+        width: 100%;
+        padding: 28px 24px;
+    }
+
+    .ab-modal-btn-cancel,
+    .ab-modal-btn-confirm {
+        flex: none;
+        padding: 8px 24px;
+    }
+}

@@ -1,116 +1,124 @@
-/* src/components/admin/layout/AdminLayout.css */
+/* src/styles/admin/AdminLayout.css — mobile first */
+
+/* ══════════════════════════════════════
+   BASE (mobile)
+══════════════════════════════════════ */
 
 .admin-layout-wrapper {
     display: flex;
     min-height: 100vh;
-    background-color: #f1f5f9;
+    background-color: #0d0d0d;
 }
 
+/* Sidebar ẩn trên mobile — chỉ hiện qua drawer */
 .admin-layout-sidebar {
-    width: 240px;
-    flex-shrink: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 100;
-    overflow-y: auto;
+    display: none;
 }
 
 .admin-layout-main {
     flex: 1;
-    margin-left: 240px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* không margin-left trên mobile */
+}
+
+/* Topbar hiện trên mobile */
+.admin-layout-mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #111;
+    color: #f1f1f1;
+    border-bottom: 1px solid #222;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.admin-layout-menu-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #aaa;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin-layout-menu-btn:hover {
+    background: #1a1a1a;
+    color: #f1f1f1;
+}
+
+.admin-layout-mobile-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    color: #e53e3e;
 }
 
 .admin-layout-content {
-    padding: 24px;
+    padding: 16px;
     flex: 1;
 }
 
-/* Ẩn trên desktop */
-.admin-layout-mobile-topbar {
-    display: none;
+/* Overlay + Drawer */
+.admin-layout-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 200;
 }
 
-.admin-layout-overlay {
-    display: none;
+.admin-layout-drawer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100%;
+    background: #111;
+    border-right: 1px solid #222;
+    overflow-y: auto;
+    animation: adminDrawerSlideIn 0.25s ease;
+}
+
+@keyframes adminDrawerSlideIn {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
 }
 
 /* ══════════════════════════════════════
-   MOBILE — màn hình < 1024px
+   DESKTOP — từ 1024px trở lên
 ══════════════════════════════════════ */
-@media (max-width: 1023px) {
+@media (min-width: 1024px) {
 
+    /* Sidebar cố định bên trái */
     .admin-layout-sidebar {
-        display: none;
+        display: block;
+        width: 240px;
+        flex-shrink: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+        overflow-y: auto;
     }
 
     .admin-layout-main {
-        margin-left: 0;
+        margin-left: 240px;
     }
 
+    /* Ẩn topbar mobile */
     .admin-layout-mobile-topbar {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        background: #0f172a;
-        color: white;
-        position: sticky;
-        top: 0;
-        z-index: 50;
-    }
-
-    .admin-layout-menu-btn {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.4rem;
-        cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 6px;
-        transition: background 0.2s;
-    }
-
-    .admin-layout-menu-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .admin-layout-mobile-title {
-        font-weight: 700;
-        font-size: 0.95rem;
-        letter-spacing: 0.05em;
-        color: #60a5fa;
+        display: none;
     }
 
     .admin-layout-content {
-        padding: 16px;
-    }
-
-    .admin-layout-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 200;
-    }
-
-    .admin-layout-drawer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 260px;
-        height: 100%;
-        background: #0f172a;
-        overflow-y: auto;
-        animation: adminDrawerSlideIn 0.25s ease;
-    }
-
-    @keyframes adminDrawerSlideIn {
-        from { transform: translateX(-100%); }
-        to   { transform: translateX(0); }
+        padding: 24px;
     }
 }

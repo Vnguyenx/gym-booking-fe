@@ -1,8 +1,5 @@
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-
-// ── Bật/tắt mock (đổi thành false khi BE sẵn sàng) ───────
-const USE_MOCK = false;
 // ─────────────────────────────────────────────────────────
 
 export const bookingService = {

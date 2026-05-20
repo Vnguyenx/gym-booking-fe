@@ -8,7 +8,7 @@ import '../../../styles/admin/AdminSidebar.css';
 
 const MENU_ITEMS = [
     { label: 'Dashboard',    icon: '📊', path: ROUTES.ADMIN_DASHBOARD },
-    { label: 'Học viên',     icon: '👥', path: ROUTES.ADMIN_USERS },
+    { label: 'Người dùng',     icon: '👥', path: ROUTES.ADMIN_USERS },
     { label: 'PT & Đơn PT',  icon: '💪', path: ROUTES.ADMIN_PTS },
     { label: 'Lớp học',      icon: '📚', path: ROUTES.ADMIN_CLASSES },
     { label: 'Booking',      icon: '🎫', path: ROUTES.ADMIN_BOOKINGS },

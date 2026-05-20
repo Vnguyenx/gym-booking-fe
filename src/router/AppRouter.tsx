@@ -39,10 +39,10 @@ import PtDashboard    from '../pages/pt/PtDashboard';
 
 // ── Admin pages ───────────────────────────────────────────
 import AdminDashboard    from '../pages/admin/AdminDashboard';
-// import AdminUsersPage    from '../pages/admin/AdminUsersPage';
-// import AdminPTsPage      from '../pages/admin/AdminPTsPage';
+import AdminUsersPage    from '../pages/admin/AdminUsersPage';
+import AdminPTsPage      from '../pages/admin/AdminPTsPage';
 // import AdminClassesPage  from '../pages/admin/AdminClassesPage';
-// import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
+import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
 // import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
 // import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
 // import AdminContentPage     from '../pages/admin/AdminContentPage';
@@ -146,17 +146,17 @@ const AppRouter = () => {
                 <Route path={ROUTES.ADMIN_DASHBOARD}
                        element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_USERS}*/}
-                {/*       element={<AdminRoute><AdminUsersPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_USERS}
+                       element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_PTS}*/}
-                {/*       element={<AdminRoute><AdminPTsPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_PTS}
+                       element={<AdminRoute><AdminPTsPage /></AdminRoute>} />
 
                 {/*<Route path={ROUTES.ADMIN_CLASSES}*/}
                 {/*       element={<AdminRoute><AdminClassesPage /></AdminRoute>} />*/}
 
-                {/*<Route path={ROUTES.ADMIN_BOOKINGS}*/}
-                {/*       element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_BOOKINGS}
+                       element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />
 
                 {/*<Route path={ROUTES.ADMIN_MEMBERSHIPS}*/}
                 {/*       element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />*/}

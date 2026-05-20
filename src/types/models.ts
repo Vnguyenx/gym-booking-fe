@@ -203,6 +203,7 @@ export interface Booking {
     createdAt: string | null;  // ISO string sau khi BE convert
     paidAt: string | null;     // ISO string sau khi BE convert
     paymentCode: String;
+    vnpay_TransactionNo?: string;
 }
 
 export interface UseBookingsReturn {

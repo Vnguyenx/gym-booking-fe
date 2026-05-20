@@ -1,0 +1,513 @@
+/* ==========================================================================
+   VARIABLES & BASE (Tone màu tối, nhấn đỏ theo yêu cầu)
+   ========================================================================== */
+:root {
+    --au-bg-main: #111111;
+    --au-bg-card: #1a1a1a;
+    --au-bg-input: #252525;
+    --au-bg-hover: #2a2a2a;
+
+    --au-accent: #e53e3e;
+    --au-accent-hover: #c53030;
+
+    --au-text-main: #f1f1f1;
+    --au-text-muted: #888888;
+
+    --au-border: #222222;
+    --au-border-focus: #444444;
+
+    --au-radius-sm: 6px;
+    --au-radius-md: 8px;
+    --au-radius-lg: 16px;
+
+    --au-transition: all 0.2s ease-in-out;
+}
+
+.au-page {
+    background-color: var(--au-bg-main);
+    color: var(--au-text-main);
+    padding: 16px;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, sans-serif;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   HEADER & FILTER BAR (Mobile First)
+   ========================================================================== */
+.au-header {
+    margin-bottom: 20px;
+}
+
+.au-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.au-filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.au-search,
+.au-select {
+    width: 100%;
+    height: 44px; /* Tối ưu chiều cao cho ngón tay chạm trên mobile */
+    padding: 0 14px;
+    background-color: var(--au-bg-card);
+    border: 1px solid var(--au-border);
+    border-radius: var(--au-radius-md);
+    color: var(--au-text-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--au-transition);
+    box-sizing: border-box;
+}
+
+.au-search:focus,
+.au-select:focus {
+    border-color: var(--au-accent);
+    background-color: var(--au-bg-input);
+}
+
+/* ==========================================================================
+   MOBILE CARD LAYOUT
+   ========================================================================== */
+.au-mobile-only {
+    display: block;
+}
+
+.au-desktop-only {
+    display: none;
+}
+
+.au-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.au-card {
+    background-color: var(--au-bg-card);
+    border: 1px solid var(--au-border);
+    border-radius: var(--au-radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.au-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 8px;
+}
+
+.au-card-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.au-card-label {
+    color: var(--au-text-muted);
+    font-size: 0.85rem;
+}
+
+.au-card-value {
+    font-size: 0.95rem;
+    color: var(--au-text-main);
+    text-align: right;
+}
+
+.au-card-value.font-semibold {
+    font-weight: 600;
+}
+
+.au-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+/* ==========================================================================
+   BADGES & BUTTONS
+   ========================================================================== */
+.au-badge {
+    display: inline-flex;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.au-badge--customer {
+    background-color: rgba(43, 108, 176, 0.2);
+    color: #63b3ed;
+    border: 1px solid rgba(43, 108, 176, 0.5);
+}
+
+.au-badge--pt {
+    background-color: rgba(229, 62, 62, 0.15);
+    color: var(--au-accent);
+    border: 1px solid rgba(229, 62, 62, 0.4);
+}
+
+/* Base Button */
+.au-btn, .au-btn-view, .au-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--au-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--au-transition);
+}
+
+/* Standard Buttons (Form/Modal) */
+.au-btn {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 0.9rem;
+}
+
+.au-btn--primary {
+    background-color: var(--au-accent);
+    color: #ffffff;
+}
+
+.au-btn--primary:hover:not(:disabled) {
+    background-color: var(--au-accent-hover);
+}
+
+.au-btn--primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.au-btn--ghost {
+    background-color: transparent;
+    border: 1px solid var(--au-border-focus);
+    color: var(--au-text-main);
+}
+
+.au-btn--ghost:hover {
+    background-color: var(--au-bg-hover);
+}
+
+/* Action Buttons (Card/Table) */
+.au-btn-view, .au-btn-delete {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+}
+
+.au-btn-view {
+    background-color: #2d3748;
+    color: #edf2f7;
+}
+
+.au-btn-view:hover {
+    background-color: #4a5568;
+}
+
+.au-btn-delete {
+    background-color: #4a1a1a;
+    color: #fc8181;
+}
+
+.au-btn-delete:hover {
+    background-color: #742a2a;
+    color: #fff;
+}
+
+.mr-2 {
+    margin-right: 8px;
+}
+
+/* ==========================================================================
+   PAGINATION
+   ========================================================================== */
+.au-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 24px;
+}
+
+.au-page-btn {
+    min-width: 38px;
+    height: 38px;
+    border-radius: var(--au-radius-sm);
+    border: 1px solid var(--au-border);
+    background: var(--au-bg-card);
+    color: var(--au-text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--au-transition);
+}
+
+.au-page-btn:hover:not(:disabled) {
+    background: var(--au-border-focus);
+    color: var(--au-text-main);
+}
+
+.au-page-btn--active {
+    background: var(--au-accent) !important;
+    border-color: var(--au-accent) !important;
+    color: #ffffff !important;
+}
+
+.au-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.au-page-info {
+    width: 100%;
+    text-align: center;
+    color: var(--au-text-muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+/* ==========================================================================
+   MODAL & FORMS (UserDetailModal)
+   ========================================================================== */
+.au-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: flex-end; /* Mobile: Trượt từ dưới lên */
+    justify-content: center;
+    z-index: 1000;
+    padding: 0;
+}
+
+.au-modal-box {
+    background-color: var(--au-bg-card);
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+    border-top-left-radius: var(--au-radius-lg);
+    border-top-right-radius: var(--au-radius-lg);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+
+.au-modal-box--loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: var(--au-text-muted);
+}
+
+.au-modal-title {
+    font-size: 1.25rem;
+    margin: 0 0 20px 0;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.au-field {
+    margin-bottom: 16px;
+}
+
+.au-field-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--au-text-muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.au-field-input {
+    width: 100%;
+    height: 44px;
+    background-color: var(--au-bg-input);
+    border: 1px solid var(--au-border);
+    border-radius: var(--au-radius-md);
+    color: var(--au-text-main);
+    padding: 0 14px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--au-transition);
+    box-sizing: border-box;
+}
+
+.au-field-input:focus {
+    border-color: var(--au-accent);
+}
+
+.au-modal-error {
+    color: #fc8181;
+    font-size: 0.85rem;
+    margin-top: 12px;
+    background-color: rgba(229, 62, 62, 0.1);
+    padding: 10px;
+    border-radius: var(--au-radius-sm);
+}
+
+.au-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    border-top: 1px solid var(--au-border);
+    padding-top: 16px;
+}
+
+/* ==========================================================================
+   UTILITIES (Loading, Error, Spinner)
+   ========================================================================== */
+.au-loading, .au-error {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--au-bg-card);
+    border-radius: var(--au-radius-md);
+    color: var(--au-text-muted);
+}
+
+.au-error {
+    color: #fc8181;
+}
+
+.au-spinner, .au-btn-spinner {
+    display: inline-block;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+}
+
+.au-spinner {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+}
+
+.au-btn-spinner {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   DESKTOP / WEB SCALE OUT (>= 768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+    .au-page {
+        padding: 32px;
+    }
+
+    .au-header {
+        margin-bottom: 24px;
+    }
+
+    /* Filter Bar nằm ngang */
+    .au-filter-bar {
+        flex-direction: row;
+        max-width: 500px;
+    }
+
+    .au-search {
+        flex: 2;
+    }
+
+    .au-select {
+        flex: 1;
+    }
+
+    /* Chuyển đổi hiển thị: Ẩn Card Mobile, Hiện Table Desktop */
+    .au-mobile-only {
+        display: none;
+    }
+
+    .au-desktop-only {
+        display: block;
+    }
+
+    /* Table Styling */
+    .au-table-wrapper {
+        background-color: var(--au-bg-card);
+        border: 1px solid var(--au-border);
+        border-radius: var(--au-radius-md);
+        overflow: hidden;
+    }
+
+    .au-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .au-table th {
+        background-color: #151515;
+        color: var(--au-text-muted);
+        padding: 16px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+    }
+
+    .au-table td {
+        padding: 16px;
+        border-bottom: 1px solid var(--au-border);
+        color: var(--au-text-main);
+        font-size: 0.95rem;
+    }
+
+    .au-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .au-table tr:hover td {
+        background-color: var(--au-bg-hover);
+    }
+
+    .font-semibold {
+        font-weight: 600;
+    }
+
+    /* Pagination canh phải */
+    .au-pagination {
+        justify-content: flex-end;
+    }
+
+    .au-page-info {
+        width: auto;
+        margin-top: 0;
+        margin-left: 12px;
+    }
+
+    /* Modal hiển thị giữa màn hình */
+    .au-modal-overlay {
+        align-items: center;
+        padding: 20px;
+    }
+
+    .au-modal-box {
+        max-width: 500px; /* Thu hẹp modal trên Desktop */
+        border-radius: var(--au-radius-md);
+        padding: 32px;
+    }
+}

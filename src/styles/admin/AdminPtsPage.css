@@ -1,0 +1,481 @@
+/* ==========================================================================
+   VARIABLES & BASE THEME (Dark Theme, Nhấn Đỏ)
+   ========================================================================== */
+:root {
+    --bg-dark: #111111;
+    --bg-card: #1b1b1b;
+    --bg-input: #252525;
+
+    --accent: #e53e3e;
+    --accent-hover: #c53030;
+
+    --text-main: #f1f1f1;
+    --text-muted: #888888;
+
+    --border: #2c2c2c;
+    --border-light: #333333;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    --touch-size: 48px; /* Chuẩn kích thước chạm trên Mobile */
+}
+
+/* ════════════════════════════════════════════════════════════
+   1. MOBILE FIRST LAYOUT (Mặc định hiển thị cho Điện thoại)
+   ════════════════════════════════════════════════════════════ */
+
+.ap-page {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    padding: 16px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Header & Title ── */
+.ap-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.ap-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff;
+}
+
+/* ── Tabs Cuộn Ngang (Horizontal Scroll) trên Mobile ── */
+.ap-tabs {
+    display: flex;
+    background: var(--bg-card);
+    padding: 4px;
+    border-radius: var(--radius-md);
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+}
+
+/* Ẩn thanh cuộn mặc định cho đẹp */
+.ap-tabs::-webkit-scrollbar { display: none; }
+.ap-tabs { -ms-overflow-style: none; scrollbar-width: none; }
+
+.ap-tab-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.ap-tab-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+/* ── Filter Bar ── */
+.ap-filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.ap-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ap-filter-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.ap-select, .ap-search {
+    width: 100%;
+    height: var(--touch-size);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.ap-select:focus, .ap-search:focus {
+    border-color: var(--accent);
+}
+
+/* ── Danh Sách Thẻ (Card List) ── */
+.ap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    transition: 0.2s;
+    margin: 15px;
+}
+
+.pt-card-main {
+    display: flex;
+    flex-direction: column; /* Xếp dọc trên mobile */
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.pt-avatar-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.pt-info {
+    width: 100%;
+}
+
+.pt-name {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.pt-sub {
+    margin: 0 0 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ── Badges ── */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-pending { background: rgba(217, 119, 6, 0.15); color: #fbbf24; border: 1px solid rgba(217, 119, 6, 0.3); }
+.status-approved { background: rgba(56, 161, 105, 0.15); color: #48bb78; border: 1px solid rgba(56, 161, 105, 0.3); }
+.status-rejected { background: rgba(229, 62, 62, 0.15); color: #f56565; border: 1px solid rgba(229, 62, 62, 0.3); }
+
+/* ── Nút Bấm (Buttons) ── */
+.ap-btn {
+    width: 100%; /* Nút full ngang trên mobile */
+    height: var(--touch-size);
+    border-radius: var(--radius-sm);
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s ease;
+}
+
+.ap-btn--ghost { background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-light); }
+.ap-btn--ghost:hover { background: var(--border-light); }
+
+.ap-btn--approve { background: #2f855a; color: #ffffff; }
+.ap-btn--reject { background: #9b2c2c; color: #ffffff; }
+
+/* ── Phân Trang (Pagination) ── */
+.ap-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.ap-page-btn {
+    min-width: 40px;
+    height: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.ap-page-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
+.ap-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.ap-page-info {
+    width: 100%;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   2. MODAL GIAO DIỆN "BOTTOM SHEET" (Vuốt từ dưới lên trên Mobile)
+   ════════════════════════════════════════════════════════════ */
+
+.ap-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: flex-end; /* Mobile: Ép modal xuống đáy màn hình */
+    justify-content: center;
+    z-index: 1000;
+}
+
+.ap-modal-box {
+    background: var(--bg-card);
+    width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* Bo góc 2 cạnh trên */
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.ap-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ap-modal-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #ffffff;
+}
+
+.ap-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.ap-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.ap-field {
+    margin-bottom: 24px;
+}
+
+.ap-field label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.ap-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ap-tag {
+    background: var(--bg-input);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    border: 1px solid var(--border-light);
+}
+
+.ap-bio-text {
+    line-height: 1.6;
+    color: #dddddd;
+    white-space: pre-wrap;
+    margin: 0;
+    background: var(--bg-input);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+}
+
+.ap-modal-footer {
+    padding: 16px 24px;
+    background: #151515;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column; /* Mobile: Nút xếp chồng lên nhau */
+    gap: 12px;
+}
+
+.ap-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.ap-actions button {
+    flex: 1;
+}
+
+/* Utils */
+.ap-loading, .ap-empty, .ap-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+.ap-error { color: #f56565; }
+
+/* ════════════════════════════════════════════════════════════
+   3. DESKTOP RESPONSIVE (Mở rộng cho Tablet & PC từ 768px)
+   ════════════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+    .ap-page {
+        padding: 32px;
+    }
+
+    /* Đưa Header nằm ngang */
+    .ap-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ap-title { font-size: 1.6rem; }
+
+    /* Tabs co lại cho gọn */
+    .ap-tabs {
+        width: auto;
+    }
+
+    .ap-tab-btn {
+        min-width: 140px;
+    }
+
+    /* Đưa Filter nằm ngang */
+    .ap-filter-bar {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .ap-filter-group {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .ap-select {
+        width: 200px;
+    }
+
+    /* Danh sách Card: Dàn thẻ PT theo chiều ngang */
+    .pt-card-main {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .pt-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .pt-sub {
+        margin-bottom: 4px;
+    }
+
+    .pt-card-main .ap-btn {
+        width: auto; /* Thu nhỏ nút bấm trên PC */
+        padding: 0 24px;
+        height: 40px;
+    }
+
+    /* Phân trang: Canh phải, hiện info cùng dòng */
+    .ap-pagination {
+        justify-content: flex-end;
+    }
+
+    .ap-page-info {
+        width: auto;
+        margin-top: 0;
+        margin-left: 16px;
+    }
+
+    /* Modal Giao Diện PC (Khung nằm chính giữa) */
+    .ap-modal-overlay {
+        align-items: center; /* Kéo modal lên giữa màn hình */
+        padding: 24px;
+    }
+
+    .ap-modal-box {
+        max-width: 600px; /* Thu hẹp chiều ngang */
+        border-radius: var(--radius-md); /* Bo góc toàn bộ 4 cạnh */
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Modal Footer đưa các nút nằm ngang */
+    .ap-modal-footer {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .ap-modal-footer .ap-btn {
+        width: auto;
+        padding: 0 24px;
+    }
+
+    .ap-actions {
+        width: auto;
+        justify-content: flex-end;
+    }
+}

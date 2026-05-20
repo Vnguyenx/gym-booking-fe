@@ -18,6 +18,7 @@ import ptDashboardReducer from "./ptDashBoardSlice";
 import ptProfileReducer from './ptProfileSlice';
 
 import adminUserReducer from './admin/adminUserSlice';
+import adminBookingReducer from './admin/adminBookingSlice';
 
 
 export const store = configureStore({
@@ -36,6 +37,7 @@ export const store = configureStore({
         ptDashboard: ptDashboardReducer,
         ptProfile:    ptProfileReducer,
         adminUser: adminUserReducer,
+        adminBooking: adminBookingReducer,
     },
 });
 
