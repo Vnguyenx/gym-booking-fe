@@ -1,481 +1,656 @@
 /* ==========================================================================
-   VARIABLES & BASE THEME (Dark Theme, Nhấn Đỏ)
+   VARIABLES — Dark Theme, Accent Đỏ
    ========================================================================== */
 :root {
-    --bg-dark: #111111;
-    --bg-card: #1b1b1b;
-    --bg-input: #252525;
+    --bg-dark:       #111111;
+    --bg-card:       #1b1b1b;
+    --bg-input:      #252525;
 
-    --accent: #e53e3e;
-    --accent-hover: #c53030;
+    --accent:        #e53e3e;
+    --accent-hover:  #c53030;
 
-    --text-main: #f1f1f1;
-    --text-muted: #888888;
+    --text-main:     #f1f1f1;
+    --text-muted:    #888888;
 
-    --border: #2c2c2c;
-    --border-light: #333333;
+    --border:        #2c2c2c;
+    --border-light:  #333333;
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
+    --radius-sm:     8px;
+    --radius-md:     12px;
+    --radius-lg:     20px;
 
-    --touch-size: 48px; /* Chuẩn kích thước chạm trên Mobile */
+    --touch:         44px;
 }
 
-/* ════════════════════════════════════════════════════════════
-   1. MOBILE FIRST LAYOUT (Mặc định hiển thị cho Điện thoại)
-   ════════════════════════════════════════════════════════════ */
+/* ==========================================================================
+   BASE PAGE
+   ========================================================================== */
 
-.ap-page {
-    background-color: var(--bg-dark);
+.au-page {
+    background: var(--bg-dark);
     color: var(--text-main);
-    padding: 16px;
     min-height: 100vh;
+    padding: 16px;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ── Header & Title ── */
-.ap-header {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 20px;
-}
+/* ==========================================================================
+   PAGE HEADER  (title + 2 nút chuyển tab)
+   Mobile:  title hàng 1 | 2 nút hàng 2
+   Desktop: title bên trái | 2 nút bên phải cùng hàng
+   ========================================================================== */
 
-.ap-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0;
-    color: #ffffff;
-}
-
-/* ── Tabs Cuộn Ngang (Horizontal Scroll) trên Mobile ── */
-.ap-tabs {
-    display: flex;
-    background: var(--bg-card);
-    padding: 4px;
-    border-radius: var(--radius-md);
-    gap: 4px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-}
-
-/* Ẩn thanh cuộn mặc định cho đẹp */
-.ap-tabs::-webkit-scrollbar { display: none; }
-.ap-tabs { -ms-overflow-style: none; scrollbar-width: none; }
-
-.ap-tab-btn {
-    flex: 1;
-    min-width: 120px;
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.ap-tab-btn.active {
-    background: var(--accent);
-    color: #ffffff;
-}
-
-/* ── Filter Bar ── */
-.ap-filter-bar {
+.au-header {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
-.ap-filter-group {
+.au-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.au-tabs {
     display: flex;
-    flex-direction: column;
     gap: 8px;
-}
-
-.ap-filter-group label {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
-.ap-select, .ap-search {
     width: 100%;
-    height: var(--touch-size);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-main);
+}
+
+.au-tabs .au-btn {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (min-width: 768px) {
+    .au-page   { padding: 28px 32px; }
+    .au-header { flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .au-title  { font-size: 1.6rem; }
+    .au-tabs   { width: auto; }
+    .au-tabs .au-btn { flex: none; }
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.au-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: var(--touch);
     padding: 0 16px;
     border-radius: var(--radius-sm);
-    font-size: 0.95rem;
-    outline: none;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, opacity 0.18s;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin: 5px;
 }
 
-.ap-select:focus, .ap-search:focus {
-    border-color: var(--accent);
+.au-btn--primary       { background: var(--accent);      color: #fff; }
+.au-btn--primary:hover { background: var(--accent-hover); }
+
+.au-btn--ghost         { background: var(--bg-input);    color: var(--text-main); border: 1px solid var(--border-light); }
+.au-btn--ghost:hover   { background: var(--border-light); }
+
+.au-btn--approve       { background: #276749; color: #fff; }
+.au-btn--approve:hover { background: #22543d; }
+
+.au-btn--reject        { background: #9b2c2c; color: #fff; }
+.au-btn--reject:hover  { background: #742a2a; }
+
+.au-btn:disabled       { opacity: 0.45; cursor: not-allowed; }
+
+.au-btn-view {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.18s;
+}
+.au-btn-view:hover { background: var(--border-light); }
+
+.au-btn-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
 }
 
-/* ── Danh Sách Thẻ (Card List) ── */
-.ap-list {
+/* ==========================================================================
+   FILTER BAR
+   ========================================================================== */
+
+.au-filter-bar {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
+    margin-bottom: 16px;
 }
 
-.pt-card {
+.au-search {
+    width: 100%;
+    height: var(--touch);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    padding: 0 14px;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.18s;
+}
+.au-search:focus { border-color: var(--accent); }
+
+@media (min-width: 768px) {
+    .au-filter-bar { flex-direction: row; align-items: center; margin-bottom: 20px; }
+    .au-search     { max-width: 340px; }
+}
+
+/* ==========================================================================
+   RESPONSIVE VISIBILITY
+   ========================================================================== */
+
+.au-mobile-only  { display: block; }
+.au-desktop-only { display: none; }
+
+@media (min-width: 768px) {
+    .au-mobile-only  { display: none; }
+    .au-desktop-only { display: block; }
+}
+
+/* ==========================================================================
+   CARD LIST  (mobile PTList)
+   ========================================================================== */
+
+.au-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.au-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 16px;
-    transition: 0.2s;
-    margin: 15px;
+    padding: 14px 16px;
+    box-sizing: border-box;
 }
 
-.pt-card-main {
+.au-card-body {
     display: flex;
-    flex-direction: column; /* Xếp dọc trên mobile */
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.au-card-row {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    gap: 16px;
+    font-size: 0.9rem;
 }
 
-.pt-avatar-circle {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent);
+.au-card-label { color: var(--text-muted); }
+.au-card-value { color: var(--text-main); text-align: right; }
+.font-semibold { font-weight: 600; }
+
+.au-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
 }
 
-.pt-info {
+/* ==========================================================================
+   TABLE  (desktop PTList)
+   ========================================================================== */
+
+.au-table-wrapper {
     width: 100%;
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
 }
 
-.pt-name {
-    margin: 0 0 6px;
-    font-size: 1.1rem;
-    color: #ffffff;
+.au-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
 }
 
-.pt-sub {
-    margin: 0 0 12px;
+.au-table thead tr {
+    background: var(--bg-input);
+    border-bottom: 1px solid var(--border);
+}
+
+.au-table th {
+    padding: 12px 16px;
+    text-align: left;
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
 }
 
-/* ── Badges ── */
-.status-badge {
+.au-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+.au-table tbody tr:last-child td { border-bottom: none; }
+.au-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+/* ==========================================================================
+   BADGES
+   ========================================================================== */
+
+.au-badge {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-.status-pending { background: rgba(217, 119, 6, 0.15); color: #fbbf24; border: 1px solid rgba(217, 119, 6, 0.3); }
-.status-approved { background: rgba(56, 161, 105, 0.15); color: #48bb78; border: 1px solid rgba(56, 161, 105, 0.3); }
-.status-rejected { background: rgba(229, 62, 62, 0.15); color: #f56565; border: 1px solid rgba(229, 62, 62, 0.3); }
+.au-badge--approved { background: rgba(56,161,105,0.15); color: #48bb78; border: 1px solid rgba(56,161,105,0.3); }
+.au-badge--rejected { background: rgba(229,62,62,0.15);  color: #f56565; border: 1px solid rgba(229,62,62,0.3);  }
 
-/* ── Nút Bấm (Buttons) ── */
-.ap-btn {
-    width: 100%; /* Nút full ngang trên mobile */
-    height: var(--touch-size);
-    border-radius: var(--radius-sm);
-    border: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: 0.2s ease;
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-.ap-btn--ghost { background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-light); }
-.ap-btn--ghost:hover { background: var(--border-light); }
+.status-pending  { background: rgba(217,119,6,0.15);  color: #fbbf24; border: 1px solid rgba(217,119,6,0.3);  }
+.status-approved { background: rgba(56,161,105,0.15); color: #48bb78; border: 1px solid rgba(56,161,105,0.3); }
+.status-rejected { background: rgba(229,62,62,0.15);  color: #f56565; border: 1px solid rgba(229,62,62,0.3);  }
 
-.ap-btn--approve { background: #2f855a; color: #ffffff; }
-.ap-btn--reject { background: #9b2c2c; color: #ffffff; }
+/* ==========================================================================
+   PAGINATION
+   ========================================================================== */
 
-/* ── Phân Trang (Pagination) ── */
-.ap-pagination {
+.au-pagination {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 32px;
+    gap: 6px;
+    margin-top: 20px;
 }
 
-.ap-page-btn {
-    min-width: 40px;
-    height: 40px;
+.au-page-btn {
+    min-width: 38px;
+    height: 38px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     color: var(--text-muted);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 600;
+    transition: background 0.15s, color 0.15s;
 }
+.au-page-btn:hover:not(:disabled) { background: var(--border-light); color: var(--text-main); }
+.au-page-btn--active { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+.au-page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.ap-page-btn.active {
-    background: var(--accent);
-    color: #ffffff;
-    border-color: var(--accent);
-}
-
-.ap-page-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.ap-page-info {
+.au-page-info {
+    font-size: 0.82rem;
+    color: var(--text-muted);
     width: 100%;
     text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 8px;
+    margin-top: 4px;
 }
 
+@media (min-width: 768px) {
+    .au-pagination { justify-content: flex-end; }
+    .au-page-info  { width: auto; margin-top: 0; margin-left: 8px; }
+}
 
-/* ════════════════════════════════════════════════════════════
-   2. MODAL GIAO DIỆN "BOTTOM SHEET" (Vuốt từ dưới lên trên Mobile)
-   ════════════════════════════════════════════════════════════ */
+/* ==========================================================================
+   STATE: loading / error / empty
+   ========================================================================== */
 
-.ap-modal-overlay {
+.au-loading, .au-error {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+.au-error { color: #f56565; }
+
+.au-spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-light);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ==========================================================================
+   PT APPLICATIONS
+   ========================================================================== */
+
+.ap-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ap-tabs {
+    display: flex;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.ap-tabs::-webkit-scrollbar { display: none; }
+
+.ap-tab-btn {
+    flex: 1;
+    min-width: 72px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.18s, color 0.18s;
+}
+.ap-tab-btn.active { background: var(--accent); color: #fff; }
+
+.pt-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pt-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+
+.pt-avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   MODAL
+   Mobile:  bottom sheet
+   Desktop: dialog giữa màn hình
+   ========================================================================== */
+
+.au-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0,0,0,0.8);
     display: flex;
-    align-items: flex-end; /* Mobile: Ép modal xuống đáy màn hình */
+    align-items: flex-end;
     justify-content: center;
     z-index: 1000;
 }
 
-.ap-modal-box {
+.au-modal-box {
     background: var(--bg-card);
     width: 100%;
-    max-height: 90vh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* Bo góc 2 cạnh trên */
+    max-height: 92dvh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    animation: slideUp 0.28s cubic-bezier(0.16,1,0.3,1);
 }
 
 @keyframes slideUp {
     from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    to   { transform: translateY(0); }
 }
 
-.ap-modal-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.ap-modal-header h2 {
-    font-size: 1.25rem;
+.au-modal-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
     margin: 0;
-    color: #ffffff;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
 }
 
-.ap-close {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 2rem;
-    line-height: 1;
-    cursor: pointer;
-    padding: 0;
-}
-
-.ap-modal-body {
-    padding: 24px;
+.au-modal-body {
+    padding: 16px 20px 0;
     overflow-y: auto;
     flex: 1;
-}
-
-.ap-field {
-    margin-bottom: 24px;
-}
-
-.ap-field label {
-    display: block;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-.ap-tags {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.ap-tag {
-    background: var(--bg-input);
-    padding: 6px 12px;
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-    border: 1px solid var(--border-light);
-}
-
-.ap-bio-text {
-    line-height: 1.6;
-    color: #dddddd;
-    white-space: pre-wrap;
-    margin: 0;
-    background: var(--bg-input);
-    padding: 16px;
-    border-radius: var(--radius-sm);
-}
-
-.ap-modal-footer {
-    padding: 16px 24px;
-    background: #151515;
+.au-modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 20px;
     border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column; /* Mobile: Nút xếp chồng lên nhau */
+    background: #151515;
+}
+
+.au-modal-footer .au-btn { width: 100%; }
+
+.au-modal-error {
+    color: #f56565;
+    font-size: 0.88rem;
+}
+
+.au-modal-box--loading {
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
     gap: 12px;
+    min-height: 160px;
+    border-radius: var(--radius-lg);
 }
-
-.ap-actions {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-}
-
-.ap-actions button {
-    flex: 1;
-}
-
-/* Utils */
-.ap-loading, .ap-empty, .ap-error {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-muted);
-}
-.ap-error { color: #f56565; }
-
-/* ════════════════════════════════════════════════════════════
-   3. DESKTOP RESPONSIVE (Mở rộng cho Tablet & PC từ 768px)
-   ════════════════════════════════════════════════════════════ */
 
 @media (min-width: 768px) {
-    .ap-page {
-        padding: 32px;
-    }
-
-    /* Đưa Header nằm ngang */
-    .ap-header {
-        flex-direction: row;
-        justify-content: space-between;
+    .au-modal-overlay {
         align-items: center;
-    }
-
-    .ap-title { font-size: 1.6rem; }
-
-    /* Tabs co lại cho gọn */
-    .ap-tabs {
-        width: auto;
-    }
-
-    .ap-tab-btn {
-        min-width: 140px;
-    }
-
-    /* Đưa Filter nằm ngang */
-    .ap-filter-bar {
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .ap-filter-group {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .ap-select {
-        width: 200px;
-    }
-
-    /* Danh sách Card: Dàn thẻ PT theo chiều ngang */
-    .pt-card-main {
-        flex-direction: row;
-        text-align: left;
-    }
-
-    .pt-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .pt-sub {
-        margin-bottom: 4px;
-    }
-
-    .pt-card-main .ap-btn {
-        width: auto; /* Thu nhỏ nút bấm trên PC */
-        padding: 0 24px;
-        height: 40px;
-    }
-
-    /* Phân trang: Canh phải, hiện info cùng dòng */
-    .ap-pagination {
-        justify-content: flex-end;
-    }
-
-    .ap-page-info {
-        width: auto;
-        margin-top: 0;
-        margin-left: 16px;
-    }
-
-    /* Modal Giao Diện PC (Khung nằm chính giữa) */
-    .ap-modal-overlay {
-        align-items: center; /* Kéo modal lên giữa màn hình */
         padding: 24px;
     }
 
-    .ap-modal-box {
-        max-width: 600px; /* Thu hẹp chiều ngang */
-        border-radius: var(--radius-md); /* Bo góc toàn bộ 4 cạnh */
-        animation: fadeIn 0.2s ease-out;
+    .au-modal-box {
+        max-width: 560px;
+        width: 100%;
+        max-height: 90vh;
+        border-radius: var(--radius-md);
+        animation: fadeScaleIn 0.2s ease-out;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
+    @keyframes fadeScaleIn {
+        from { opacity: 0; transform: scale(0.96); }
+        to   { opacity: 1; transform: scale(1); }
     }
 
-    /* Modal Footer đưa các nút nằm ngang */
-    .ap-modal-footer {
+    .au-modal-title  { padding: 18px 24px; }
+    .au-modal-body   { padding: 16px 24px 0; }
+
+    .au-modal-footer {
         flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .ap-modal-footer .ap-btn {
-        width: auto;
-        padding: 0 24px;
-    }
-
-    .ap-actions {
-        width: auto;
         justify-content: flex-end;
+        padding: 14px 24px;
     }
+
+    .au-modal-footer .au-btn { width: auto; }
+}
+
+/* ==========================================================================
+   FORM FIELDS  (PTDetailModal — au- prefix)
+   ========================================================================== */
+
+.au-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.au-field-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.au-field-input,
+.au-field-textarea {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 0.93rem;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.18s;
+    font-family: inherit;
+}
+.au-field-input { height: var(--touch); }
+.au-field-input:focus,
+.au-field-textarea:focus { border-color: var(--accent); }
+.au-field-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+/* ==========================================================================
+   FORM FIELDS  (PTApplicationDetailModal — ap- prefix)
+   ========================================================================== */
+
+.ap-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ap-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.ap-input,
+.ap-textarea {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 0.93rem;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+.ap-input    { height: var(--touch); }
+.ap-textarea { resize: none; line-height: 1.5; }
+
+/* ==========================================================================
+   TOGGLE  (isAvailable switch)
+   ========================================================================== */
+
+.au-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.au-toggle-input { display: none; }
+
+.au-toggle-track {
+    width: 44px;
+    height: 24px;
+    background: var(--border-light);
+    border-radius: 50px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.au-toggle-input:checked + .au-toggle-track { background: var(--accent); }
+
+.au-toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.au-toggle-input:checked + .au-toggle-track .au-toggle-thumb { transform: translateX(20px); }
+
+.au-toggle-text {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: 500;
 }

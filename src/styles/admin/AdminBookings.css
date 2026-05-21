@@ -13,6 +13,14 @@
     margin-bottom: 20px;
 }
 
+/* Header row: title + create button side by side */
+.ab-page-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
 .ab-page-title {
     font-size: 1.25rem;
     font-weight: 700;
@@ -24,6 +32,29 @@
     font-size: 0.8rem;
     color: #888;
     margin: 4px 0 0;
+}
+
+/* Create button */
+.ab-create-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #e53e3e;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.ab-create-btn:hover {
+    background: #c53030;
+}
+
+.ab-create-btn:active {
+    transform: scale(0.97);
 }
 
 /* ── Filter bar ── */
@@ -298,7 +329,10 @@
     margin-left: 4px;
 }
 
-/* ── Modal ── */
+/* ══════════════════════════════════════
+   MODAL BASE
+══════════════════════════════════════ */
+
 .ab-modal-overlay {
     position: fixed;
     inset: 0;
@@ -371,8 +405,214 @@
 .ab-modal-btn-confirm--cancel  { background: #ef4444; }
 
 .ab-modal-btn-confirm:disabled {
-    opacity: 0.7;
+    opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════
+   CREATE MODAL (form, scrollable)
+══════════════════════════════════════ */
+
+/* Override: create modal dùng layout dọc, align trái, có scroll */
+.ab-create-modal {
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+    padding: 0;          /* padding chuyển vào từng vùng */
+}
+
+.ab-create-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #2a2a2a;
+    position: sticky;
+    top: 0;
+    background: #1a1a1a;
+    z-index: 1;
+}
+
+.ab-create-modal-header .ab-modal-title {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.ab-create-modal-close {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.ab-create-modal-close:hover {
+    color: #f1f1f1;
+}
+
+.ab-create-loading {
+    padding: 32px;
+    text-align: center;
+    color: #888;
+    font-size: 0.875rem;
+}
+
+.ab-create-form {
+    padding: 16px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Form groups */
+.ab-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.ab-form-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ab-form-required {
+    color: #e53e3e;
+    margin-left: 2px;
+}
+
+.ab-form-input,
+.ab-form-select {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #f1f1f1;
+    font-size: 0.875rem;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.ab-form-input:focus,
+.ab-form-select:focus {
+    border-color: #e53e3e;
+}
+
+.ab-form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+/* Autocomplete dropdown */
+.ab-form-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-top: 2px;
+}
+
+.ab-form-dropdown-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.875rem;
+    color: #f1f1f1;
+    border-bottom: 1px solid #2a2a2a;
+    transition: background 0.15s;
+}
+
+.ab-form-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.ab-form-dropdown-item:hover {
+    background: #2a2a2a;
+}
+
+.ab-form-dropdown-sub {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+}
+
+.ab-form-dropdown-empty {
+    padding: 12px 14px;
+    color: #666;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Selected customer tag */
+.ab-form-selected-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #166534;
+    color: #86efac;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+/* Price display (read-only) */
+.ab-form-price-display {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e53e3e;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+}
+
+/* Error */
+.ab-create-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+}
+
+/* Actions row in create modal: fixed width buttons */
+.ab-create-actions {
+    margin-top: 4px;
+}
+
+.ab-create-actions .ab-modal-btn-cancel,
+.ab-create-actions .ab-modal-btn-confirm {
+    flex: 1;
 }
 
 /* ══════════════════════════════════════
@@ -412,7 +652,7 @@
     .ab-desktop-only { display: block; }
     .ab-mobile-only  { display: none;  }
 
-    /* Modal: centered popup trên desktop */
+    /* Confirm/cancel modal: centered popup trên desktop */
     .ab-modal-overlay {
         align-items: center;
         padding: 16px;
@@ -430,5 +670,18 @@
     .ab-modal-btn-confirm {
         flex: none;
         padding: 8px 24px;
+    }
+
+    /* Create modal: taller, centered, wider */
+    .ab-create-modal {
+        max-width: 520px;
+        border-radius: 12px;
+        max-height: 85vh;
+    }
+
+    .ab-create-modal .ab-modal-btn-cancel,
+    .ab-create-modal .ab-modal-btn-confirm {
+        flex: 1;
+        padding: 12px 16px;
     }
 }

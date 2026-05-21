@@ -19,7 +19,7 @@ import type {
     GymInfo,
     Banner,
     PTInfo,
-    Zone,
+    Zone, UpdateClassData,
 } from '../types/models';
 
 // ── Revenue types (chưa có trong models.ts) ───────────────────────────────────
@@ -151,7 +151,7 @@ export const createClass = (data: Partial<Omit<ClassItem, 'id' | 'attendance'>>)
     });
 
 /** Cập nhật lớp học (status, ptId, endDate, totalSessions...) */
-export const updateClass = (classId: string, data: Partial<Pick<ClassItem, 'status' | 'ptId' | 'endDate' | 'totalSessions' | 'usedSessions'>>) =>
+export const updateClass = (classId: string, data: UpdateClassData) =>
     apiFetch<{ message: string }>(`/api/admin/classes/${classId}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
@@ -182,6 +182,19 @@ export const updateBookingStatus = (bookingId: string, status: 'confirmed' | 'ca
     apiFetch<{ message: string }>(`/api/admin/bookings/${bookingId}`, {
         method: 'PATCH',
         body: JSON.stringify({ status }),
+    });
+
+/** Tạo booking mới cho trường hợp khách thanh toán trực tiếp */
+export const createBooking = (data: {
+    customerId: string;
+    membershipId: string;
+    ptServiceId: string;
+    ptId?: string;
+    totalPrice: number;
+}) =>
+    apiFetch<{ message: string; booking: Booking }>('/api/admin/bookings', {
+        method: 'POST',
+        body: JSON.stringify(data),
     });
 
 // ══════════════════════════════════════════════════════

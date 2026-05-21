@@ -9,10 +9,10 @@ const AdminPTsPage: React.FC = () => {
 
     return (
         <div className="au-page">
-            <div className="au-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="au-page-header">
                 <h1 className="au-title">Hồ sơ PT & Đơn đăng ký</h1>
 
-                <div className="au-tabs" style={{ display: 'flex', gap: '8px' }}>
+                <div className="au-page-tabs" style={{margin: "10px", display: "flex", justifyContent: "center",}}>
                     <button
                         className={`au-btn ${activeTab === 'pts' ? 'au-btn--primary' : 'au-btn--ghost'}`}
                         onClick={() => setActiveTab('pts')}

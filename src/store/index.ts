@@ -21,6 +21,7 @@ import adminUserReducer from './admin/adminUserSlice';
 import adminPTReducer from './admin/adminPTSlice';
 import adminPTApplicationReducer from './admin/adminPTApplicationSlice';
 import adminBookingReducer from './admin/adminBookingSlice';
+import adminClassReducer from './admin/adminClassSlice';
 
 
 export const store = configureStore({
@@ -42,6 +43,7 @@ export const store = configureStore({
         adminPT: adminPTReducer,
         adminPTApplication: adminPTApplicationReducer,
         adminBooking: adminBookingReducer,
+        adminClass: adminClassReducer,
     },
 });
 

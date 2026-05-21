@@ -6,6 +6,7 @@
 // Các action có thể dùng:
 //   - fetchAdminBookings(status?)  — tải danh sách, có thể lọc theo status
 //   - changeBookingStatus(...)     — duyệt hoặc huỷ 1 booking
+//   - createAdminBooking(...)      — tạo booking walk-in / cash
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Booking, BookingStatus }        from '../../types/models';
@@ -18,23 +19,27 @@ export type BookingStatusFilter = 'all' | BookingStatus;
 // ── State shape ───────────────────────────────────────────────────────────────
 
 interface AdminBookingState {
-    bookings:     Booking[];          // danh sách booking đang hiển thị
-    loading:      boolean;            // đang fetch lần đầu
-    error:        string | null;      // lỗi fetch
-    filterStatus: BookingStatusFilter;// bộ lọc đang chọn
-    updating:     string | null;      // bookingId đang được cập nhật (tránh click 2 lần)
+    bookings:       Booking[];            // danh sách booking đang hiển thị
+    loading:        boolean;              // đang fetch lần đầu
+    error:          string | null;        // lỗi fetch
+    filterStatus:   BookingStatusFilter;  // bộ lọc đang chọn
+    updating:       string | null;        // bookingId đang được cập nhật (tránh click 2 lần)
     selectedDetail: Booking | null;
-    loadingDetail: boolean;
+    loadingDetail:  boolean;
+    creating:       boolean;              // đang submit tạo booking mới
+    createError:    string | null;        // lỗi tạo booking
 }
 
 const initialState: AdminBookingState = {
-    bookings:     [],
-    loading:      false,
-    error:        null,
-    filterStatus: 'all',
-    updating:     null,
+    bookings:       [],
+    loading:        false,
+    error:          null,
+    filterStatus:   'all',
+    updating:       null,
     selectedDetail: null,
-    loadingDetail: false
+    loadingDetail:  false,
+    creating:       false,
+    createError:    null,
 };
 
 // ── Async thunks ──────────────────────────────────────────────────────────────
@@ -68,7 +73,6 @@ export const changeBookingStatus = createAsyncThunk(
     ) => {
         try {
             await adminService.updateBookingStatus(bookingId, status);
-            // Trả về để reducer cập nhật store
             return { bookingId, status };
         } catch (err: any) {
             return rejectWithValue(err.message);
@@ -81,7 +85,33 @@ export const getBookingDetail = createAsyncThunk(
     async (bookingId: string, { rejectWithValue }) => {
         try {
             const data = await adminService.fetchBookingById(bookingId);
-            return data.booking; // Trả về object đã có đầy đủ customerName, membershipName...
+            return data.booking;
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
+/**
+ * Tạo booking mới (walk-in / cash).
+ * BE nhận IDs → trả về booking đã join tên.
+ * Sau khi thành công, prepend vào đầu danh sách.
+ */
+export const createAdminBooking = createAsyncThunk(
+    'adminBooking/create',
+    async (
+        payload: {
+            customerId:   string;
+            membershipId: string;
+            ptServiceId:  string;
+            ptId?:        string;
+            totalPrice:   number;
+        },
+        { rejectWithValue }
+    ) => {
+        try {
+            const data = await adminService.createBooking(payload);
+            return data.booking;
         } catch (err: any) {
             return rejectWithValue(err.message);
         }
@@ -100,8 +130,11 @@ const adminBookingSlice = createSlice({
         },
         clearSelectedDetail: (state) => {
             state.selectedDetail = null;
-            state.loadingDetail = false; // Đảm bảo reset cả loading
-        }
+            state.loadingDetail  = false;
+        },
+        clearCreateError: (state) => {
+            state.createError = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -128,7 +161,6 @@ const adminBookingSlice = createSlice({
                 const booking = state.bookings.find(b => b.id === action.payload.bookingId);
                 if (booking) booking.status = action.payload.status;
 
-                // Cập nhật đồng bộ cho selectedDetail
                 if (state.selectedDetail?.id === action.payload.bookingId) {
                     state.selectedDetail.status = action.payload.status;
                 }
@@ -137,19 +169,34 @@ const adminBookingSlice = createSlice({
                 state.updating = null;
             })
 
-            // getBookingDetail (Đầy đủ 3 trạng thái)
+            // ── getBookingDetail ──────────────────────────────────────────
             .addCase(getBookingDetail.pending, (state) => {
                 state.loadingDetail = true;
             })
             .addCase(getBookingDetail.fulfilled, (state, action) => {
                 state.selectedDetail = action.payload;
-                state.loadingDetail = false;
+                state.loadingDetail  = false;
             })
             .addCase(getBookingDetail.rejected, (state) => {
                 state.loadingDetail = false;
+            })
+
+            // ── createAdminBooking ────────────────────────────────────────
+            .addCase(createAdminBooking.pending, (state) => {
+                state.creating     = true;
+                state.createError  = null;
+            })
+            .addCase(createAdminBooking.fulfilled, (state, action) => {
+                state.creating = false;
+                // Thêm booking mới vào đầu danh sách
+                state.bookings.unshift(action.payload);
+            })
+            .addCase(createAdminBooking.rejected, (state, action) => {
+                state.creating    = false;
+                state.createError = action.payload as string;
             });
     },
 });
 
-export const { setFilterStatus, clearSelectedDetail } = adminBookingSlice.actions;
+export const { setFilterStatus, clearSelectedDetail, clearCreateError } = adminBookingSlice.actions;
 export default adminBookingSlice.reducer;

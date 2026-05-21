@@ -41,7 +41,7 @@ import PtDashboard    from '../pages/pt/PtDashboard';
 import AdminDashboard    from '../pages/admin/AdminDashboard';
 import AdminUsersPage    from '../pages/admin/AdminUsersPage';
 import AdminPTsPage      from '../pages/admin/AdminPTsPage';
-// import AdminClassesPage  from '../pages/admin/AdminClassesPage';
+import AdminClassesPage  from '../pages/admin/AdminClassesPage';
 import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
 // import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
 // import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
@@ -152,8 +152,8 @@ const AppRouter = () => {
                 <Route path={ROUTES.ADMIN_PTS}
                        element={<AdminRoute><AdminPTsPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_CLASSES}*/}
-                {/*       element={<AdminRoute><AdminClassesPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_CLASSES}
+                       element={<AdminRoute><AdminClassesPage /></AdminRoute>} />
 
                 <Route path={ROUTES.ADMIN_BOOKINGS}
                        element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />

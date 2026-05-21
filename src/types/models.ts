@@ -236,15 +236,28 @@ export interface ClassItem {
     customerAvatar: string;
     classGroupId: string | null;
     type: ClassType;
+    typeName?: string;
     status: ClassStatus;
     startDate: string;             // ISO string
     endDate: string;               // ISO string
     ptId: string;
+    ptName?: string;
     totalSessions: number;
     usedSessions: number;
     createdBy: string;
     creatorRole: string;
+    creatorName?: string;
     attendance: AttendanceRecord[];
+}
+
+export interface CreateClassRequest {
+    customerName: string;
+    ptName: string;
+    type: string;
+    classGroupId: string;
+    totalSessions: number;
+    startDate: string;
+    endDate: string;
 }
 
 export interface UseClassesReturn {
@@ -256,6 +269,16 @@ export interface UseClassesReturn {
     selectClass: (id: string) => void;
     clearSelection: () => void;
 }
+
+// Kiểu dữ liệu dùng cho hàm Update: Cho phép cập nhật lẻ tẻ từng trường
+export type UpdateClassData = {
+    status?: 'active' | 'expired';
+    ptName?: string;
+    endDate?: string;
+    totalSessions?: number;
+    usedSessions?: number;
+    classGroupId?: string | null;
+};
 
 // ── PT Dashboard ──────────────────────────────────────────────────────────────
 // Types dùng riêng cho luồng PT đã đăng nhập (dashboard, students, notifications)

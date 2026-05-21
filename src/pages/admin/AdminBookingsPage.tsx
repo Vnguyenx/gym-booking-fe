@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import useAdminBookings from '../../hooks/useAdminBookings';
-import BookingFilterBar from '../../components/admin/bookings/BookingFilterBar';
-import BookingTable from '../../components/admin/bookings/BookingTable';
-import BookingCardList from '../../components/admin/bookings/BookingCardList';
+import BookingFilterBar    from '../../components/admin/bookings/BookingFilterBar';
+import BookingTable        from '../../components/admin/bookings/BookingTable';
+import BookingCardList     from '../../components/admin/bookings/BookingCardList';
 import BookingConfirmModal from '../../components/admin/bookings/BookingConfirmModal';
+import BookingCreateModal  from '../../components/admin/bookings/BookingCreateModal';
 import '../../styles/admin/AdminBookings.css';
 
 const PAGE_SIZE = 5;
@@ -27,7 +28,8 @@ const AdminBookingsPage: React.FC = () => {
         handleRefresh,
     } = useAdminBookings();
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage,      setCurrentPage]      = useState(1);
+    const [showCreateModal,  setShowCreateModal]   = useState(false);
 
     // Reset về trang 1 khi filter thay đổi
     useEffect(() => {
@@ -47,10 +49,20 @@ const AdminBookingsPage: React.FC = () => {
     return (
         <div className="ab-page">
             <div className="ab-page-header">
-                <h1 className="ab-page-title">Quản lý đơn đăng ký</h1>
-                <p className="ab-page-subtitle">
-                    Xem và xử lý các đơn đăng ký gói tập từ khách hàng
-                </p>
+                <div className="ab-page-header-row">
+                    <div>
+                        <h1 className="ab-page-title">Quản lý đơn đăng ký</h1>
+                        <p className="ab-page-subtitle">
+                            Xem và xử lý các đơn đăng ký gói tập từ khách hàng
+                        </p>
+                    </div>
+                    <button
+                        className="ab-create-btn"
+                        onClick={() => setShowCreateModal(true)}
+                    >
+                        ＋ Tạo đơn
+                    </button>
+                </div>
             </div>
 
             <BookingFilterBar
@@ -127,13 +139,21 @@ const AdminBookingsPage: React.FC = () => {
                 </>
             )}
 
+            {/* Modal xác nhận duyệt / huỷ */}
             <BookingConfirmModal
                 booking={selectedBooking}
                 action={pendingAction}
                 onConfirm={handleConfirmAction}
                 onClose={handleCloseModal}
                 isUpdating={!!updating}
-                selectedDetail={selectedDetail}/>
+                selectedDetail={selectedDetail}
+            />
+
+            {/* Modal tạo đơn mới */}
+            <BookingCreateModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+            />
         </div>
     );
 };
