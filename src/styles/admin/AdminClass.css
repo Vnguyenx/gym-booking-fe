@@ -354,7 +354,6 @@
         transform: none;
     }
     .class-card:hover {
-        background: var(--gray-900);
         transform: none;
         box-shadow: none;
     }

@@ -6,19 +6,14 @@ import ClassCard from './ClassCard';
 const PAGE_SIZE = 4;
 
 const ClassesSection: React.FC = () => {
-    const { classes, isLoading, error, selectedClassId, selectClass, clearSelection } = useClasses();
+    const { classes, isLoading, error } = useClasses();
     const [page, setPage] = useState(1);
 
-    const totalPages = Math.ceil(classes.length / PAGE_SIZE);
+    const totalPages  = Math.ceil(classes.length / PAGE_SIZE);
     const pagedClasses = classes.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-    const handleSelect = (id: string) => {
-        if (selectedClassId === id) clearSelection();
-        else selectClass(id);
-    };
-
     if (isLoading) return <p className="loading-text">Đang tải...</p>;
-    if (error) return <p className="alert alert--error">{error}</p>;
+    if (error)     return <p className="alert alert--error">{error}</p>;
     if (classes.length === 0) return <p className="empty-text">Bạn chưa tham gia lớp học nào.</p>;
 
     return (
@@ -29,12 +24,7 @@ const ClassesSection: React.FC = () => {
 
             <div className="class-list">
                 {pagedClasses.map(classItem => (
-                    <ClassCard
-                        key={classItem.id}
-                        classItem={classItem}
-                        isSelected={selectedClassId === classItem.id}
-                        onSelect={() => handleSelect(classItem.id)}
-                    />
+                    <ClassCard key={classItem.id} classItem={classItem} />
                 ))}
             </div>
 

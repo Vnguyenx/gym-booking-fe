@@ -1,11 +1,12 @@
 /*
  * CustomerProfile.css — Red-Black Edition
- * Cải tiến: grid 2 cột trên desktop, card animation, pagination đẹp, responsive.
+ * Mobile-first, fully responsive.
+ * Supports: ClassCard (with action buttons), AttendanceModal, Bookings, ProfileInfo.
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap');
 
-/* ── 1. Variables ─────────────────────────────────────────────────────────── */
+/* ===== 1. Variables ===== */
 :root {
     --c-accent:       #E02020;
     --c-accent-dim:   rgba(224, 32, 32, 0.12);
@@ -39,7 +40,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* ── 2. Root wrapper ──────────────────────────────────────────────────────── */
+/* ===== 2. Root wrapper ===== */
 .customer-profile {
     min-height: 100vh;
     background: var(--c-bg);
@@ -48,7 +49,7 @@
     padding-bottom: 72px;
 }
 
-/* ── 3. Header ────────────────────────────────────────────────────────────── */
+/* ===== 3. Header ===== */
 .customer-profile__header {
     background: var(--c-s1);
     border-bottom: 1px solid var(--c-bd);
@@ -108,13 +109,14 @@
     font-weight: 700; font-size: 17px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    object-fit: cover;
 }
 
-/* ── 4. Body (mobile) ─────────────────────────────────────────────────────── */
+/* ===== 4. Body (mobile) ===== */
 .customer-profile__body { display: block; }
 .customer-profile__content { padding: 14px 16px; }
 
-/* ── 5. TabNav — mobile sticky bottom ────────────────────────────────────── */
+/* ===== 5. TabNav — mobile sticky bottom ===== */
 .tab-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -148,7 +150,7 @@
 .tab-nav__icon  { font-size: 20px; line-height: 1; }
 .tab-nav__label { font-size: 10px; font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; }
 
-/* ── 6. Sections chung ────────────────────────────────────────────────────── */
+/* ===== 6. Sections chung ===== */
 .profile-section {
     background: var(--c-s1);
     border: 1px solid var(--c-bd);
@@ -179,7 +181,7 @@
     text-align: center; padding: 28px 0;
 }
 
-/* ── 7. ProfileInfo ───────────────────────────────────────────────────────── */
+/* ===== 7. ProfileInfo ===== */
 .avatar-upload-wrapper {
     display: flex; flex-direction: column;
     align-items: center; gap: 8px;
@@ -252,11 +254,11 @@
 }
 .btn-logout:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ── 8. ClassesSection (cải tiến mạnh) ───────────────────────────────────── */
+/* ===== 8. ClassesSection & ClassCard ===== */
 .class-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 .class-card {
     background: var(--c-s2);
@@ -266,14 +268,13 @@
     transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 .class-card:hover {
     transform: translateY(-2px);
     border-color: var(--c-accent);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
-.class-card__header {
+.class-card__header--static {
     width: 100%;
     display: flex;
     align-items: flex-start;
@@ -281,9 +282,6 @@
     padding: 16px;
     gap: 12px;
     background: none;
-    border: none;
-    cursor: pointer;
-    text-align: left;
     color: var(--c-text);
 }
 .class-card__info {
@@ -309,13 +307,6 @@
     font-size: 12px;
     color: var(--c-sub);
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.class-card__meta strong {
-    color: var(--c-accent);
-    font-weight: 600;
 }
 .class-card__attendance-summary {
     text-align: center;
@@ -344,7 +335,6 @@
 .class-card__progress-bar {
     height: 3px;
     background: var(--c-s3);
-    margin-top: -2px;
 }
 .class-card__progress-fill {
     height: 100%;
@@ -352,111 +342,246 @@
     border-radius: 2px;
     transition: width 0.4s ease;
 }
-.class-card__checkin {
+.class-card__actions {
     padding: 12px 16px;
     border-top: 1px solid var(--c-bd);
-    background: var(--c-s1);
-    margin-top: auto;
+    background: var(--bg-card);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
-.btn--full {
-    width: 100%;
-    padding: 10px;
-    font-size: 13px;
-}
-.badge--full {
-    display: block;
+.btn--action, .badge--action {
+    flex: 1;
+    min-width: 110px;
     text-align: center;
-    padding: 10px;
-    background: var(--c-ok-b);
-    color: var(--c-ok);
+    padding: 9px 12px;
+    font-size: 12px;
     font-weight: 600;
     border-radius: var(--r-sm);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
-.class-card__detail {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease, padding 0.28s ease;
+.btn--action { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn--primary.btn--action {
+    background: var(--c-accent);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px var(--c-accent-glow);
+}
+.btn--primary.btn--action:hover { background: var(--c-accent-hover); box-shadow: 0 4px 14px rgba(224,32,32,0.35); }
+.btn--ghost.btn--action {
+    background: transparent;
+    color: var(--c-sub);
+    border: 1px solid var(--c-bd);
+}
+.btn--ghost.btn--action:hover {
+    background: var(--c-s2);
+    color: var(--c-text);
+    border-color: var(--c-bdh);
+}
+.badge--action {
+    display: block;
+    cursor: default;
+    background: var(--c-ok-b);
+    color: var(--c-ok);
+    border: 1px solid rgba(34,197,94,0.15);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.class-card__history-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--c-s3);
+    color: var(--c-hint);
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 9px;
+}
+
+/* ===== 9. AttendanceModal ===== */
+.att-modal {
+    width: 100%;
+    max-width: 480px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
     overflow: hidden;
-    border-top: none;
-    background: var(--c-s1);
 }
-.class-card__detail > * {
-    overflow: hidden;
+.att-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 22px 16px;
+    border-bottom: 1px solid var(--c-bd);
+    gap: 12px;
+    flex-shrink: 0;
 }
-.class-card--selected .class-card__detail {
-    grid-template-rows: 1fr;
-    opacity: 1;
-    padding: 14px;
-    border-top: 1px solid var(--c-bd);
-}
-.detail-title {
+.att-modal__header-info { flex: 1; min-width: 0; }
+.att-modal__label {
     font-size: 10px;
     font-weight: 600;
     color: var(--c-hint);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 0 12px;
+    letter-spacing: 1.2px;
+    margin: 0 0 4px;
 }
-.attendance-list {
-    list-style: none;
-    padding: 0;
+.att-modal__title {
+    font-family: var(--font-d);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--c-text);
+    margin: 0 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.att-modal__subtitle {
+    font-size: 12px;
+    color: var(--c-sub);
     margin: 0;
+}
+.att-modal__close {
+    background: var(--c-s2);
+    border: 1px solid var(--c-bd);
+    border-radius: var(--r-sm);
+    color: var(--c-sub);
+    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+.att-modal__close:hover { background: var(--c-s3); color: var(--c-text); }
+.att-modal__stats {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--c-bd);
+    flex-shrink: 0;
+}
+.att-modal__stat {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-}
-.attendance-item {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 6px 0;
-    border-radius: var(--r-sm);
+    gap: 3px;
+    padding: 14px 8px;
+    border-right: 1px solid var(--c-bd);
 }
-.attendance-date {
-    font-size: 13px;
-    color: var(--c-sub);
-    flex-shrink: 0;
-    min-width: 90px;
-}
-.attendance-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-.class-card__header::after {
-    content: '›';
+.att-modal__stat:last-child { border-right: none; }
+.att-modal__stat-value {
+    font-family: var(--font-d);
     font-size: 20px;
-    color: var(--c-hint);
-    transition: transform 0.25s ease, color 0.15s;
+    font-weight: 800;
+    color: var(--c-text);
     line-height: 1;
+}
+.att-modal__stat-value--accent { color: var(--c-accent); }
+.att-modal__stat-value--ok     { color: var(--c-ok); }
+.att-modal__stat-value--err    { color: var(--c-err); }
+.att-modal__stat-label {
+    font-size: 9px;
+    color: var(--c-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+}
+.att-modal__progress-track {
+    height: 3px;
+    background: var(--c-s3);
     flex-shrink: 0;
-    margin-left: auto;
-    transform: rotate(90deg);
 }
-.class-card--selected .class-card__header::after {
-    transform: rotate(-90deg);
-    color: var(--c-accent);
+.att-modal__progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--c-accent), #ff6b6b);
+    transition: width 0.5s ease;
 }
-.class-card--selected .attendance-item {
-    animation: row-in 0.2s ease both;
+.att-modal__list-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
 }
-.class-card--selected .attendance-item:nth-child(1)  { animation-delay: 0.04s; }
-.class-card--selected .attendance-item:nth-child(2)  { animation-delay: 0.07s; }
-.class-card--selected .attendance-item:nth-child(3)  { animation-delay: 0.10s; }
-.class-card--selected .attendance-item:nth-child(4)  { animation-delay: 0.13s; }
-.class-card--selected .attendance-item:nth-child(5)  { animation-delay: 0.16s; }
-.class-card--selected .attendance-item:nth-child(n+6) { animation-delay: 0.18s; }
+.att-modal__list-wrap::-webkit-scrollbar { width: 4px; }
+.att-modal__list-wrap::-webkit-scrollbar-track { background: transparent; }
+.att-modal__list-wrap::-webkit-scrollbar-thumb { background: var(--c-s3); border-radius: 4px; }
+.att-modal__list-header {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    padding: 0 16px 8px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--c-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--c-bd);
+    margin-bottom: 4px;
+}
+.att-modal__list {
+    list-style: none;
+    padding: 0 8px;
+    margin: 0;
+}
+.att-modal__row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 9px 8px;
+    border-radius: var(--r-sm);
+    transition: background 0.12s;
+    animation: row-in 0.22s ease both;
+}
+.att-modal__row:hover { background: var(--c-s2); }
 @keyframes row-in {
-    from { opacity: 0; transform: translateY(-6px); }
+    from { opacity: 0; transform: translateY(-5px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+.att-modal__row-num {
+    font-size: 11px;
+    color: var(--c-hint);
+    font-weight: 600;
+    text-align: center;
+}
+.att-modal__row-date {
+    font-size: 13px;
+    color: var(--c-sub);
+    font-weight: 500;
+}
+.att-modal__row-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.att-modal__footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--c-bd);
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+.att-modal__footer .btn {
+    padding: 9px 24px;
+    font-size: 13px;
+    font-weight: 600;
+}
 
-/* ── 9. BookingsSection ───────────────────────────────────────────────────── */
-.booking-list { display: flex; flex-direction: column; gap: 8px; }
+/* ===== 10. BookingsSection & BookingCard ===== */
+.booking-list { display: flex; flex-direction: column; gap: 12px; }
 .booking-card {
     background: var(--c-s2); border: 1px solid var(--c-bd);
     border-radius: var(--r-lg); padding: 14px;
@@ -482,7 +607,7 @@
 .btn-danger:hover { background: var(--c-err-b); border-color: var(--c-err); }
 .btn-danger:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ── 10. Pagination (cải tiến) ───────────────────────────────────────────── */
+/* ===== 11. Pagination ===== */
 .pagination {
     display: flex;
     align-items: center;
@@ -525,32 +650,8 @@
     min-width: 60px;
     text-align: center;
 }
-/* Nếu muốn số trang riêng lẻ */
-.pagination__number {
-    width: 36px;
-    height: 36px;
-    background: var(--c-s2);
-    border: 1px solid var(--c-bd);
-    border-radius: var(--r-sm);
-    color: var(--c-sub);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.pagination__number:hover {
-    background: var(--c-accent-dim);
-    border-color: var(--c-accent);
-    color: var(--c-accent);
-}
-.pagination__number.active {
-    background: var(--c-accent);
-    border-color: var(--c-accent);
-    color: white;
-    box-shadow: 0 0 6px var(--c-accent-glow);
-}
 
-/* ── 11. Utilities / Badges ───────────────────────────────────────────────── */
+/* ===== 12. Badges, Alerts, Buttons (shared) ===== */
 .badge {
     display: inline-block; font-size: 10px; font-weight: 600;
     padding: 3px 9px; border-radius: 20px;
@@ -566,7 +667,6 @@
 .alert--success { background: var(--c-ok-b);  color: var(--c-ok);  border: 1px solid rgba(34,197,94,0.2); }
 .alert--error   { background: var(--c-err-b); color: var(--c-err); border: 1px solid rgba(248,113,113,0.2); }
 
-/* ── 12. Buttons ──────────────────────────────────────────────────────────── */
 .btn-primary {
     flex: 1; padding: 12px;
     background: var(--c-accent); color: #fff;
@@ -594,7 +694,7 @@
 }
 .btn-ghost:hover { background: var(--c-s3); color: var(--c-text); }
 
-/* ── 13. CheckinModal ─────────────────────────────────────────────────────── */
+/* ===== 13. CheckinModal (shared with AttendanceModal overlay) ===== */
 .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0, 0, 0, 0.80);
@@ -675,7 +775,7 @@
 }
 .modal-actions .btn { flex: 1; }
 
-/* ── 14. Tablet 640–899px ─────────────────────────────────────────────────── */
+/* ===== 14. Tablet (640px - 899px) ===== */
 @media (min-width: 640px) and (max-width: 899px) {
     .tab-nav {
         position: static; border-top: none;
@@ -691,9 +791,10 @@
     .tab-nav__label { font-size: 13px; text-transform: none; letter-spacing: 0; }
     .customer-profile { padding-bottom: 0; }
     .customer-profile__content { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
+    .att-modal { max-width: 520px; max-height: 80vh; }
 }
 
-/* ── 15. Desktop ≥900px (cải tiến: grid 2 cột, content rộng) ──────────────── */
+/* ===== 15. Desktop ≥900px (grid 2 cột, sidebar) ===== */
 @media (min-width: 900px) {
     .customer-profile {
         padding-bottom: 0;
@@ -760,13 +861,12 @@
     .customer-profile__content {
         flex: 1;
         padding: 32px 40px;
-        max-width: 1000px; /* rộng hơn để grid 2 cột thoáng */
+        max-width: 1000px;
         overflow-y: auto;
     }
     /* Grid 2 cột cho lớp học */
     .class-list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
         align-items: stretch;
     }
@@ -774,10 +874,12 @@
     .class-card__meta { font-size: 13px; }
     .class-card__attendance-count { font-size: 26px; }
     .class-card__attendance-summary { padding: 10px 12px; min-width: 80px; }
-    .class-card__checkin .btn--primary { font-size: 14px; }
-    .class-card__detail .attendance-date { font-size: 14px; min-width: 100px; }
-    .attendance-item { padding: 6px 8px; transition: background 0.12s; }
-    .attendance-item:hover { background: var(--c-s2); border-radius: var(--r-sm); }
+    .class-card__actions { padding: 12px 16px; gap: 10px; }
+    .btn--action, .badge--action { font-size: 13px; }
+    .att-modal__title { font-size: 20px; }
+    .att-modal__stat-value { font-size: 22px; }
+    .att-modal__row-date { font-size: 14px; }
+    .att-modal__row { padding: 10px 8px; }
     /* Profile info desktop */
     .avatar-upload-wrapper {
         flex-direction: row;
@@ -807,7 +909,7 @@
     .btn-danger { font-size: 13px; padding: 8px 20px; }
     .pagination__btn { width: 36px; height: 36px; font-size: 20px; }
     .pagination__info { font-size: 14px; min-width: 60px; }
-    /* Scrollbar */
+    /* Custom scrollbar */
     .tab-nav::-webkit-scrollbar,
     .customer-profile__content::-webkit-scrollbar { width: 4px; }
     .tab-nav::-webkit-scrollbar-track,
@@ -823,7 +925,7 @@
     }
 }
 
-/* ── 16. Desktop rộng ≥1280px ─────────────────────────────────────────────── */
+/* ===== 16. Desktop rộng ≥1280px ===== */
 @media (min-width: 1280px) {
     :root { --sidebar-w: 250px; }
     .customer-profile__header { padding: 20px 56px; }

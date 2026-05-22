@@ -15,21 +15,9 @@ const formatDate = (createdAt: any): string => {
 };
 
 const BOOKING_STATUS_CONFIG: Record<BookingStatus, { label: string; className: string }> = {
-    pending: { label: 'Chờ xác nhận', className: 'badge badge--warning' },
-    confirmed: { label: 'Đã xác nhận', className: 'badge badge--info' },
-    cancelled: { label: 'Đã huỷ', className: 'badge badge--error' },
-};
-
-const MEMBERSHIP_CONFIG: Record<string, string> = {
-    'mem-1m': 'Gói 1 tháng', 'mem-3m': 'Gói 3 tháng',
-    'mem-6m': 'Gói 6 tháng', 'mem-12m': 'Gói 1 năm',
-    'mem-24m': 'Gói 2 năm', 'mem-60m': 'Gói 5 năm',
-};
-
-const PT_SERVICE_CONFIG: Record<string, string> = {
-    'pt-none': 'Không có PT',
-    'pt-1on1': 'PT kèm riêng 1:1',
-    'pt-group': 'PT nhóm',
+    pending:   { label: 'Chờ xác nhận', className: 'badge badge--warning' },
+    confirmed: { label: 'Đã xác nhận',  className: 'badge badge--info'    },
+    cancelled: { label: 'Đã huỷ',       className: 'badge badge--error'   },
 };
 
 interface BookingCardProps {
@@ -47,8 +35,9 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, onCancel }) => {
         }
     };
 
-    const membershipName = MEMBERSHIP_CONFIG[booking.membershipId] ?? booking.membershipId;
-    const ptServiceName = PT_SERVICE_CONFIG[booking.ptServiceId] ?? booking.ptServiceId;
+    // Dùng tên từ API (membershipName, ptServiceName) nếu có, fallback sang ID
+    const membershipName = booking.membershipName ?? booking.membershipId;
+    const ptServiceName  = booking.ptServiceName ?? booking.ptServiceId;
     const ptDisplay = booking.ptId ? (getPTName(booking.ptId) || 'PT đã được chọn') : 'Không có PT';
 
     return (
