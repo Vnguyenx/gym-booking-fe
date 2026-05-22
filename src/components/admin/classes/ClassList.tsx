@@ -30,8 +30,7 @@ const ClassList: React.FC<Props> = ({data, isLoading, onViewDetail, onEdit}) => 
                         <div>
                             {/* Hiển thị Tên học viên thay vì ID */}
                             <strong className="customer-name">{item.customerName}</strong>
-                            <div className="type-badge">{item.typeName}</div>
-                        </div>
+                            <div className="type-badge">{item.ptServiceName || 'Dịch vụ mặc định'}</div>                        </div>
                         <span className={`badge badge-${item.status}`}>
                             {item.status === 'active' ? 'Còn hạn' : 'Hết hạn'}
                         </span>

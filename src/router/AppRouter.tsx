@@ -43,8 +43,8 @@ import AdminUsersPage    from '../pages/admin/AdminUsersPage';
 import AdminPTsPage      from '../pages/admin/AdminPTsPage';
 import AdminClassesPage  from '../pages/admin/AdminClassesPage';
 import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
-// import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
-// import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
+import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
+import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
 // import AdminContentPage     from '../pages/admin/AdminContentPage';
 // import AdminRevenuePage     from '../pages/admin/AdminRevenuePage';
 // import AdminSettingsPage    from '../pages/admin/AdminSettingsPage';
@@ -158,11 +158,11 @@ const AppRouter = () => {
                 <Route path={ROUTES.ADMIN_BOOKINGS}
                        element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_MEMBERSHIPS}*/}
-                {/*       element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_MEMBERSHIPS}
+                       element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_EQUIPMENT}*/}
-                {/*       element={<AdminRoute><AdminEquipmentPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_EQUIPMENT}
+                       element={<AdminRoute><AdminEquipmentPage /></AdminRoute>} />
 
                 {/*<Route path={ROUTES.ADMIN_CONTENT}*/}
                 {/*       element={<AdminRoute><AdminContentPage /></AdminRoute>} />*/}

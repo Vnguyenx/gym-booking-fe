@@ -44,7 +44,7 @@ const ClassDetail: React.FC<Props> = ({ selectedClass, onClose }) => {
                     </div>
                     <div>
                         <label style={{ fontSize: '0.8rem', color: '#64748b', display: 'block' }}>Loại dịch vụ</label>
-                        <strong>{selectedClass.typeName}</strong>
+                        <strong>{selectedClass.ptServiceName}</strong>
                     </div>
                     <div>
                         <label style={{ fontSize: '0.8rem', color: '#64748b', display: 'block' }}>HLV Phụ trách</label>

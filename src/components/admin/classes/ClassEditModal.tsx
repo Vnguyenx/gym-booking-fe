@@ -50,7 +50,7 @@ const ClassEditModal: React.FC<Props> = ({ isOpen, initialData, onClose, onSubmi
                 <h3>Cập nhật lớp học</h3>
                 <p style={{marginBottom: '15px', color: '#4b5563'}}>
                     Học viên: <strong>{initialData.customerName}</strong> <br/>
-                    Dịch vụ: <strong>{initialData.typeName}</strong>
+                    Dịch vụ: <strong>{initialData.ptServiceName}</strong>
                 </p>
 
                 <form onSubmit={handleSubmit}>

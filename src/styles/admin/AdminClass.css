@@ -330,7 +330,7 @@
         display: grid !important;
         grid-template-columns: 2fr 1.5fr 1.2fr 0.8fr 0.8fr;
         padding: 11px 20px;
-        background: var(--gray-900);
+        background: var(--gray-950);
         color: var(--white);
         font-size: 0.78rem;
         font-weight: 700;
@@ -354,7 +354,7 @@
         transform: none;
     }
     .class-card:hover {
-        background: var(--gray-600);
+        background: var(--gray-900);
         transform: none;
         box-shadow: none;
     }

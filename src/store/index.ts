@@ -22,6 +22,12 @@ import adminPTReducer from './admin/adminPTSlice';
 import adminPTApplicationReducer from './admin/adminPTApplicationSlice';
 import adminBookingReducer from './admin/adminBookingSlice';
 import adminClassReducer from './admin/adminClassSlice';
+import adminCatalogReducer from './admin/adminCatalogSlice';
+import adminEquipmentReducer from './admin/adminEquipmentSlice';
+import adminOptionsReducer from './admin/adminOptionsSlice';
+
+
+
 
 
 export const store = configureStore({
@@ -44,6 +50,11 @@ export const store = configureStore({
         adminPTApplication: adminPTApplicationReducer,
         adminBooking: adminBookingReducer,
         adminClass: adminClassReducer,
+        adminCatalog: adminCatalogReducer,
+        adminEquipment: adminEquipmentReducer,
+        adminOptions: adminOptionsReducer,
+
+
     },
 });
 

@@ -19,7 +19,7 @@ import type {
     GymInfo,
     Banner,
     PTInfo,
-    Zone, UpdateClassData,
+    Zone, UpdateClassData, Floor,
 } from '../types/models';
 
 // ── Revenue types (chưa có trong models.ts) ───────────────────────────────────
@@ -239,6 +239,13 @@ export const updatePTService = (id: string, data: Partial<Omit<PTService, 'id'>>
         method: 'PATCH',
         body: JSON.stringify(data),
     });
+export const createPTService = (data: Omit<PTService, 'id'>) =>
+    apiFetch<{ message: string; ptServiceId: string }>('/api/admin/pt-services', {
+        method: 'POST', body: JSON.stringify(data),
+    });
+
+export const deletePTService = (id: string) =>
+    apiFetch<{ message: string }>(`/api/admin/pt-services/${id}`, { method: 'DELETE' });
 
 // ══════════════════════════════════════════════════════
 //  EQUIPMENT
@@ -274,6 +281,9 @@ export const deleteEquipment = (id: string) =>
 // ══════════════════════════════════════════════════════
 //  CONTENT — gym info, settings, banners, pt info, zones
 // ══════════════════════════════════════════════════════
+
+export const fetchFloors = () =>
+    apiFetch<{ floors: Floor[] }>('/api/admin/floors');
 
 /** Lấy thông tin phòng gym */
 export const fetchGymInfo = () =>

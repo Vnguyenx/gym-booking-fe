@@ -61,7 +61,7 @@ export interface PTService {
     id?: string;
     name: string;              // "Thuê PT kèm riêng 1:1"
     pricePerMonth: number;     // 1500000
-    type: 'personal' | 'group' | 'none';
+    type?: string;
 }
 
 // ── User ──────────────────────────────────────────────────────────────────────
@@ -214,7 +214,13 @@ export interface UseBookingsReturn {
 /// ── Classes & Attendance ──────────────────────────────────────────────────────
 
 export type ClassStatus     = 'active' | 'expired';
-export type ClassType = 'pt-none' | 'pt-1on1' | 'pt-group';
+export type ClassType =
+    | 'none'          // Tự tập
+    | 'personal'      // PT 1:1 mặc định
+    | 'group'         // Tập nhóm
+    | 'pt-1on1-vip'   // Gói VIP mới tạo
+    | string;         // Thêm cái này để "mở đường" cho các loại mới từ DB mà FE chưa kịp update
+
 export type AttendanceType  = 'membership_checkin' | 'pt_session' | null;
 export type CustomerStatus  = 'confirmed' | null;
 export type PTStatus        = 'none' | 'confirmed' | null;
@@ -236,6 +242,7 @@ export interface ClassItem {
     customerAvatar: string;
     classGroupId: string | null;
     type: ClassType;
+    ptServiceName?: string;
     typeName?: string;
     status: ClassStatus;
     startDate: string;             // ISO string
