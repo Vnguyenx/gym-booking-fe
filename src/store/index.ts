@@ -25,8 +25,13 @@ import adminClassReducer from './admin/adminClassSlice';
 import adminCatalogReducer from './admin/adminCatalogSlice';
 import adminEquipmentReducer from './admin/adminEquipmentSlice';
 import adminOptionsReducer from './admin/adminOptionsSlice';
-
-
+import adminSettingsReducer from './admin/adminSettingsSlice';
+import adminFloorsReducer from './admin/adminFloorsSlice';
+import adminBannersReducer from './admin/adminBannersSlice';
+import adminZonesReducer from './admin/adminZonesSlice';
+import adminGymInfoReducer from './admin/adminGymInfoSlice';
+import adminPtInfoReducer from './admin/adminPtInfoSlice';
+import adminRevenueReducer from './admin/adminRevenueSlice';
 
 
 
@@ -53,6 +58,13 @@ export const store = configureStore({
         adminCatalog: adminCatalogReducer,
         adminEquipment: adminEquipmentReducer,
         adminOptions: adminOptionsReducer,
+        adminSettings: adminSettingsReducer,
+        adminFloors: adminFloorsReducer,
+        adminBanners: adminBannersReducer,
+        adminZones: adminZonesReducer,
+        adminGymInfo: adminGymInfoReducer,
+        adminPtInfo: adminPtInfoReducer,
+        adminRevenue: adminRevenueReducer,
 
 
     },

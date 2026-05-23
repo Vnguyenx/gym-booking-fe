@@ -1,53 +1,56 @@
 import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
-import { logout } from '../../store/authSlice';
-import { auth } from '../../config/firebase';
-import { signOut } from 'firebase/auth';
-import useAuth from '../../hooks/useAuth';
-import { ROUTES } from '../../constants/routes';
+import StatCards from '../../components/admin/dashboard/StatCards';
+import RecentClasses from '../../components/admin/dashboard/RecentClasses';
+import RecentBookings from '../../components/admin/dashboard/RecentBookings';
+import ContentCards from '../../components/admin/dashboard/ContentCards';
+import EquipmentTable from '../../components/admin/dashboard/EquipmentTable';
+import RevenueChart from '../../components/admin/dashboard/RevenueChart';
+import SettingsCard from '../../components/admin/dashboard/SettingsCard';
+import useDashboardData from '../../hooks/useAdminDashboardData';
+import '../../styles/admin/AdminDashboard.css';
 
-
-const ProfilePage = () => {
-    const { user, isLoggedIn, loading } = useAuth(); // Lấy data từ Redux
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    // 1. Kiểm tra quyền truy cập (Nếu chưa login thì đá ra trang Login)
-    if (!loading && !isLoggedIn) {
-        return <Navigate to={ROUTES.LOGIN} />;
-    }
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth); // Đăng xuất khỏi Firebase
-            dispatch(logout()); // Xoá data trong Redux
-            navigate(ROUTES.LOGIN);
-        } catch (error) {
-            console.error("Lỗi đăng xuất:", error);
-        }
-    };
+const AdminDashboard: React.FC = () => {
+    useDashboardData();
 
     return (
-        <div className="auth-container">
-            <h1 className="auth-title">THÔNG TIN CÁ NHÂN</h1>
+        <div className="db-page">
+            {/* Thống kê */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h1 className="db-heading1">
+                    <span>📊</span> Tổng quan
+                </h1>
+                <StatCards />
+            </div>
 
-            {user ? (
-                <div style={{ backgroundColor: '#0F0F0F', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
-                    <p><strong>Họ tên:</strong> {user.displayName}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Số Zalo:</strong> {user.phone}</p>
-                    <p><strong>Vai trò:</strong> <span style={{ color: '#FF9500' }}>{user.role.toUpperCase()}</span></p>
-                </div>
-            ) : (
-                <p>Đang tải dữ liệu...</p>
-            )}
+            {/* Lớp học và booking */}
+            <div className="db-grid-2-cols" style={{ marginBottom: '1.5rem' }}>
+                <RecentClasses />
+                <RecentBookings />
+            </div>
 
-            <button className="auth-btn" onClick={handleLogout}>
-                ĐĂNG XUẤT
-            </button>
+            {/* Cấu hình nội dung */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h2 className="db-heading2">
+                    <span>🏠</span> Cấu hình trang chủ & phòng tập
+                </h2>
+                <ContentCards />
+            </div>
+
+            {/* Thiết bị */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h2 className="db-heading2">
+                    <span>🏋️</span> Quản lý thiết bị
+                </h2>
+                <EquipmentTable />
+            </div>
+
+            {/* Doanh thu và cài đặt */}
+            <div className="db-grid-2-cols">
+                <RevenueChart />
+                <SettingsCard />
+            </div>
         </div>
     );
 };
 
-export default ProfilePage;
+export default AdminDashboard;

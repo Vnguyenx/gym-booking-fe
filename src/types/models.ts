@@ -195,7 +195,7 @@ export interface Booking {
     status: BookingStatus;
     createdAt: string | null;  // ISO string sau khi BE convert
     paidAt: string | null;     // ISO string sau khi BE convert
-    paymentCode: String;
+    paymentCode?: String;
     vnpay_TransactionNo?: string;
     customerName?: string;
     customerPhone?: string;

@@ -285,6 +285,23 @@ export const deleteEquipment = (id: string) =>
 export const fetchFloors = () =>
     apiFetch<{ floors: Floor[] }>('/api/admin/floors');
 
+export const createFloor = (data: Omit<Floor, 'id'>) =>
+    apiFetch<{ message: string; floorId: string }>('/api/admin/floors', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
+
+export const updateFloor = (floorId: string, data: Partial<Omit<Floor, 'id'>>) =>
+    apiFetch<{ message: string }>(`/api/admin/floors/${floorId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    });
+
+export const deleteFloor = (floorId: string) =>
+    apiFetch<{ message: string }>(`/api/admin/floors/${floorId}`, {
+        method: 'DELETE',
+    });
+
 /** Lấy thông tin phòng gym */
 export const fetchGymInfo = () =>
     apiFetch<{ gymInfo: GymInfo }>('/api/admin/gym-info');
@@ -377,3 +394,12 @@ export const fetchRevenue = (month: number, year: number) =>
 /** Tổng quan doanh thu 6 tháng gần nhất */
 export const fetchRevenueSummary = () =>
     apiFetch<RevenueSummary>('/api/admin/revenue/summary');
+
+export const fetchRevenueByYear = (year: number) =>
+    apiFetch<{ year: number; monthlyRevenue: Record<number, number> }>(`/api/admin/revenue/year?year=${year}`);
+
+export const fetchRevenueByWeek = (week: number, year: number) =>
+    apiFetch<{ week: number; year: number; startDate: string; endDate: string; dailyRevenue: Record<string, number> }>(`/api/admin/revenue/week?week=${week}&year=${year}`);
+
+export const fetchRevenueByRange = (start: string, end: string) =>
+    apiFetch<{ start: string; end: string; totalRevenue: number; count: number; bookings: Booking[] }>(`/api/admin/revenue/range?start=${start}&end=${end}`);

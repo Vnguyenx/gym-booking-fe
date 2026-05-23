@@ -1,0 +1,346 @@
+/* src/styles/admin/RevenuePage.css */
+/* Mobile-first — scale lên tablet/desktop qua media queries */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ─── Page layout ─────────────────────────────────────────── */
+.revenue-page {
+    background: #0a0a0a;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.revenue-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ─── Title ───────────────────────────────────────────────── */
+.page-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #ff3b30;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+/* ─── Filter bar (tab buttons) ────────────────────────────── */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    justify-content: center;
+}
+
+.filter-bar button {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    padding: 0.45rem 1.1rem;
+    border-radius: 40px;
+    color: #888;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.filter-bar button:hover:not(.active) {
+    border-color: #ff3b30;
+    color: #ff3b30;
+}
+
+.filter-bar button.active {
+    background: #c0392b;
+    border-color: #c0392b;
+    color: #fff;
+}
+
+/* ─── Filter controls ─────────────────────────────────────── */
+.filter-controls {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: center;
+}
+
+.filter-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.filter-group select,
+.filter-group input[type="number"],
+.filter-group input[type="date"] {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    border-color: #c0392b;
+}
+
+.filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #777;
+    font-size: 0.85rem;
+}
+
+/* ─── Summary card ────────────────────────────────────────── */
+.summary-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-left: 3px solid #c0392b;
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.total-revenue {
+    font-size: 0.95rem;
+    color: #777;
+}
+
+.total-revenue span {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ff3b30;
+    margin-top: 0.25rem;
+    letter-spacing: -0.01em;
+}
+
+.total-bookings {
+    margin-top: 0.5rem;
+    color: #555;
+    font-size: 0.85rem;
+}
+
+/* ─── Chart wrapper ───────────────────────────────────────── */
+.chart-wrapper {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ─── Bookings table ──────────────────────────────────────── */
+.bookings-table {
+    margin-top: 1.25rem;
+}
+
+.bookings-table h3 {
+    margin-bottom: 0.75rem;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #1e1e1e;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bookings-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #111;
+    min-width: 600px;
+}
+
+.bookings-table th {
+    background: #1a1a1a;
+    color: #ff3b30;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #222;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.bookings-table td {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.85rem;
+    color: #ccc;
+    border-bottom: 1px solid #1a1a1a;
+    white-space: nowrap;
+}
+
+.bookings-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.bookings-table tbody tr:hover td {
+    background: #161616;
+}
+
+/* ─── Pagination ──────────────────────────────────────────── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+}
+
+.pagination button {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.pagination button:hover:not(:disabled) {
+    border-color: #c0392b;
+    color: #ff3b30;
+}
+
+.pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    color: #555;
+    font-size: 0.85rem;
+}
+
+/* ─── Loading / Error ─────────────────────────────────────── */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #c0392b;
+    font-size: 0.9rem;
+}
+
+/* ─── Mobile: card layout cho bảng (< 600px) ──────────────── */
+@media (max-width: 599px) {
+    .table-wrapper {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .bookings-table table {
+        min-width: auto;
+        display: block;
+    }
+
+    .bookings-table thead {
+        display: none;
+    }
+
+    .bookings-table tbody {
+        display: block;
+    }
+
+    .bookings-table tbody tr {
+        display: block;
+        margin-bottom: 0.75rem;
+        border: 1px solid #1e1e1e;
+        border-radius: 10px;
+        padding: 0.5rem;
+        background: #111;
+    }
+
+    .bookings-table tbody tr:hover td {
+        background: transparent;
+    }
+
+    .bookings-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.4rem 0.5rem;
+        border-bottom: 1px solid #1a1a1a;
+        white-space: normal;
+        font-size: 0.82rem;
+    }
+
+    .bookings-table td:last-child {
+        border-bottom: none;
+    }
+
+    .bookings-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #c0392b;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        min-width: 42%;
+        flex-shrink: 0;
+        padding-top: 1px;
+    }
+}
+
+/* ─── Tablet trở lên (≥ 768px) ───────────────────────────── */
+@media (min-width: 768px) {
+    .revenue-page {
+        padding: 2rem;
+    }
+
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .total-revenue span {
+        font-size: 2rem;
+    }
+
+    .summary-card {
+        padding: 1.5rem 2rem;
+    }
+
+    .chart-wrapper {
+        padding: 1.25rem;
+    }
+}
+
+/* ─── Desktop (≥ 1024px) ──────────────────────────────────── */
+@media (min-width: 1024px) {
+    .page-title {
+        font-size: 1.75rem;
+    }
+}

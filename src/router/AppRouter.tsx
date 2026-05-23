@@ -45,9 +45,9 @@ import AdminClassesPage  from '../pages/admin/AdminClassesPage';
 import AdminBookingsPage from '../pages/admin/AdminBookingsPage';
 import AdminMembershipsPage from '../pages/admin/AdminMembershipsPage';
 import AdminEquipmentPage   from '../pages/admin/AdminEquipmentPage';
-// import AdminContentPage     from '../pages/admin/AdminContentPage';
-// import AdminRevenuePage     from '../pages/admin/AdminRevenuePage';
-// import AdminSettingsPage    from '../pages/admin/AdminSettingsPage';
+import AdminContentPage     from '../pages/admin/AdminContentPage';
+import AdminRevenuePage     from '../pages/admin/AdminRevenuePage';
+import AdminSettingsPage    from '../pages/admin/AdminSettingsPage';
 
 // ── Admin Layout ──────────────────────────────────────────
 import AdminLayout from '../components/admin/layout/AdminLayout';
@@ -164,14 +164,14 @@ const AppRouter = () => {
                 <Route path={ROUTES.ADMIN_EQUIPMENT}
                        element={<AdminRoute><AdminEquipmentPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_CONTENT}*/}
-                {/*       element={<AdminRoute><AdminContentPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_CONTENT}
+                       element={<AdminRoute><AdminContentPage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_REVENUE}*/}
-                {/*       element={<AdminRoute><AdminRevenuePage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_REVENUE}
+                       element={<AdminRoute><AdminRevenuePage /></AdminRoute>} />
 
-                {/*<Route path={ROUTES.ADMIN_SETTINGS}*/}
-                {/*       element={<AdminRoute><AdminSettingsPage /></AdminRoute>} />*/}
+                <Route path={ROUTES.ADMIN_SETTINGS}
+                       element={<AdminRoute><AdminSettingsPage /></AdminRoute>} />
 
 
                 {/* ── Fallback ────────────────────────────────────────── */}
