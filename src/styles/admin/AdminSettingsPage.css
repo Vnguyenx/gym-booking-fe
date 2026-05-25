@@ -81,7 +81,7 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0 0 1rem 0;
-    color: #e53935; /* đỏ chính */
+    color: #e53935;
     border-left: 4px solid #e53935;
     padding-left: 0.75rem;
 }
@@ -365,6 +365,42 @@
     border-top: 1px solid #2c2c2c;
     padding-top: 1rem;
 }
+
+/* ---------- Nút Đăng xuất (auth-btn) ---------- */
+.auth-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.65rem 1.25rem;
+    background-color: transparent;
+    color: #e53935;
+    border: 1.5px solid #e53935;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.auth-btn:hover {
+    background-color: #e53935;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(229, 57, 53, 0.35);
+}
+
+.auth-btn:active {
+    background-color: #c62828;
+    border-color: #c62828;
+}
+
+@media (min-width: 768px) {
+    .auth-btn {
+        width: auto;
+        align-self: flex-end;
+        padding: 0.65rem 1.75rem;
+    }
+}
+
 /* ---------- Daily & Payment Form ---------- */
 .daily-config-form,
 .payment-config-form {

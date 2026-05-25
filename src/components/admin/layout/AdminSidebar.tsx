@@ -1,14 +1,14 @@
 // src/components/admin/layout/AdminSidebar.tsx
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import '../../../styles/admin/AdminSidebar.css';
 
 
 const MENU_ITEMS = [
     { label: 'Dashboard',    icon: '📊', path: ROUTES.ADMIN_DASHBOARD },
-    { label: 'Người dùng',     icon: '👥', path: ROUTES.ADMIN_USERS },
+    { label: 'Người dùng',   icon: '👥', path: ROUTES.ADMIN_USERS },
     { label: 'PT & Đơn PT',  icon: '💪', path: ROUTES.ADMIN_PTS },
     { label: 'Lớp học',      icon: '📚', path: ROUTES.ADMIN_CLASSES },
     { label: 'Booking',      icon: '🎫', path: ROUTES.ADMIN_BOOKINGS },
@@ -24,6 +24,13 @@ interface AdminSidebarProps {
 }
 
 const AdminSidebar = ({ onNavigate }: AdminSidebarProps) => {
+    const navigate = useNavigate();
+
+    const handleBackHome = () => {
+        onNavigate?.();
+        navigate(ROUTES.HOME);
+    };
+
     return (
         <nav className="admin-sidebar">
 
@@ -48,6 +55,18 @@ const AdminSidebar = ({ onNavigate }: AdminSidebarProps) => {
                     </li>
                 ))}
             </ul>
+
+            {/* Nút back về trang chủ — cuối sidebar */}
+            <div className="admin-sidebar-footer">
+                <button
+                    className="admin-sidebar-back-btn"
+                    onClick={handleBackHome}
+                    aria-label="Về trang chủ"
+                >
+                    <span className="admin-sidebar-icon">←</span>
+                    <span className="admin-sidebar-label">Trang chủ</span>
+                </button>
+            </div>
 
         </nav>
     );

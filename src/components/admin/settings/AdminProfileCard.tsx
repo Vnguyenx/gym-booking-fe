@@ -4,9 +4,33 @@
  */
 
 import React from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../store/hooks';
+import { logout } from '../../../store/authSlice';
+import { auth } from '../../../config/firebase';
+import { signOut } from 'firebase/auth';
 import useAuth from '../../../hooks/useAuth';
+import { ROUTES } from '../../../constants/routes';
+
 const AdminProfileCard: React.FC = () => {
-    const { user, loading } = useAuth();
+    const { user, loading,isLoggedIn } = useAuth();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    // 1. Kiểm tra quyền truy cập (Nếu chưa login thì đá ra trang Login)
+    if (!loading && !isLoggedIn) {
+        return <Navigate to={ROUTES.LOGIN} />;
+    }
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth); // Đăng xuất khỏi Firebase
+            dispatch(logout()); // Xoá data trong Redux
+            navigate(ROUTES.LOGIN);
+        } catch (error) {
+            console.error("Lỗi đăng xuất:", error);
+        }
+    };
 
     if (loading) {
         return <div className="profile-card">Đang tải thông tin...</div>;
@@ -45,6 +69,9 @@ const AdminProfileCard: React.FC = () => {
                     <label>Vai trò</label>
                     <p className="profile-card__role">{user.role.toUpperCase()}</p>
                 </div>
+                <button className="auth-btn" onClick={handleLogout}>
+                    ĐĂNG XUẤT
+                </button>
             </div>
             <p className="profile-card__note">
                 * Để chỉnh sửa thông tin, vui lòng vào mục "Quản lý người dùng".

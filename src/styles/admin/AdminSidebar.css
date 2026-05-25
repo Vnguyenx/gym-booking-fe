@@ -44,6 +44,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1; /* đẩy footer xuống cuối */
 }
 
 /* ── Menu item ── */
@@ -84,6 +85,36 @@
     text-overflow: ellipsis;
 }
 
+/* ── Footer + nút back về trang chủ ── */
+.admin-sidebar-footer {
+    padding-top: 10px;
+    border-top: 1px solid #222;
+    margin-top: 4px;
+}
+
+.admin-sidebar-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    width: 100%;
+    border-radius: 8px;
+    background: none;
+    border: 1px solid #2a2a2a;
+    color: #888;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.admin-sidebar-back-btn:hover {
+    background: #1a1a1a;
+    color: #ddd;
+    border-color: #444;
+}
+
 /* ══════════════════════════════════════
    DESKTOP — từ 1024px trở lên
 ══════════════════════════════════════ */
@@ -105,5 +136,10 @@
 
     .admin-sidebar-logo-text {
         font-size: 0.95rem;
+    }
+
+    .admin-sidebar-footer {
+        padding-top: 12px;
+        margin-top: 6px;
     }
 }

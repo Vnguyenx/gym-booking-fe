@@ -18,7 +18,6 @@ const STATUS_LABEL: Record<PTApplication['status'], string> = {
 
 const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onReview, loading }) => {
 
-    // Tự động đóng khi nhấn phím Esc
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -27,6 +26,16 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
         return () => window.removeEventListener('keydown', onKey);
     }, [onClose]);
 
+    // Helper để lấy danh sách chuyên môn (luôn trả về mảng string)
+    const getSpecialtyList = (): string[] => {
+        const spec = application.specialty;
+        if (!spec) return [];
+        if (Array.isArray(spec)) return spec;
+        return spec.split(',').map(s => s.trim()).filter(Boolean);
+    };
+
+    const specialtyList = getSpecialtyList();
+
     return (
         <div className="au-modal-overlay" onClick={onClose}>
             <div
@@ -34,7 +43,7 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
                 onClick={(e) => e.stopPropagation()}
                 style={{ maxWidth: '650px', width: '100%', borderRadius: '16px' }}
             >
-                {/* ─── Header Modal (Thông tin cơ bản + Avatar) ─── */}
+                {/* Header */}
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #2c2c2c', paddingBottom: '16px' }}>
                     {application.avatarUrl ? (
                         <img
@@ -57,9 +66,8 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
                     </div>
                 </div>
 
-                {/* ─── Body Modal (Chi tiết hồ sơ ứng viên) ─── */}
+                {/* Body */}
                 <div className="au-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
                     <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
                         <div className="ap-field" style={{ flex: 1 }}>
                             <label className="ap-label">Giới tính</label>
@@ -79,8 +87,8 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
                     <div className="ap-field">
                         <label className="ap-label">Lĩnh vực chuyên môn</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
-                            {application.specialty && application.specialty.length > 0 ? (
-                                application.specialty.map((spec, index) => (
+                            {specialtyList.length > 0 ? (
+                                specialtyList.map((spec, index) => (
                                     <span
                                         key={index}
                                         style={{ background: '#b7791f', color: '#fff', padding: '5px 12px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}
@@ -119,7 +127,7 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
                     </div>
                 </div>
 
-                {/* ─── Footer Modal (Các nút thao tác phê duyệt) ─── */}
+                {/* Footer */}
                 <div
                     className="au-modal-footer"
                     style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px', borderTop: '1px solid #2c2c2c', paddingTop: '16px' }}
@@ -150,7 +158,6 @@ const PTApplicationDetailModal: React.FC<Props> = ({ application, onClose, onRev
                         </>
                     )}
                 </div>
-
             </div>
         </div>
     );

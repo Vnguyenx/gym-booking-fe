@@ -49,7 +49,7 @@ export interface PTApplication {
     email: string;
     phone: string;
     gender: string;
-    specialty: string[];
+    specialty: string | string[];
     experience: string;
     bio: string;
     status: 'pending' | 'approved' | 'rejected';

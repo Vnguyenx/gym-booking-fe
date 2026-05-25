@@ -20,7 +20,6 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* không margin-left trên mobile */
 }
 
 /* Topbar hiện trên mobile */
@@ -46,6 +45,7 @@
     padding: 4px 8px;
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
 }
 
 .admin-layout-menu-btn:hover {
@@ -58,6 +58,28 @@
     font-size: 0.95rem;
     letter-spacing: 0.05em;
     color: #e53e3e;
+    flex: 1; /* đẩy nút back sang phải */
+}
+
+/* Nút back về trang chủ — topbar mobile */
+.admin-layout-back-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #aaa;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.admin-layout-back-btn:hover {
+    background: #1a1a1a;
+    color: #f1f1f1;
+    border-color: #555;
 }
 
 .admin-layout-content {

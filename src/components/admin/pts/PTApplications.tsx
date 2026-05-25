@@ -11,13 +11,24 @@ import type { PTApplication } from '../../../types/models';
 import PTApplicationDetailModal from './PTApplicationDetailModal';
 import '../../../styles/admin/AdminPtsPage.css';
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 const STATUS_LABEL: Record<PTApplication['status'] | 'all', string> = {
     all:      'Tất cả',
     pending:  'Chờ duyệt',
     approved: 'Đã duyệt',
     rejected: 'Từ chối',
+};
+
+/**
+ * Chuyển specialty (string | string[]) thành chuỗi hiển thị ngắn gọn, tối đa 2 mục
+ */
+const formatSpecialty = (specialty: string | string[] | undefined): string => {
+    if (!specialty) return '—';
+    if (Array.isArray(specialty)) {
+        return specialty.slice(0, 2).join(', ');
+    }
+    return specialty.split(',').map(s => s.trim()).slice(0, 2).join(', ');
 };
 
 const PTApplications: React.FC = () => {
@@ -28,45 +39,44 @@ const PTApplications: React.FC = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [previewApp, setPreviewApp] = useState<PTApplication | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // Fetch dữ liệu tương ứng khi filter thay đổi
     useEffect(() => {
         dispatch(fetchPTApplications(ptAppFilter));
     }, [dispatch, ptAppFilter]);
 
-    // Reset về trang đầu tiên khi đổi tab bộ lọc
     useEffect(() => {
         setCurrentPage(1);
-    }, [ptAppFilter]);
+    }, [ptAppFilter, searchQuery]);
 
-    // Tính toán dữ liệu phân trang
-    const totalPages = Math.max(1, Math.ceil(ptApplications.length / PAGE_SIZE));
+    const filteredApps = ptApplications.filter(app =>
+        !searchQuery ||
+        app.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.phone?.includes(searchQuery)
+    );
+
+    const totalPages = Math.max(1, Math.ceil(filteredApps.length / PAGE_SIZE));
     const startIdx   = (currentPage - 1) * PAGE_SIZE;
-    const pageApps   = ptApplications.slice(startIdx, startIdx + PAGE_SIZE);
+    const pageApps   = filteredApps.slice(startIdx, startIdx + PAGE_SIZE);
 
     const goTo = (page: number) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
+        if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
 
-    // Xử lý gửi API xét duyệt đơn đăng ký (Approved / Rejected)
     const handleReview = useCallback(async (id: string, status: 'approved' | 'rejected') => {
         try {
-            // Thực hiện dispatch action từ Redux slice và unwrap kết quả
             await dispatch(reviewPTApplication({ id, status })).unwrap();
-            // Đóng modal chi tiết sau khi duyệt thành công
             setPreviewApp(null);
-            // Tải lại danh sách đơn để cập nhật trạng thái mới nhất lên giao diện
             dispatch(fetchPTApplications(ptAppFilter));
         } catch (err) {
-            console.error("Lỗi trong quá trình xét duyệt đơn:", err);
+            console.error("Lỗi xét duyệt đơn:", err);
         }
     }, [dispatch, ptAppFilter]);
 
     return (
         <div className="ap-section">
-            {/* Thanh Tab chuyển đổi các bộ lọc trạng thái đơn */}
+            {/* Tabs lọc trạng thái */}
             <div className="ap-tabs">
                 {(Object.keys(STATUS_LABEL) as Array<PTApplicationStatusFilter>).map((status) => (
                     <button
@@ -79,67 +89,129 @@ const PTApplications: React.FC = () => {
                 ))}
             </div>
 
-            {/* Trạng thái giao diện dựa trên dữ liệu Redux */}
+            {/* Ô tìm kiếm */}
+            <div className="au-filter-bar">
+                <input
+                    type="text"
+                    className="au-search"
+                    placeholder="Tìm theo tên, email, số điện thoại..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+
+            {/* Trạng thái loading / error / empty */}
             {ptAppLoading && ptApplications.length === 0 ? (
                 <div className="au-modal-box au-modal-box--loading" style={{ background: 'transparent', boxShadow: 'none' }}>
                     <span className="au-spinner" />
-                    <p>Đang tải danh sách đơn đăng ký làm PT...</p>
+                    <p>Đang tải danh sách đơn đăng ký...</p>
                 </div>
             ) : ptAppError ? (
                 <p className="au-modal-error" style={{ textAlign: 'center', padding: '20px' }}>⚠ Lỗi: {ptAppError}</p>
-            ) : ptApplications.length === 0 ? (
+            ) : filteredApps.length === 0 ? (
                 <div style={{ textAlign: 'center', color: '#888', padding: '40px 0' }}>
-                    Không tìm thấy đơn đăng ký nào phù hợp với bộ lọc hiện tại.
+                    Không tìm thấy đơn đăng ký nào.
                 </div>
             ) : (
                 <>
-                    {/* Render danh sách thẻ đơn ứng tuyển */}
-                    <div className="pt-list-container">
-                        {pageApps.map((app) => (
-                            <div key={app.id} className="pt-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
-                                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                                    {app.avatarUrl ? (
-                                        <img src={app.avatarUrl} alt={app.fullName} className="pt-avatar-circle" />
-                                    ) : (
-                                        <div className="pt-avatar-circle" style={{ background: '#252525', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
-                                            👤
+                    {/* ========== MOBILE: CARD VIEW (giống PTList) ========== */}
+                    <div className="au-mobile-only">
+                        <div className="au-card-list">
+                            {pageApps.map((app) => (
+                                <div key={app.id} className="au-card">
+                                    <div className="au-card-body">
+                                        <div className="au-card-row">
+                                            <span className="au-card-label">Họ tên</span>
+                                            <span className="au-card-value font-semibold">{app.fullName}</span>
                                         </div>
-                                    )}
-                                    <div>
-                                        <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: '#fff' }}>{app.fullName}</h3>
-                                        <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem', color: '#888' }}>
-                                            {app.email} {app.phone && `• ${app.phone}`}
-                                        </p>
-                                        <span className={`status-badge status-${app.status}`}>
-                                            {STATUS_LABEL[app.status]}
-                                        </span>
+                                        <div className="au-card-row">
+                                            <span className="au-card-label">Email</span>
+                                            <span className="au-card-value">{app.email}</span>
+                                        </div>
+                                        <div className="au-card-row">
+                                            <span className="au-card-label">Số điện thoại</span>
+                                            <span className="au-card-value">{app.phone || '—'}</span>
+                                        </div>
+                                        <div className="au-card-row">
+                                            <span className="au-card-label">Trạng thái</span>
+                                            <span className="au-card-value">
+                                                <span className={`status-badge status-${app.status}`}>
+                                                    {STATUS_LABEL[app.status]}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="au-card-footer">
+                                        <button className="au-btn-view" onClick={() => setPreviewApp(app)}>
+                                            Xem chi tiết
+                                        </button>
                                     </div>
                                 </div>
-                                <button className="au-btn au-btn--ghost" onClick={() => setPreviewApp(app)}>
-                                    Xem chi tiết
-                                </button>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Thanh Phân Trang (Chỉ hiện khi tổng số trang > 1) */}
+                    {/* ========== DESKTOP: TABLE VIEW ========== */}
+                    <div className="au-desktop-only">
+                        <div className="au-table-wrapper">
+                            <table className="au-table">
+                                <thead>
+                                <tr>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Chuyên môn</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {pageApps.map((app) => (
+                                    <tr key={app.id}>
+                                        <td className="font-semibold">{app.fullName}</td>
+                                        <td>{app.email}</td>
+                                        <td>{app.phone || '—'}</td>
+                                        <td>{formatSpecialty(app.specialty)}</td>
+                                        <td>
+                                                <span className={`status-badge status-${app.status}`}>
+                                                    {STATUS_LABEL[app.status]}
+                                                </span>
+                                        </td>
+                                        <td>
+                                            <button className="au-btn-view" onClick={() => setPreviewApp(app)}>
+                                                Xem chi tiết
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Phân trang */}
                     {totalPages > 1 && (
-                        <div className="au-pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', marginTop: '24px' }}>
+                        <div className="au-pagination">
                             <button className="au-page-btn" onClick={() => goTo(currentPage - 1)} disabled={currentPage === 1}>‹</button>
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                 <button
                                     key={page}
                                     className={`au-page-btn${currentPage === page ? ' au-page-btn--active' : ''}`}
                                     onClick={() => goTo(page)}
-                                >{page}</button>
+                                >
+                                    {page}
+                                </button>
                             ))}
                             <button className="au-page-btn" onClick={() => goTo(currentPage + 1)} disabled={currentPage === totalPages}>›</button>
+                            <span className="au-page-info">
+                                {startIdx + 1}–{Math.min(startIdx + PAGE_SIZE, filteredApps.length)} / {filteredApps.length}
+                            </span>
                         </div>
                     )}
                 </>
             )}
 
-            {/* Gọi cấu trúc Modal mới được tách riêng để xử lý hiển thị chi tiết và tác vụ duyệt hồ sơ */}
+            {/* Modal chi tiết */}
             {previewApp && (
                 <PTApplicationDetailModal
                     application={previewApp}

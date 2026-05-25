@@ -654,3 +654,22 @@
     color: var(--text-main);
     font-weight: 500;
 }
+/* Mobile: xếp dọc */
+@media (max-width: 767px) {
+    .ap-tabs {
+        flex-direction: column;
+        background: transparent;
+        padding: 0;
+        gap: 8px;
+    }
+    .ap-tab-btn {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+    }
+    .ap-tab-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+    }
+}

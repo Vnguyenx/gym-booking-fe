@@ -51,7 +51,7 @@ const RecentBookings: React.FC = () => {
                                     </p>
                                 </div>
                                 <span className={booking.status === 'pending' ? 'db-badge-orange' : 'db-badge-green'}>
-                                    {booking.status === 'pending' ? 'Chờ thanh toán' : 'Đã xác nhận'}
+                                    {booking.status === 'pending' ? 'Chờ xác nhận' : 'Đã xác nhận'}
                                 </span>
                             </div>
                         </div>
