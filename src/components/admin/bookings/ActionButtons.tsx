@@ -11,7 +11,10 @@ export interface ActionButtonsProps {
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ booking, updating, onAction }) => {
-    if (booking.status !== 'pending') {
+    // Cả 'pending' (VNPay) lẫn 'pending_manual' (QR) đều cần nút duyệt/huỷ
+    const canAct = booking.status === 'pending' || booking.status === 'pending_manual';
+
+    if (!canAct) {
         return <span className="ab-td--muted">—</span>;
     }
 

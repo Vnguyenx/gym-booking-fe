@@ -1,6 +1,6 @@
 // src/types/models.ts
 import { Role } from '../constants/roles';
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
+export type BookingStatus = 'pending' | 'pending_manual' | 'confirmed' | 'cancelled';
 
 export interface Banner {
     id?: string;
@@ -197,6 +197,7 @@ export interface Booking {
     paidAt: string | null;     // ISO string sau khi BE convert
     paymentCode?: String;
     vnpay_TransactionNo?: string;
+    paymentMethod? :string;
     customerName?: string;
     customerPhone?: string;
     membershipName?: string;

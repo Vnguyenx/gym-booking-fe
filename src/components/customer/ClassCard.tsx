@@ -42,8 +42,9 @@ const ClassCard: React.FC<ClassCardProps> = ({ classItem }) => {
     const attendanceCount = classItem.attendance.length;
 
     // Ưu tiên dùng typeName (tên dịch vụ từ pt_services) nếu có, fallback sang type
-    const displayType = classItem.typeName ?? classItem.type;
-
+    const displayType = classItem.typeName
+        ? (classItem.typeName === 'none' ? 'Không có PT' : classItem.typeName)
+        : (classItem.type === 'none' ? 'Không có PT' : classItem.type);
     return (
         <>
             <div className="class-card">

@@ -15,24 +15,24 @@ const PTCard: React.FC<PTCardProps> = ({ item }) => {
     };
 
     return (
-        <div className="pt-card" onClick={handleClick} style={{ cursor: 'pointer' }} >
-            <div className="pt-card__img-wrap">
-                <img src={item.avatar} alt={item.fullName} className="pt-card__img" loading="lazy" />
+        <div className="pts-card" onClick={handleClick} style={{ cursor: 'pointer' }} >
+            <div className="pts-card__img-wrap">
+                <img src={item.avatar} alt={item.fullName} className="pts-card__img" loading="lazy" />
                 {/* Badge trạng thái: Sẵn sàng hoặc Kín lịch */}
-                <span className={`pt-card__badge ${item.isAvailable ? 'status--online' : 'status--busy'}`}>
+                <span className={`pts-card__badge ${item.isAvailable ? 'status--online' : 'status--busy'}`}>
                     {item.isAvailable ? 'Sẵn sàng' : 'Kín lịch'}
                 </span>
             </div>
 
-            <div className="pt-card__body">
-                <p className="pt-card__gender">{item.gender}</p>
-                <h3 className="pt-card__name">{item.fullName}</h3>
+            <div className="pts-card__body">
+                <p className="pts-card__gender">{item.gender}</p>
+                <h3 className="pts-card__name">{item.fullName}</h3>
 
-                <div className="pt-card__specialties">
+                <div className="pts-card__specialties">
                     {item.specialty.slice(0, 2).map((s, idx) => (
                         <span key={idx} className="pt-card__tag">{s}</span>
                     ))}
-                    {item.specialty.length > 2 && <span className="pt-card__tag">+{item.specialty.length - 2}</span>}
+                    {item.specialty.length > 2 && <span className="pts-card__tag">+{item.specialty.length - 2}</span>}
                 </div>
             </div>
         </div>

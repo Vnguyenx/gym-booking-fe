@@ -15,9 +15,10 @@ const formatDate = (createdAt: any): string => {
 };
 
 const BOOKING_STATUS_CONFIG: Record<BookingStatus, { label: string; className: string }> = {
-    pending:   { label: 'Chờ xác nhận', className: 'badge badge--warning' },
-    confirmed: { label: 'Đã xác nhận',  className: 'badge badge--info'    },
-    cancelled: { label: 'Đã huỷ',       className: 'badge badge--error'   },
+    pending:        { label: 'Chờ xác nhận',       className: 'badge badge--warning' },
+    pending_manual: { label: 'Chờ duyệt',           className: 'badge badge--orange'  },
+    confirmed:      { label: 'Đã xác nhận',         className: 'badge badge--info'    },
+    cancelled:      { label: 'Đã huỷ',              className: 'badge badge--error'   },
 };
 
 interface BookingCardProps {

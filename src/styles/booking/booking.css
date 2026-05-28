@@ -470,3 +470,225 @@
     opacity: 0.3;
     cursor: not-allowed;
 }
+/* ── THÊM VÀO CUỐI booking.css ──────────────────────────── */
+
+/* ── CHỌN PHƯƠNG THỨC THANH TOÁN ────────────────────────── */
+.payment-method {
+    margin-bottom: 1.25rem;
+}
+
+.payment-method__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted-lt);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+}
+
+.payment-method__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.payment-method__item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+    background: var(--surface-2);
+}
+.payment-method__item:hover {
+    border-color: var(--border-lt);
+}
+.payment-method__item.selected {
+    border-color: var(--red);
+    background: rgba(255, 59, 48, 0.06);
+}
+
+.payment-method__radio {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border-lt);
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color var(--transition);
+}
+.payment-method__item.selected .payment-method__radio {
+    border-color: var(--red);
+    background: var(--red);
+}
+.payment-method__item.selected .payment-method__radio::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--white);
+}
+
+.payment-method__icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.payment-method__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+}
+
+.payment-method__label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.payment-method__desc {
+    font-size: 0.72rem;
+    color: var(--muted-lt);
+}
+
+/* ── QR PAYMENT MODAL ────────────────────────────────────── */
+.qr-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.qr-modal {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.qr-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.qr-modal__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.qr-modal__close {
+    background: transparent;
+    border: none;
+    color: var(--muted-lt);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition);
+}
+.qr-modal__close:hover { color: var(--white); }
+
+.qr-modal__qr-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+}
+
+.qr-modal__qr-img {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+    display: block;
+}
+
+.qr-modal__info {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.qr-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+    gap: 0.5rem;
+}
+.qr-info-row + .qr-info-row {
+    border-top: 1px solid var(--border);
+}
+
+.qr-info-row__label {
+    color: var(--muted-lt);
+    flex-shrink: 0;
+}
+
+.qr-info-row__value {
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+}
+.qr-info-row__value--mono {
+    font-family: monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+}
+.qr-info-row__value--price {
+    font-family: var(--ff-display);
+    font-size: 1rem;
+    color: var(--red);
+}
+.qr-info-row__value--code {
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: var(--orange);
+    letter-spacing: 0.04em;
+}
+
+.qr-modal__note {
+    font-size: 0.78rem;
+    color: var(--muted-lt);
+    background: rgba(255, 149, 0, 0.06);
+    border: 1px solid rgba(255, 149, 0, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.qr-modal__btn {
+    width: 100%;
+    background: var(--red);
+    border: none;
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.9rem;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), transform var(--transition);
+    letter-spacing: 0.02em;
+}
+.qr-modal__btn:hover { background: var(--red-dk); }
+.qr-modal__btn:active { transform: scale(0.98); }

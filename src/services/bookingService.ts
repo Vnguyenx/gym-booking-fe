@@ -20,6 +20,35 @@ export const bookingService = {
         return json;
     },
 
+    /**
+     * Tạo booking thanh toán QR chuyển khoản
+     * BE trả về qrUrl (ảnh VietQR), paymentCode (mã đối chiếu),
+     * cùng thông tin tài khoản để hiển thị trong modal.
+     */
+    createBookingQR: async (data: {
+        membershipId: string;
+        ptServiceId: string;
+        ptId: string;
+    }): Promise<{
+        bookingId: string;
+        qrUrl: string;
+        paymentCode: string;
+        totalPrice: number;
+        accountNo: string;
+        accountName: string;
+        bankId: string;
+    }> => {
+        const res = await fetch(`${BASE_URL}/api/bookings/qr`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error);
+        return json;
+    },
+
     getAvailablePTs: async () => {
         const res = await fetch(`${BASE_URL}/api/bookings/available-pts`, {
             credentials: 'include',

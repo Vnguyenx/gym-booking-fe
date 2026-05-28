@@ -9,10 +9,22 @@ import { bookingService } from '../services/bookingService';
 import usePTServiceData from './usePTServiceData';
 import usePTData from './usePTData';
 
+export type PaymentMethod = 'vnpay' | 'qr';
+
 interface BookingResult {
     bookingId: string;
     paymentUrl: string;   // link VNPay
     totalPrice: number;
+}
+
+export interface QRData {
+    bookingId: string;
+    qrUrl: string;
+    paymentCode: string;
+    totalPrice: number;
+    accountNo: string;
+    accountName: string;
+    bankId: string;
 }
 
 interface BookingInitialState {
@@ -39,10 +51,17 @@ const useBooking = (initial?: BookingInitialState) => {
         initial?.pt ?? null
     );
 
+    // ── Phương thức thanh toán ───────────────────────────
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('vnpay');
+
     // ── Kết quả booking ──────────────────────────────────
     const [bookingResult, setBookingResult] = useState<BookingResult | null>(null);
     const [loadingBooking, setLoadingBooking] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // ── QR Modal ─────────────────────────────────────────
+    const [qrData, setQrData] = useState<QRData | null>(null);
+    const [showQRModal, setShowQRModal] = useState(false);
 
     // ── Data từ Redux (không fetch trực tiếp từ BE nữa) ──
     const { ptServices, loading: loadingPTServices } = usePTServiceData();
@@ -79,14 +98,12 @@ const useBooking = (initial?: BookingInitialState) => {
 
     const handleSelectPTService = (ptService: PTService) => {
         setSelectedPTService(ptService);
-        // Đổi sang "Không PT" → bỏ PT đã chọn
         if (ptService.type === 'none') {
             setSelectedPT(null);
         }
     };
 
     const handleSelectPT = (pt: PT) => {
-        // Bấm lại PT đang chọn → bỏ chọn
         if (selectedPT?.id === pt.id) {
             setSelectedPT(null);
         } else {
@@ -94,7 +111,7 @@ const useBooking = (initial?: BookingInitialState) => {
         }
     };
 
-    // Xác nhận đặt lịch → gọi BE
+    // Xác nhận đặt lịch — VNPay: redirect cổng thanh toán
     const handleConfirmBooking = async () => {
         if (!canCheckout() || !selectedMembership || !selectedPTService) return;
 
@@ -107,7 +124,6 @@ const useBooking = (initial?: BookingInitialState) => {
                 ptId: selectedPT?.id || '',
             });
 
-            // Redirect thẳng sang trang thanh toán VNPay
             window.location.href = result.paymentUrl;
 
         } catch (err: any) {
@@ -115,6 +131,34 @@ const useBooking = (initial?: BookingInitialState) => {
         } finally {
             setLoadingBooking(false);
         }
+    };
+
+    // Xác nhận đặt lịch — QR: gọi BE lấy QR rồi hiện modal
+    const handleConfirmQR = async () => {
+        if (!canCheckout() || !selectedMembership || !selectedPTService) return;
+
+        setLoadingBooking(true);
+        setError(null);
+        try {
+            const result = await bookingService.createBookingQR({
+                membershipId: selectedMembership.id!,
+                ptServiceId: selectedPTService.id!,
+                ptId: selectedPT?.id || '',
+            });
+
+            setQrData(result);
+            setShowQRModal(true);
+
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoadingBooking(false);
+        }
+    };
+
+    const handleCloseQRModal = () => {
+        setShowQRModal(false);
+        setQrData(null);
     };
 
     return {
@@ -125,6 +169,10 @@ const useBooking = (initial?: BookingInitialState) => {
         selectedMembership,
         selectedPTService,
         selectedPT,
+
+        // Phương thức thanh toán
+        paymentMethod,
+        setPaymentMethod,
 
         // Data từ Redux
         ptServices,
@@ -139,6 +187,11 @@ const useBooking = (initial?: BookingInitialState) => {
         bookingResult,
         error,
 
+        // QR Modal
+        qrData,
+        showQRModal,
+        handleCloseQRModal,
+
         // Computed
         totalPrice: calcTotalPrice(),
         canCheckout: canCheckout(),
@@ -148,6 +201,7 @@ const useBooking = (initial?: BookingInitialState) => {
         handleSelectPTService,
         handleSelectPT,
         handleConfirmBooking,
+        handleConfirmQR,
     };
 };
 
