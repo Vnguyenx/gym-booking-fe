@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/gym-booking-fe/static/css/main.09849d97.css",
+    "main.js": "/gym-booking-fe/static/js/main.ef3e8fb3.js",
+    "index.html": "/gym-booking-fe/index.html",
+    "main.09849d97.css.map": "/gym-booking-fe/static/css/main.09849d97.css.map",
+    "main.ef3e8fb3.js.map": "/gym-booking-fe/static/js/main.ef3e8fb3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.09849d97.css",
+    "static/js/main.ef3e8fb3.js"
+  ]
+}
