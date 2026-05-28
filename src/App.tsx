@@ -10,27 +10,24 @@ const App = () => {
     const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        // Nếu localStorage đã có user → dùng luôn, không cần gọi BE
-        // Mục đích: dev FE không cần bật BE, production vẫn hoạt động
-        const saved = localStorage.getItem('auth_user');
-        if (saved) {
-            try {
-                dispatch(setUser(JSON.parse(saved)));
-            } catch {
-                // Dữ liệu bị hỏng → bỏ qua
-            }
-            setChecking(false);
-            return; // ← thoát sớm, không gọi getMe
-        }
-
-        // Không có localStorage → hỏi BE xem còn session cookie không
-        // Trường hợp: user chưa từng đăng nhập trên máy này
+        // Luôn gọi BE để verify session cookie
+        // Nếu còn session → dùng data từ BE (mới nhất)
+        // Nếu hết session → xóa localStorage, về trạng thái chưa đăng nhập
         authService.getMe()
             .then(data => {
-                if (data?.user) dispatch(setUser(data.user));
+                if (data?.user) {
+                    dispatch(setUser(data.user));
+                    localStorage.setItem('auth_user', JSON.stringify(data.user));
+                } else {
+                    localStorage.removeItem('auth_user');
+                }
             })
             .catch(() => {
-                // BE tắt hoặc lỗi mạng → bỏ qua, giữ trạng thái chưa đăng nhập
+                // BE lỗi mạng → dùng localStorage làm fallback
+                const saved = localStorage.getItem('auth_user');
+                if (saved) {
+                    try { dispatch(setUser(JSON.parse(saved))); } catch {}
+                }
             })
             .finally(() => setChecking(false));
     }, []);
