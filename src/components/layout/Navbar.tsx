@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
             }
         } else {
-            window.location.href = `/${link.href}`;
+            window.location.href = `${process.env.PUBLIC_URL}/${link.href}`;  // ← sửa chỗ này
         }
         closeDrawer();
     };
