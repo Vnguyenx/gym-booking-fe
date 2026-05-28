@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/gym-booking-fe/static/css/main.09849d97.css",
-    "main.js": "/gym-booking-fe/static/js/main.45c1c8cf.js",
+    "main.js": "/gym-booking-fe/static/js/main.105818d5.js",
     "index.html": "/gym-booking-fe/index.html",
     "main.09849d97.css.map": "/gym-booking-fe/static/css/main.09849d97.css.map",
-    "main.45c1c8cf.js.map": "/gym-booking-fe/static/js/main.45c1c8cf.js.map"
+    "main.105818d5.js.map": "/gym-booking-fe/static/js/main.105818d5.js.map"
   },
   "entrypoints": [
     "static/css/main.09849d97.css",
-    "static/js/main.45c1c8cf.js"
+    "static/js/main.105818d5.js"
   ]
 }
