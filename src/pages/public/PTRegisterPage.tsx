@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePTRegister } from "../../hooks/usePTRegister"; // Import hook vừa tạo
+import { usePTRegister } from "../../hooks/usePTRegister";
+import useAuth from "../../hooks/useAuth";
+import { ROLES } from "../../constants/roles";
 import "../../styles/pages/pt-register.css";
 
 const PTRegisterPage: React.FC = () => {
     const navigate = useNavigate();
-
-    // Lấy toàn bộ logic từ Hook
+    const { user, loading: authLoading, isPT, isAdmin } = useAuth();
     const {
         formData,
         specialtyInput,
@@ -19,10 +20,54 @@ const PTRegisterPage: React.FC = () => {
         handleSubmit,
     } = usePTRegister();
 
-    const handleAvatarClick = () => {
-        document.getElementById("avatarInput")?.click();
-    };
+    // Flag để chỉ fill thông tin một lần duy nhất
+    const hasFilled = useRef(false);
 
+    // 1. Kiểm tra quyền: nếu đã là PT hoặc Admin thì redirect
+    useEffect(() => {
+        if (!authLoading) {
+            if (user && (isPT || isAdmin)) {
+                alert("Bạn đã là PT/Admin, không thể đăng ký thêm!");
+                navigate("/");
+            }
+        }
+    }, [user, authLoading, isPT, isAdmin, navigate]);
+
+    // 2. Tự động điền thông tin nếu user là customer và chưa fill
+    useEffect(() => {
+        if (!authLoading && user && user.role === ROLES.CUSTOMER && !hasFilled.current) {
+            // Tạo event giả lập để gọi handleChange
+            const fillField = (name: string, value: string) => {
+                if (value) {
+                    handleChange({
+                        target: { name, value },
+                    } as React.ChangeEvent<HTMLInputElement>);
+                }
+            };
+            fillField("fullName", user.displayName || "");
+            fillField("email", user.email || "");
+            fillField("phone", user.phone || "");
+            hasFilled.current = true;
+        }
+    }, [authLoading, user, handleChange]);
+
+    // Hiển thị loading khi đang kiểm tra auth
+    if (authLoading) {
+        return (
+            <div className="pt-register-page">
+                <div className="pt-register__wrapper">
+                    <div className="pt-register__loading">Đang tải...</div>
+                </div>
+            </div>
+        );
+    }
+
+    // Nếu là PT/Admin thì không render gì (useEffect đã redirect)
+    if (user && (isPT || isAdmin)) {
+        return null;
+    }
+
+    // 3. Giao diện sau khi gửi thành công
     if (submitted) {
         return (
             <div className="pt-register-page">
@@ -43,6 +88,7 @@ const PTRegisterPage: React.FC = () => {
         );
     }
 
+    // 4. Form đăng ký
     return (
         <div className="pt-register-page">
             <div className="pt-register__wrapper">
@@ -63,7 +109,7 @@ const PTRegisterPage: React.FC = () => {
                         <label>Ảnh Chân Dung <span className="required">*</span></label>
                         <div
                             className="avatar-preview-container"
-                            onClick={handleAvatarClick}
+                            onClick={() => document.getElementById("avatarInput")?.click()}
                             role="button"
                             aria-label="Chọn ảnh đại diện"
                         >
