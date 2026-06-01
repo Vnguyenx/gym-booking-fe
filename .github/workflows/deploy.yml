@@ -25,6 +25,10 @@ jobs:
         run: npm run build
         env:
           CI: false
+          REACT_APP_CLOUDINARY_CLOUD_NAME: ${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }}
+          REACT_APP_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.REACT_APP_CLOUDINARY_UPLOAD_PRESET }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          VNP_RETURNURL: ${{ secrets.VNP_RETURNURL }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

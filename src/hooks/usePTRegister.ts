@@ -108,9 +108,9 @@ export const usePTRegister = () => {
         setLoading(true);
 
         try {
-            // Bước A: Upload ảnh lên imgBB
+            // Bước A: Upload ảnh lên Cloudinary
             const imageUrl = await uploadImageToCloudinary(imageFile);
-            if (!imageUrl) throw new Error("Không thể tải ảnh lên imgBB. Vui lòng kiểm tra kết nối.");
+            if (!imageUrl) throw new Error("Không thể tải ảnh lên Cloudinary. Vui lòng kiểm tra kết nối.");
 
             // Bước B: Xử lý mảng chuyên môn
             const specialtyArray: string[] = specialtyInput

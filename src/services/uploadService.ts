@@ -4,6 +4,9 @@ export const uploadImageToCloudinary = async (file: File): Promise<string | null
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
 
+    console.log('cloudName:', cloudName);        // ← thêm dòng này
+    console.log('uploadPreset:', uploadPreset);  // ← thêm dòng này
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", uploadPreset!);
