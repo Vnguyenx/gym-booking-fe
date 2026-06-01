@@ -20,7 +20,7 @@ interface TabNavProps {
 const TABS: Tab[] = [
     { id: 'profile',  label: 'Cá nhân',  icon: '👤' },
     { id: 'classes',  label: 'Lớp học',  icon: '🧘' },
-    { id: 'bookings', label: 'Đặt lịch', icon: '📅' },
+    { id: 'bookings', label: 'Lịch sử đặt lịch', icon: '📅' },
 ];
 
 // ─── Component ───────────────────────────────────────────────────────────────
