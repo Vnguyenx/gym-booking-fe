@@ -17,7 +17,7 @@ import {
 import { usePtProfileData }  from './usePtProfileData';
 import { PTProfileFormData } from '../types/models';
 import { ROUTES }            from '../constants/routes';
-import { uploadImageToImgBB } from '../services/uploadService';
+import {uploadImageToImgBB} from '../services/uploadService';
 import { authService }        from '../services/authService';
 
 // ─── Types export ────────────────────────────────────────────────────────────

@@ -91,7 +91,7 @@ export interface UseProfileReturn {
     handleCancel: () => void;
     handleChange: (field: keyof ProfileFormData, value: string) => void;
     handleSave: () => Promise<void>;
-    handleAvatarSave: (url: string) => Promise<void>;
+    handleAvatarChange: (file: File) => Promise<void>;
 }
 
 // ── Gym ───────────────────────────────────────────────────────────────────────

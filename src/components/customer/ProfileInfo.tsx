@@ -3,26 +3,6 @@ import useProfile from '../../hooks/useProfile';
 import useAuth from '../../hooks/useAuth';
 import useLogout from '../../hooks/useLogout';
 
-// ─── ImgBB Upload ─────────────────────────────────────────────────────────────
-// FE: chọn file → upload ImgBB → lưu URL vào Firestore users/{uid}.avatarUrl
-// BE: Firestore chỉ nhận avatarUrl string
-
-const uploadAvatarToImgBB = async (file: File): Promise<string> => {
-    const apiKey = process.env.REACT_APP_IMGBB_API_KEY;
-    if (!apiKey) throw new Error('Thiếu REACT_APP_IMGBB_API_KEY');
-
-    const form = new FormData();
-    form.append('image', file);
-
-    const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: 'POST',
-        body: form,
-    });
-    if (!res.ok) throw new Error('ImgBB upload thất bại');
-    const data = await res.json();
-    return data.data.url as string;
-};
-
 const getInitial = (name?: string | null) =>
     name?.trim().charAt(0).toUpperCase() ?? '?';
 
@@ -50,12 +30,12 @@ const ProfileInfo: React.FC = () => {
         handleSave,
         avatarUrl,
         isUploadingAvatar,
-        handleAvatarSave,
+        handleAvatarChange,
     } = useProfile();
 
     const fileRef = useRef<HTMLInputElement>(null);
 
-    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -69,14 +49,11 @@ const ProfileInfo: React.FC = () => {
         }
 
         try {
-            const url = await uploadAvatarToImgBB(file);
-            await handleAvatarSave(url);
+            await handleAvatarChange(file);
         } catch (err: any) {
             alert('Không thể tải ảnh: ' + (err.message ?? 'Lỗi không xác định'));
         }
     };
-
-    const displayAvatar = avatarUrl;
 
     return (
         <section className="profile-section">
@@ -99,7 +76,7 @@ const ProfileInfo: React.FC = () => {
                     type="file"
                     accept="image/*"
                     style={{ display: 'none' }}
-                    onChange={handleAvatarChange}
+                    onChange={handleFileInput}
                 />
                 <div
                     className="avatar-upload-circle"
@@ -107,8 +84,8 @@ const ProfileInfo: React.FC = () => {
                     role="button"
                     aria-label="Đổi ảnh đại diện"
                 >
-                    {displayAvatar
-                        ? <img src={displayAvatar} alt="Avatar" />
+                    {avatarUrl
+                        ? <img src={avatarUrl} alt="Avatar" />
                         : <div className="avatar-initials">{getInitial(user?.displayName)}</div>
                     }
                     <div className="avatar-overlay">📷<br />Đổi ảnh</div>
@@ -183,22 +160,3 @@ const ProfileInfo: React.FC = () => {
 };
 
 export default ProfileInfo;
-
-/*
- * ── Cần thêm vào useProfile.ts ───────────────────────────────────────────────
- *
- *   const [avatarUrl, setAvatarUrl] = useState(user?.photoURL ?? '');
- *   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
- *
- *   const handleAvatarSave = async (url: string) => {
- *       setIsUploadingAvatar(true);
- *       try {
- *           await updateDoc(doc(db, 'users', user!.uid), { avatarUrl: url });
- *           setAvatarUrl(url);
- *       } finally {
- *           setIsUploadingAvatar(false);
- *       }
- *   };
- *
- *   return { ..., avatarUrl, isUploadingAvatar, handleAvatarSave };
- */

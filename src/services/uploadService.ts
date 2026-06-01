@@ -25,3 +25,4 @@ export const uploadImageToCloudinary = async (file: File): Promise<string | null
         return null;
     }
 };
+export const uploadImageToImgBB = uploadImageToCloudinary;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateUserInStore } from '../store/authSlice';
 import { customerService } from '../services/customerService';
+import { uploadImageToCloudinary } from '../services/uploadService';
 import { ProfileFormData, UseProfileReturn } from '../types/models';
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
@@ -10,7 +11,7 @@ import { ProfileFormData, UseProfileReturn } from '../types/models';
  * Quản lý logic xem và chỉnh sửa thông tin cá nhân của user.
  * Tách biệt hoàn toàn với UI để dễ test và tái sử dụng.
  *
- * Luồng avatar: FE upload ImgBB → lấy URL → handleAvatarSave(url) → gọi API BE
+ * Luồng avatar: FE chọn file → upload Cloudinary → lấy URL → gọi API BE → cập nhật store
  * Luồng profile: handleSave() → gọi API BE → cập nhật Redux store
  */
 const useProfile = (): UseProfileReturn => {
@@ -79,10 +80,14 @@ const useProfile = (): UseProfileReturn => {
     };
 
     // ── Handler avatar ────────────────────────────────────
+    // Nhận file từ UI → upload lên Cloudinary → lưu URL vào BE + store
 
-    const handleAvatarSave = async (url: string) => {
+    const handleAvatarChange = async (file: File) => {
         setIsUploadingAvatar(true);
         try {
+            const url = await uploadImageToCloudinary(file);
+            if (!url) throw new Error('Upload thất bại, vui lòng thử lại.');
+
             await customerService.updateProfile({
                 displayName: formData.displayName,
                 phone:       formData.phone,
@@ -111,7 +116,7 @@ const useProfile = (): UseProfileReturn => {
         handleCancel,
         handleChange,
         handleSave,
-        handleAvatarSave,
+        handleAvatarChange,
     };
 };
 
