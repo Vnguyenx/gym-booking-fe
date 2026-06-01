@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { db } from "../config/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { uploadImageToImgBB } from "../services/uploadService";
+import { uploadImageToCloudinary } from "../services/uploadService";
 import { PTApplication } from "../types/models";
 
 export const usePTRegister = () => {
@@ -109,7 +109,7 @@ export const usePTRegister = () => {
 
         try {
             // Bước A: Upload ảnh lên imgBB
-            const imageUrl = await uploadImageToImgBB(imageFile);
+            const imageUrl = await uploadImageToCloudinary(imageFile);
             if (!imageUrl) throw new Error("Không thể tải ảnh lên imgBB. Vui lòng kiểm tra kết nối.");
 
             // Bước B: Xử lý mảng chuyên môn
