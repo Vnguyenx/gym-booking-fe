@@ -70,7 +70,7 @@ const AppRouter = () => {
     const dashboardPath = getRoleHomePath(user?.role);
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Routes>
 
                 {/* ── Public — ai cũng vào được ──────────────────────── */}
