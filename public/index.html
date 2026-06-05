@@ -25,18 +25,16 @@
     -->
     <title>React App</title>
     <script>
-      (function(l) {
-        if (l.search[1] === '/') {
-          var decoded = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&');
+      !function(a){
+        if(a.search.indexOf('?p=/')===0){
+          var n=a.search.slice(1).split("&").map(function(a){
+            return a.replace(/~and~/g,"&")
           });
-          window.history.replaceState(null, null,
-                  l.pathname.slice(0, -1) + decoded[0] +
-                  (decoded[1] ? '?' + decoded[1] : '') +
-                  l.hash
-          );
+          window.history.replaceState(null,null,
+                  a.pathname.slice(0,-1)+n[0]+(n[1]?"?"+n[1]:"")+a.hash
+          )
         }
-      }(window.location))
+      }(window.location)
     </script>
   </head>
   <body>
