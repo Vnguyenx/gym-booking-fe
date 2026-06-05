@@ -32,7 +32,7 @@
           var query=n[1]?n[1].replace(/~and~/g,'&'):'';
           var base="%PUBLIC_URL%";
           window.history.replaceState(null,null,
-                  base+path+(query?'?'+query:'')+a.hash
+                  base+'/'+path.replace(/^\//,'')+( query?'?'+query:'')+a.hash
           )
         }
       }(window.location)
