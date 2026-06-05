@@ -30,8 +30,9 @@
           var n=a.search.slice(4).split('&q=');
           var path=n[0];
           var query=n[1]?n[1].replace(/~and~/g,'&'):'';
+          var base="%PUBLIC_URL%";
           window.history.replaceState(null,null,
-                  a.pathname.slice(0,-1)+path+(query?'?'+query:'')+a.hash
+                  base+path+(query?'?'+query:'')+a.hash
           )
         }
       }(window.location)
