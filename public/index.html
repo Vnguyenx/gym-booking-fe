@@ -27,7 +27,7 @@
     <script>
       !function(a){
         if(a.search.indexOf('?p=/')===0){
-          var n=a.search.slice(4).split('&q=');
+          var n=a.search.slice(3).split('&q=');
           var path=n[0];
           var query=n[1]?n[1].replace(/~and~/g,'&'):'';
           var base="%PUBLIC_URL%";
