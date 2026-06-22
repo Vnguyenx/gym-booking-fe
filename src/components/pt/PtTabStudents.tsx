@@ -3,6 +3,7 @@ import { usePtStudents } from '../../hooks/usePtStudents';
 import FilterChips from './students/FilterChips';
 import StudentCard from './students/StudentCard';
 import GroupCard from './students/GroupCard';
+import ErrorToast from './notifications/ErrorToast';
 
 const ITEMS_PER_PAGE = 3;
 
@@ -14,6 +15,10 @@ const PtTabStudents: React.FC = () => {
         groupedClasses,
         expandedIds,
         toggleExpand,
+        confirmingIds,
+        confirmError,
+        onConfirm,
+        onClearError,
     } = usePtStudents();
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -31,6 +36,14 @@ const PtTabStudents: React.FC = () => {
     return (
         <div className="pt-tab-students">
             <FilterChips activeFilter={activeFilter} onFilterChange={onFilterChange} />
+
+            {/* ── Toast lỗi — xuất hiện khi confirm thất bại ── */}
+            {confirmError && (
+                <ErrorToast
+                    message={confirmError}
+                    onClose={onClearError}
+                />
+            )}
 
             <div className="students-list">
                 {paginatedData.length === 0 ? (
@@ -54,6 +67,8 @@ const PtTabStudents: React.FC = () => {
                                 colorIndex={idx}
                                 isExpanded={expandedIds.has((item as any).id)}
                                 onToggle={() => toggleExpand((item as any).id)}
+                                confirmingIds={confirmingIds}
+                                onConfirm={onConfirm}
                             />
                         )
                     ))

@@ -4,9 +4,11 @@
 // Click vào header → mở/đóng chi tiết attendance.
 //
 // Props:
-//   cls        — ClassItem từ Redux store
-//   isExpanded — trạng thái mở/đóng (quản lý ở hook)
-//   onToggle   — callback toggle
+//   cls           — ClassItem từ Redux store
+//   isExpanded    — trạng thái mở/đóng (quản lý ở hook)
+//   onToggle      — callback toggle
+//   confirmingIds — danh sách attendanceId đang gọi API confirm
+//   onConfirm     — callback xác nhận điểm danh
 
 import React from 'react';
 import { ClassItem } from '../../../types/models';
@@ -48,15 +50,24 @@ function formatDate(iso: string): string {
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface StudentCardProps {
-    cls:        ClassItem;
-    colorIndex: number;   // để xoay màu avatar
-    isExpanded: boolean;
-    onToggle:   () => void;
+    cls:           ClassItem;
+    colorIndex:    number;   // để xoay màu avatar
+    isExpanded:    boolean;
+    onToggle:      () => void;
+    confirmingIds: string[];
+    onConfirm:     (attendanceId: string, classId: string) => void;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const StudentCard: React.FC<StudentCardProps> = ({ cls, colorIndex, isExpanded, onToggle }) => {
+const StudentCard: React.FC<StudentCardProps> = ({
+                                                     cls,
+                                                     colorIndex,
+                                                     isExpanded,
+                                                     onToggle,
+                                                     confirmingIds,
+                                                     onConfirm,
+                                                 }) => {
     const { bg, color } = AVATAR_COLORS[colorIndex % AVATAR_COLORS.length];
     const initials       = getInitials(cls.customerId);
     const { done, total, pct } = getProgress(cls);
@@ -131,7 +142,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ cls, colorIndex, isExpanded, 
                                 new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime(),
                             )
                             .map((att) => (
-                                <AttendanceBadge key={att.id} record={att} />
+                                <AttendanceBadge
+                                    key={att.id}
+                                    record={att}
+                                    classId={cls.id}
+                                    isConfirming={confirmingIds.includes(att.id)}
+                                    onConfirm={onConfirm}
+                                />
                             ))
                     )}
                 </div>

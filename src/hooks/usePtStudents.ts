@@ -5,15 +5,19 @@
 //   1. Filter chips (all / 1on1 / group / expired)
 //   2. Lấy danh sách class đã filter từ Redux store (qua selector)
 //   3. Expand/collapse từng student card hoặc group card
+//   4. Xác nhận điểm danh ngay trong card (giống tab Thông báo)
 //
 // Component không tự truy cập store hay tính toán gì thêm.
 
-import { useState } from 'react';
-import { useAppSelector } from '../store/hooks';
+import { useState, useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
     selectFilteredClasses,
     selectGroupedClasses,
+    selectConfirmingIds,
+    selectConfirmError,
 } from '../store/selectors/ptSelectors';
+import { confirmAttendance, clearConfirmError } from '../store/ptDashBoardSlice';
 import { StudentFilter } from '../types/models';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -32,11 +36,23 @@ export interface PtStudentsData {
     // Expand/collapse card theo id
     expandedIds:    Set<string>;
     toggleExpand:   (id: string) => void;
+
+    // Xác nhận điểm danh
+    /** attendanceId đang gọi API confirm — để disable nút tương ứng */
+    confirmingIds:  string[];
+    /** Lỗi xác nhận gần nhất (null nếu không có) */
+    confirmError:   string | null;
+    /** Bấm Xác nhận — dispatch thunk */
+    onConfirm:      (attendanceId: string, classId: string) => void;
+    /** Đóng toast lỗi */
+    onClearError:   () => void;
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function usePtStudents(): PtStudentsData {
+    const dispatch = useAppDispatch();
+
     const [activeFilter, setActiveFilter] = useState<StudentFilter>('all');
 
     // Set chứa id của các card đang mở — dùng Set để O(1) lookup
@@ -48,6 +64,9 @@ export function usePtStudents(): PtStudentsData {
     );
 
     const groupedClasses = useAppSelector(selectGroupedClasses);
+
+    const confirmingIds = useAppSelector(selectConfirmingIds);
+    const confirmError  = useAppSelector(selectConfirmError);
 
     // Toggle expand: nếu đang mở thì đóng, ngược lại mở
     const toggleExpand = (id: string) => {
@@ -68,6 +87,18 @@ export function usePtStudents(): PtStudentsData {
         setExpandedIds(new Set());
     };
 
+    // useCallback tránh tạo lại function mỗi lần render
+    const onConfirm = useCallback(
+        (attendanceId: string, classId: string) => {
+            dispatch(confirmAttendance({ attendanceId, classId }));
+        },
+        [dispatch],
+    );
+
+    const onClearError = useCallback(() => {
+        dispatch(clearConfirmError());
+    }, [dispatch]);
+
     return {
         activeFilter,
         onFilterChange,
@@ -75,5 +106,9 @@ export function usePtStudents(): PtStudentsData {
         groupedClasses,
         expandedIds,
         toggleExpand,
+        confirmingIds,
+        confirmError,
+        onConfirm,
+        onClearError,
     };
 }
