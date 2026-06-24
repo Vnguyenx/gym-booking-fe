@@ -27,13 +27,12 @@ const ClassList: React.FC<Props> = ({data, isLoading, onViewDetail, onEdit}) => 
             {data.map((item) => (
                 <div key={item.id} className="class-card">
                     <div className="class-card-header">
-                        <div>
-                            {/* Hiển thị Tên học viên thay vì ID */}
+                        <div className="class-info-row" style={{display: 'flex',
+                            }}>
+                                                    {/* Hiển thị Tên học viên thay vì ID */}
                             <strong className="customer-name">{item.customerName}</strong>
-                            <div className="type-badge">{item.ptServiceName || 'Dịch vụ mặc định'}</div>                        </div>
-                        <span className={`badge badge-${item.status}`}>
-                            {item.status === 'active' ? 'Còn hạn' : 'Hết hạn'}
-                        </span>
+                            <div className="type-badge">{item.ptServiceName }</div>
+                        </div>
                     </div>
 
                     <div className="class-info-row">
@@ -53,8 +52,10 @@ const ClassList: React.FC<Props> = ({data, isLoading, onViewDetail, onEdit}) => 
                         </div>
                     </div>
 
-                    <div className="desktop-only">
-                        {/* Cột trống cho layout table */}
+                    <div className="class-info-row">
+                        <span className={`badge badge-${item.status}`}>
+                            {item.status === 'active' ? 'Còn hạn' : 'Hết hạn'}
+                        </span>
                     </div>
 
                     <div className="action-buttons" style={{display: 'flex', gap: '10px', marginTop: '10px'}}>

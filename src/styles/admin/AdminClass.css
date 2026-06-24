@@ -259,6 +259,7 @@
     background: var(--gray-200);
     border-radius: 99px;
     overflow: hidden;
+    width: 150px;
 }
 .progress-fill {
     height: 100%;

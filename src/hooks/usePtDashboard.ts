@@ -31,7 +31,7 @@ export interface RecentSessionItem {
     id:          string;
     name:        string;
     avatarCus:   string;
-    type:        string;   // "1:1" hoặc "Nhóm"
+    type:        string;
     sessions:    number;
     initials:    string;
     avatarBg:    string;
@@ -123,15 +123,14 @@ export function usePtDashboard(): PtDashboardData {
         const processedItems = activeClasses.map((cls, idx) => {
             const colorPair = AVATAR_COLORS[idx % AVATAR_COLORS.length];
             const sessions  = countSessionsInMonth(cls, month, year);
-            const name = (cls as any).customerName || cls.customerId; // fallback nếu data cũ
-
+            const name = (cls as any).customerName || cls.customerId;
 
             return {
                 id:          cls.id,
                 name,
                 sessions,
                 total: cls.totalSessions || 20,
-                type: cls.type === 'pt-1on1' ? '1:1' : 'Nhóm',
+                type: (cls as any).ptServiceName || cls.type, // ✅ dùng tên thật đã JOIN, fallback về type nếu chưa có
                 initials:    getInitials(name),
                 avatarCus: cls.customerAvatar,
                 avatarBg:    colorPair.bg,

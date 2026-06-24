@@ -71,7 +71,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
     const { bg, color } = AVATAR_COLORS[colorIndex % AVATAR_COLORS.length];
     const initials       = getInitials(cls.customerId);
     const { done, total, pct } = getProgress(cls);
-    const typeLabel      = cls.type === 'pt-1on1' ? '1:1' : 'Nhóm';
+    const typeLabel = cls.ptServiceName || cls.type;
     const displayName          = (cls as any).customerName || cls.customerId;
     const avatarUrl            = (cls as any).customerAvatar as string | undefined;
 

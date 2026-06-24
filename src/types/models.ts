@@ -243,7 +243,7 @@ export interface ClassItem {
     customerAvatar: string;
     classGroupId: string | null;
     type: ClassType;
-    ptServiceName?: string;
+    ptServiceName: string;
     typeName?: string;
     status: ClassStatus;
     startDate: string;             // ISO string
