@@ -20,6 +20,14 @@ const sameMonth = (isoDate: string, month: number, year: number): boolean => {
     return d.getMonth() + 1 === month && d.getFullYear() === year;
 };
 
+/**
+ * Một số document Firestore có thể thiếu field `attendance` (chưa từng điểm
+ * danh) hoặc bị lưu sai kiểu, khiến nó là `undefined`/`null` thay vì array.
+ * Helper này đảm bảo luôn nhận về array để dùng for...of / .filter() an toàn.
+ */
+const getAttendance = (cls: ClassItem): AttendanceRecord[] =>
+    Array.isArray(cls.attendance) ? cls.attendance : [];
+
 // ─── Base selectors (primitive / stable reference) ───────────────────────────
 
 const selectActiveClasses  = (state: RootState) => state.ptDashboard.activeClasses;
@@ -51,7 +59,7 @@ export const selectDashboardStats = (
 
     let sessionsThisMonth = 0;
     for (const cls of activeClasses) {
-        for (const att of cls.attendance) {
+        for (const att of getAttendance(cls)) {
             if (att.isSuccess && att.date && sameMonth(att.date, month, year)) {
                 sessionsThisMonth++;
             }
@@ -60,7 +68,7 @@ export const selectDashboardStats = (
 
     let pendingConfirmCount = 0;
     for (const cls of activeClasses) {
-        pendingConfirmCount += cls.attendance.filter(isPending).length;
+        pendingConfirmCount += getAttendance(cls).filter(isPending).length;
     }
 
     return {
@@ -84,7 +92,7 @@ export const selectPendingConfirms = createSelector(
         const items: PendingConfirmItem[] = [];
 
         for (const cls of activeClasses) {
-            for (const att of cls.attendance) {
+            for (const att of getAttendance(cls)) {
                 if (!isPending(att)) continue;
 
                 items.push({

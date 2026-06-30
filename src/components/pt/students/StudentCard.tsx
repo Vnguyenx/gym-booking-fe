@@ -34,8 +34,9 @@ function getInitials(name: string): string {
 
 // Tính số buổi đã học / tổng buổi
 function getProgress(cls: ClassItem): { done: number; total: number; pct: number } {
-    const total = cls.attendance.length || 1;
-    const done  = cls.attendance.filter((a) => a.isSuccess).length;
+    const attendance = Array.isArray(cls.attendance) ? cls.attendance : [];
+    const total = attendance.length || 1;
+    const done  = attendance.filter((a) => a.isSuccess).length;
     return { done, total, pct: Math.round((done / total) * 100) };
 }
 
@@ -133,11 +134,13 @@ const StudentCard: React.FC<StudentCardProps> = ({
             {/* ── Chi tiết attendance — chỉ render khi expanded ── */}
             {isExpanded && (
                 <div className="student-card__detail">
-                    {cls.attendance.length === 0 ? (
-                        <p className="student-card__empty">Chưa có buổi nào</p>
-                    ) : (
+                    {(() => {
+                        const attendance = Array.isArray(cls.attendance) ? cls.attendance : [];
+                        if (attendance.length === 0) {
+                            return <p className="student-card__empty">Chưa có buổi nào</p>;
+                        }
                         // Sắp xếp mới nhất lên đầu
-                        [...cls.attendance]
+                        return [...attendance]
                             .sort((a, b) =>
                                 new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime(),
                             )
@@ -149,8 +152,8 @@ const StudentCard: React.FC<StudentCardProps> = ({
                                     isConfirming={confirmingIds.includes(att.id)}
                                     onConfirm={onConfirm}
                                 />
-                            ))
-                    )}
+                            ));
+                    })()}
                 </div>
             )}
         </div>

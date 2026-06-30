@@ -81,7 +81,8 @@ function getInitials(name: string): string {
 /** * Đếm xem trong 1 lớp học, có bao nhiêu buổi tập thành công trong tháng/năm cụ thể
  */
 function countSessionsInMonth(cls: ClassItem, month: number, year: number): number {
-    return cls.attendance.filter((a) => {
+    const attendance = Array.isArray(cls.attendance) ? cls.attendance : [];
+    return attendance.filter((a) => {
         if (!a.isSuccess || !a.date) return false;
         const d = new Date(a.date);
         // Kiểm tra khớp tháng và năm
